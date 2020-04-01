@@ -5,8 +5,8 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 export default class Map extends Component {
   state = {
     initialPosition: {
-      latitude: 14.7143,
-      longitude: 108.0042,
+      latitude: 21.0278,
+      longitude: 105.8342,
       latitudeDelta: 0.09,
       longitudeDelta: 0.035
     }
