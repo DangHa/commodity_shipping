@@ -36,6 +36,8 @@ target 'driver_app' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
   target 'driver_appTests' do
     inherit! :search_paths
     # Pods for testing

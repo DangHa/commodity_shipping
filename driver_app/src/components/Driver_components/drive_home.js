@@ -31,7 +31,7 @@ const DriveNavigator = createMaterialBottomTabNavigator(
         ),
         activeColor: '#ffffff',
         inactiveColor: '#a3c2fa',
-        barStyle: { backgroundColor: '#E94B3CFF' },
+        barStyle: { backgroundColor: '#1565c0' },
       }
     },
     Profile: {
@@ -44,7 +44,7 @@ const DriveNavigator = createMaterialBottomTabNavigator(
         ),
         activeColor: '#ffffff',
         inactiveColor: '#92c5c2',
-        barStyle: { backgroundColor: '#E94B3CFF' },
+        barStyle: { backgroundColor: '#1565c0' },
       }
     },
   },
@@ -52,7 +52,7 @@ const DriveNavigator = createMaterialBottomTabNavigator(
     initialRouteName: 'Map',
     activeColor: '#ffffff',
     inactiveColor: '#bda1f7',
-    barStyle: { backgroundColor: '#E94B3CFF' },
+    barStyle: { backgroundColor: '#1565c0' },
   }
 );
 
