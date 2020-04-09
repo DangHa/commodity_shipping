@@ -3,6 +3,7 @@ import {StyleSheet, View, Platform, TextInput, Text} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import RetroMapStyles from '../../assets/RetroMapStyles'
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 // Get location 
 export const getLocation = () => {
@@ -12,32 +13,6 @@ export const getLocation = () => {
               (data) => resolve(data.coords),
               (err) => reject(err)
           );
-      }
-  );
-}
-
-export const geocodeLocationByName = (locationName) => {
-  return new Promise(
-      (resolve, reject) => {
-        Geolocation.from(locationName)
-              .then(json => {
-                  const addressComponent = json.results[0].address_components[0];
-                  resolve(addressComponent);
-              })
-              .catch(error => reject(error));
-      }
-  );
-}
-
-export const geocodeLocationByCoords = (lat, long) => {
-  return new Promise(
-      (resolve, reject) => {
-        Geolocation.from(lat, long)
-              .then(json => {
-                  const addressComponent = json.results[0].address_components[0];
-                  resolve(addressComponent);
-              })
-              .catch(error => reject(error));
       }
   );
 }
@@ -217,23 +192,29 @@ export default class Map extends Component {
               style={styles.map}
               customMapStyle={ RetroMapStyles }
               region={this.state.region}
-              onRegionChange={(reg) => this.onMapRegionChange(reg)}
+              onRegionChangeComplete={(reg) => this.onMapRegionChange(reg)}
               showsUserLocation={true}>
             </MapView>
-            <TextInput style={styles.inputBox}
-              onChangeText={(start) => this.onChangeStart(start)}
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="Starting point"
-              selectionColor="#fff"
-              keyboardType="default"
-              onSubmitEditing={()=> this.destination.focus()}/>
-            <TextInput style={styles.inputBox}
-                onChangeText={(destination) => this.onChangeDestination(destination)} 
+            <View style={styles.inputBox}>
+              <Icon style={styles.imageStyle} size={15} name={'location-pin'} />
+              <TextInput style={{ flex: 1 }}
+                onChangeText={(start) => this.onChangeStart(start)}
                 underlineColorAndroid='rgba(0,0,0,0)' 
-                placeholder="Destination"
+                placeholder="  Starting point"
                 selectionColor="#fff"
                 keyboardType="default"
-                ref={(input) => this.destination = input}/>
+                onSubmitEditing={()=> this.destination.focus()}/>
+            </View>
+            <View style={styles.inputBox}>
+              <Icon style={styles.imageStyle} size={15} name={'arrow-right'} />
+              <TextInput style={{ flex: 1 }}
+                  onChangeText={(destination) => this.onChangeDestination(destination)} 
+                  underlineColorAndroid='rgba(0,0,0,0)' 
+                  placeholder="  Destination"
+                  selectionColor="#fff"
+                  keyboardType="default"
+                  ref={(input) => this.destination = input}/>
+              </View>
               {startingPredictions}
               {destinationPredictions}
           </View>
@@ -253,13 +234,17 @@ const styles = StyleSheet.create({
   inputBox: {
     width: 370,
     height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    fontSize: 14,
     color: '#002f6c',
+    marginLeft: 20,
+    borderRadius: 20,
     marginVertical: 5,
-    marginLeft: 20
+    paddingHorizontal: 16,
+  },
+  imageStyle: {
+    marginLeft: 5
   },
   suggestions: {
     width: 370,
