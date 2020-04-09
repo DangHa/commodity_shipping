@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {StyleSheet, View, Platform, TextInput, Text} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import RetroMapStyles from '../../assets/RetroMapStyles'
 
 // Get location 
 export const getLocation = () => {
@@ -42,43 +42,13 @@ export const geocodeLocationByCoords = (lat, long) => {
   );
 }
 
-// // Map Input
-// function MapInput(props){
-//   return (
-//       <GooglePlacesAutocomplete
-//         placeholder='Search'
-//         minLength={2} // minimum length of text to search
-//         autoFocus={false}
-//         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-//         keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-//         listViewDisplayed='auto'    // true/false/undefined
-//         fetchDetails={true}
-//         renderDescription={row => row.description} // custom description render
-//         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-//           console.log(data, details);
-//           //props.notifyChange(details.geometry.location);
-//         }}
-
-//         getDefaultValue={() => ''}
-
-//         query={{
-//           // available options: https://developers.google.com/places/web-service/autocomplete
-//           key: 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM',
-//           language: 'en', // language of the results
-//           types: '(cities)' // default: 'geocode'
-//         }}
-
-//         styles={styles.inputBox}
-//       />
-//   );
-// }
-
 export default class Map extends Component {
   state = {
     region: {},
-    start : "",
-    destination: "",
-    predictions: []
+    start : {},
+    destination: {},
+    startingPredictions: [],
+    destinationPredictions: []
   }
 
   componentDidMount() {
@@ -100,26 +70,51 @@ export default class Map extends Component {
     );
   }
 
-  // getCoordsFromName(loc) {
-  //   console.lof(loc)
-  //   this.setState({
-  //     region: {
-  //         latitude: loc.lat,
-  //         longitude: loc.lng,
-  //         latitudeDelta: 0.003,
-  //         longitudeDelta: 0.003
-  //     }
-  //   });
-  // }
-
   onMapRegionChange(region) {
     this.setState({ region });
   }
 
-  // Text 
-  onPressStartingPoint(id) {
-    console.log("title pressed");
-    this.setState({start});
+  // --- Starting textinput
+  async onPressStartingPoint(prediction) {
+    const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
+    const placeid = prediction.place_id
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${apiKey}`;
+    
+    // get coordinate from place id
+    var start ={}
+    try {
+      const result = await fetch(apiUrl)
+      const json = await result.json();
+      
+      if(json['result']){
+        start = {
+          latitude: json.result.geometry.location.lat,
+          longitude: json.result.geometry.location.lng,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02
+        }
+      }else {
+        start = this.state.region
+      }
+      
+      
+    } catch (err) {
+      console.error(err)
+    }
+
+    // change the region on map and starting point
+    this.setState({
+      region: start
+    });
+    this.setState({
+      start: start
+    });
+
+    // remove the prediction dropdown
+    this.setState({
+      startingPredictions: []
+    });
+
     // from id find coordinate put in start and regoin. create a marker
   };
 
@@ -127,12 +122,72 @@ export default class Map extends Component {
     const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${start}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
     
+    // get prediction from google api
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
-      console.log(json);
       this.setState({
-        predictions: json.predictions
+        startingPredictions: json.predictions
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  // --- Destination textinput
+  async onPressDestination(prediction) {
+    const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
+    const placeid = prediction.place_id
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${apiKey}`;
+    
+    // get coordinate from place id
+    var description ={}
+    try {
+      const result = await fetch(apiUrl)
+      const json = await result.json();
+      
+      if(json['result']){
+        description = {
+          latitude: json.result.geometry.location.lat,
+          longitude: json.result.geometry.location.lng,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02
+        }
+      }else {
+        description = this.state.region
+      }
+      
+      
+    } catch (err) {
+      console.error(err)
+    }
+
+    // change the region on map and starting point
+    this.setState({
+      region: description
+    });
+    this.setState({
+      description: description
+    });
+
+    // remove the prediction dropdown
+    this.setState({
+      destinationPredictions: []
+    });
+
+    // from id find coordinate put in start and regoin. create a marker
+  };
+
+  async onChangeDestination(start){    
+    const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${start}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
+    
+    // get prediction from google api
+    try {
+      const result = await fetch(apiUrl)
+      const json = await result.json();
+      this.setState({
+        destinationPredictions: json.predictions
       })
     } catch (err) {
       console.error(err)
@@ -140,10 +195,16 @@ export default class Map extends Component {
   }
 
   render() {
-    const predictions = this.state.predictions.map(prediction => (
-      <Text style={styles.suggestions} key={prediction.id} onPress={(id) => this.onPressStartingPoint(id)}>
+    const startingPredictions = this.state.startingPredictions.map(prediction => (
+      <Text style={styles.suggestions} key={prediction.id} onPress={() => this.onPressStartingPoint(prediction)}>
         {prediction.description}
-      </Text>  
+      </Text>
+    ));
+
+    const destinationPredictions = this.state.destinationPredictions.map(prediction => (
+      <Text style={styles.suggestions} key={prediction.id} onPress={() => this.onPressDestination(prediction)}>
+        {prediction.description}
+      </Text>
     ));
 
     return (
@@ -154,6 +215,7 @@ export default class Map extends Component {
               provider={PROVIDER_GOOGLE}
               ref={map => this._map = map}
               style={styles.map}
+              customMapStyle={ RetroMapStyles }
               region={this.state.region}
               onRegionChange={(reg) => this.onMapRegionChange(reg)}
               showsUserLocation={true}>
@@ -164,15 +226,16 @@ export default class Map extends Component {
               placeholder="Starting point"
               selectionColor="#fff"
               keyboardType="default"
-              onSubmitEditing={()=> this.password.focus()}/>
-            {/* <TextInput style={styles.inputBox}
-              onChangeText={(start) => this.onChangeStart(start)}
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="Destination"
-              selectionColor="#fff"
-              keyboardType="default"
-              onSubmitEditing={()=> this.password.focus()}/> */}
-              {predictions}
+              onSubmitEditing={()=> this.destination.focus()}/>
+            <TextInput style={styles.inputBox}
+                onChangeText={(destination) => this.onChangeDestination(destination)} 
+                underlineColorAndroid='rgba(0,0,0,0)' 
+                placeholder="Destination"
+                selectionColor="#fff"
+                keyboardType="default"
+                ref={(input) => this.destination = input}/>
+              {startingPredictions}
+              {destinationPredictions}
           </View>
         : null}
       </View>
@@ -195,17 +258,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 14,
     color: '#002f6c',
-    marginVertical: 7,
+    marginVertical: 5,
     marginLeft: 20
   },
   suggestions: {
     width: 370,
     marginLeft: 20,
     backgroundColor: 'white',
+    borderRadius: 10,
     padding: 5,
     fontSize: 14,
     borderBottomColor: 'gray',
-    borderBottomWidth: 0.7,
-    marginLeft: 20,
+    borderBottomWidth: 0.5,
   }
 });
