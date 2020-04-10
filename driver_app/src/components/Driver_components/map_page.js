@@ -23,7 +23,9 @@ export default class Map extends Component {
     start : {},
     destination: {},
     startingPredictions: [],
-    destinationPredictions: []
+    startingPointName: "",
+    destinationPredictions: [],
+    destinationName: "",
   }
 
   componentDidMount() {
@@ -84,6 +86,9 @@ export default class Map extends Component {
     this.setState({
       start: start
     });
+    this.setState({
+      startingPointName: prediction.description
+    })
 
     // remove the prediction dropdown
     this.setState({
@@ -93,7 +98,11 @@ export default class Map extends Component {
     // from id find coordinate put in start and regoin. create a marker
   };
 
-  async onChangeStart(start){    
+  async onChangeStart(start){  
+    this.setState({
+      startingPointName: start
+    })
+    
     const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${start}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
     
@@ -116,7 +125,7 @@ export default class Map extends Component {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${apiKey}`;
     
     // get coordinate from place id
-    var description ={}
+    var description = {}
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
@@ -144,6 +153,9 @@ export default class Map extends Component {
     this.setState({
       description: description
     });
+    this.setState({
+      destinationName: prediction.description
+    })
 
     // remove the prediction dropdown
     this.setState({
@@ -153,9 +165,13 @@ export default class Map extends Component {
     // from id find coordinate put in start and regoin. create a marker
   };
 
-  async onChangeDestination(start){    
+  async onChangeDestination(destination){  
+    this.setState({
+      destinationName: destination
+    })
+    
     const apiKey = "AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM"
-    const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${start}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${destination}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
     
     // get prediction from google api
     try {
@@ -170,6 +186,7 @@ export default class Map extends Component {
   }
 
   render() {
+    // Autocomplete place dropdowns
     const startingPredictions = this.state.startingPredictions.map(prediction => (
       <Text style={styles.suggestions} key={prediction.id} onPress={() => this.onPressStartingPoint(prediction)}>
         {prediction.description}
@@ -203,7 +220,7 @@ export default class Map extends Component {
                 placeholder="  Starting point"
                 selectionColor="#fff"
                 keyboardType="default"
-                onSubmitEditing={()=> this.destination.focus()}/>
+                value={this.state.startingPointName}/>
             </View>
             <View style={styles.inputBox}>
               <Icon style={styles.imageStyle} size={15} name={'arrow-right'} />
@@ -213,7 +230,7 @@ export default class Map extends Component {
                   placeholder="  Destination"
                   selectionColor="#fff"
                   keyboardType="default"
-                  ref={(input) => this.destination = input}/>
+                  value={this.state.destinationName}/>
               </View>
               {startingPredictions}
               {destinationPredictions}
