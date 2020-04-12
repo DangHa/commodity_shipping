@@ -370,7 +370,7 @@ export default class Map extends Component {
               {/* --- Route Change --- */}
               {this.state.route['coordinates'] ?
                 <TouchableOpacity onPress={this.shipment_detail.bind(this)}>
-                  <Icon style={styles.imageButton} size={25} name={'done'}/>
+                  <Icon style={[styles.imageButton, {backgroundColor: '#1565c0'}, {color: 'white'}]} size={25} name={'done'}/>
                 </TouchableOpacity>
               : null}
               <TouchableOpacity onPress={this.currentLocation.bind(this)}>
