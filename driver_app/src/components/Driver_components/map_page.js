@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import {StyleSheet, View, TextInput, Text, TouchableOpacity} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-// import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import MapViewDirections from "react-native-maps-directions";
 
 import RetroMapStyles from '../../assets/RetroMapStyles'
-
+// import ShipmentForm from './shipment_form'
 const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
 
 // Get location 
@@ -63,6 +61,11 @@ export default class Map extends Component {
     this.setState({ region });
   }
 
+  shipment_detail() {
+    console.log("turn to shipment detail")
+    // this.props.navigation.navigate("ShipmentForm");
+  }
+
   // --- Back to origin location , reset all other location states
   currentLocation() {
     this.getInitialState();
@@ -80,7 +83,19 @@ export default class Map extends Component {
     })
   }
 
-  // --- Starting textinput
+  // ------------ Route ---------------
+  setRoute() {
+    this.setState({
+      route: {
+        coordinates: [
+          { latitude: this.state.start.latitude, longitude: this.state.start.longitude },
+          { latitude: this.state.destination.latitude, longitude: this.state.destination.longitude }
+        ]
+      }
+    });
+  }
+
+  // ------------ Starting textinput ----------------
   async onPressStartingPoint(prediction) {
     const placeid = prediction.place_id
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_MAP_APIKEY}`;
@@ -122,8 +137,7 @@ export default class Map extends Component {
       startingPredictions: []
     });
 
-    // trigger drawing polyline (route)
-    
+    // Trigger creating route
     this.setState({
       route: {
         coordinates: [
@@ -144,7 +158,6 @@ export default class Map extends Component {
     
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_MAP_APIKEY}&input=${start}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
     
-    // get prediction from google api
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
@@ -156,7 +169,25 @@ export default class Map extends Component {
     }
   }
 
-  // --- Destination textinput
+  //Dragging destination marker
+  setNewStartingPoint(coords) {
+    this.setState({
+      startingPointName: ""
+    });
+
+    this.setState({
+      start: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02
+      }
+    });
+
+    this.setRoute();
+  }
+
+  // ------------ Destination textinput ------------------
   async onPressDestination(prediction) {
     const placeid = prediction.place_id
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_MAP_APIKEY}`;
@@ -188,7 +219,7 @@ export default class Map extends Component {
       region: description
     });
     this.setState({
-      description: description
+      destination: description
     });
     this.setState({
       destinationName: prediction.description
@@ -199,19 +230,10 @@ export default class Map extends Component {
       destinationPredictions: []
     });
 
-    // trigger drawing polyline (route)
+    // trigger drawing route 
     if(this.state.start['latitude']){
-      this.setState({
-        route: {
-          coordinates: [
-            { latitude: this.state.start.latitude, longitude: this.state.start.longitude },
-            { latitude: this.state.destination.latitude, longitude: this.state.destination.longitude }
-          ]
-        }
-      });
+      this.setRoute()
     }
-
-    console.log(this.state.route)
   };
 
   async onChangeDestination(destination){  
@@ -221,7 +243,6 @@ export default class Map extends Component {
     
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_MAP_APIKEY}&input=${destination}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=20000`;
     
-    // get prediction from google api
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
@@ -231,6 +252,24 @@ export default class Map extends Component {
     } catch (err) {
       console.error(err)
     }
+  }
+
+  //Dragging destination marker
+  setNewDestination(coords) {
+    this.setState({
+      destinationName: ""
+    });
+
+    this.setState({
+      destination: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02
+      }
+    });
+
+    this.setRoute();
   }
 
   render() {
@@ -265,7 +304,9 @@ export default class Map extends Component {
               {/* --- show the marker --- */}
               {this.state.start['latitude'] ?
                 <MapView.Marker
+                  ref={(ref) => { this.marker = ref; }}
                   draggable
+                  onDragEnd={(e) => this.setNewStartingPoint(e.nativeEvent.coordinate)}
                   coordinate={{
                     latitude:  this.state.start.latitude,
                     longitude: this.state.start.longitude
@@ -276,8 +317,9 @@ export default class Map extends Component {
               : null}
               {this.state.destination['latitude'] ?
                 <MapView.Marker
+                  ref={(ref) => { this.marker = ref; }}
                   draggable
-                  // onDragEnd={(t, map, coords) => this.setDestination(coords)}
+                  onDragEnd={(e) => this.setNewDestination(e.nativeEvent.coordinate)}
                   coordinate={{
                     latitude:  this.state.destination.latitude,
                     longitude: this.state.destination.longitude
@@ -322,13 +364,15 @@ export default class Map extends Component {
               {destinationPredictions}
             
             <View style={styles.bottom}>
+              {/* --- Route Change --- */}
+              {this.state.route['coordinates'] ?
+                <TouchableOpacity onPress={this.shipment_detail.bind(this)}>
+                  <Icon style={styles.imageButton} size={25} name={'done'}/>
+                </TouchableOpacity>
+              : null}
               <TouchableOpacity onPress={this.currentLocation.bind(this)}>
                 <Icon style={styles.imageButton} size={25} name={'my-location'}/>
               </TouchableOpacity>
-                {/* --- Route --- */}
-                {/* {this.state.route['coordinates'] ?
-                  <Icon style={styles.imageStyle} size={15} name={'my-location'} />
-                : null} */}
             </View>
             
           </View>
@@ -363,11 +407,12 @@ const styles = StyleSheet.create({
   imageButton:{
     width: 40,
     height: 40,
-    backgroundColor: '#F5F0F0',
+    backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    marginLeft: 350
+    marginLeft: 350,
+    marginVertical: 5,
   },
   bottom:{
     flex: 1,
