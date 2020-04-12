@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import Loading from './src/components/loadingScreen'
-import DriveNavigator from './src/components/Driver_components/drive_home'
-import AuthenticationNavigator from './src/components/Authentication/authentication_home'
+import DriveNavigator from './src/components/Driver_components/drive_navigation'
+import AuthenticationNavigator from './src/components/Authentication/authentication_navigation'
 
 
 const AppNavigation = createAppContainer(createSwitchNavigator(

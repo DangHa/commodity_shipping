@@ -5,7 +5,7 @@ import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from "react-native-maps-directions";
 
-import RetroMapStyles from '../../assets/RetroMapStyles'
+import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
 const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
 
@@ -62,8 +62,11 @@ export default class Map extends Component {
   }
 
   shipment_detail() {
-    console.log("turn to shipment detail")
-    // this.props.navigation.navigate("ShipmentForm");
+    this.props.navigation.navigate("ShipmentDetail", { 
+      route:             this.state.route,
+      startingPointName: this.state.startingPointName,
+      destinationName:   this.state.destinationName
+    });
   }
 
   // --- Back to origin location , reset all other location states

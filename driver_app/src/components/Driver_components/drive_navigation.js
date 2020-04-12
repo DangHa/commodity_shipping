@@ -6,13 +6,13 @@ import {createAppContainer} from 'react-navigation';
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
 import Driver from './driver_page'
-import Map from './map_page'
+import MapNavigation from './Map_components/map_navigation'
 import History from './drive_history_page'
 
 const DriveNavigator = createMaterialBottomTabNavigator(
   {
     Map: {
-      screen: Map,
+      screen: MapNavigation,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <View>
