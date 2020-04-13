@@ -15,6 +15,8 @@ const MapNavigation = createAppContainer(createStackNavigator({
       screen: ShipmentForm,
       navigationOptions: {
         title: "Shipment Detail",
+        headerStyle: {backgroundColor: '#1565c0'},
+        headerTintColor: 'white'
       }
     }
   },
