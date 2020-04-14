@@ -55,7 +55,7 @@ export default class ShipmentForm extends Component {
           keyboardType="numeric"/>
 
         <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>{"\n"}Time of departure:</Text>
-        <Text style={[{fontSize: 14}]}>After this time, you won't receive any package's request any more</Text>
+    <Text style={[{fontSize: 14}]}>After this time, you won't receive any package's request any more {"\n"}</Text>
         
         <View style={{alignItems: 'center'}}>
           <DatePicker
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 280,
-    backgroundColor: '#4f83cc',
+    backgroundColor: '#1565c0',
     borderRadius: 25,
     paddingVertical: 10,
   },

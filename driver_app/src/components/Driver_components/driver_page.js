@@ -8,7 +8,6 @@ export default class Driver extends Component {
 
       this.state ={
         wantToChange: false,
-        buttonName  : "Change your infor",
         phone       : "00000000",
         username    : "dang ha",
         address     : "Thai Binh city"
@@ -18,14 +17,16 @@ export default class Driver extends Component {
       this.signout.bind(this)
   }
 
+  componentDidMount() {
+    console.log("get data of user from serve");
+    this.setState({
+      wantToChange: false
+    })
+  }
+
   signout = async()=>{
     this.props.navigation.navigate("Loading");
     await AsyncStorage.setItem('loginCheck', "false");
-  }
-
-  changeInformation() {
-    this.setState({wantToChange: true})
-    console.log(this.state.wantToChange);
   }
 
   sendNewInformation() {
@@ -40,63 +41,93 @@ export default class Driver extends Component {
       
       <View style={styles.container}>
         <View style={{alignItems: 'center'}}> 
-          <Text style={[{fontSize: 20}, {fontWeight: "bold"}]}>Your Information{"\n"}{"\n"}</Text>
+          <Text style={[{fontSize: 32, color: '#1565c0'}, {fontWeight: "bold"}]}>Your Information{"\n"}</Text>
         </View>
         
-        <Text>
-          <Icon style={styles.imageStyle} size={25} name={'phone'} />
+        <View>
           {this.state.wantToChange ?
-            <TextInput style={styles.inputBox}
-              onChangeText={(phone) => this.setState({phone})}
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="Phone"
-              placeholderTextColor = "#002f6c"
-              selectionColor="#fff"
-              keyboardType="numeric"/>
-          : <Text style={{fontSize: 15}}>    {this.state.phone}</Text>}
-          <Text>{"\n"}{"\n"}</Text>
-        </Text>
-
-        <Text>
-          <Icon style={styles.imageStyle} size={25} name={'user'} />
-          {this.state.wantToChange ?
-            <TextInput style={styles.inputBox}
-              onChangeText={(phone) => this.setState({phone})}
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="Phone"
-              placeholderTextColor = "#002f6c"
-              selectionColor="#fff"
-              keyboardType="numeric"/>
-          : <Text style={{fontSize: 15}}>    {this.state.username}</Text>}
-          <Text>{"\n"}{"\n"}</Text>
-        </Text>
-
-        <Text>
-          <Icon style={styles.imageStyle} size={25} name={'home'} />
-          {this.state.wantToChange ?
-            <TextInput style={styles.inputBox}
-              onChangeText={(phone) => this.setState({phone})}
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="Phone"
-              placeholderTextColor = "#002f6c"
-              selectionColor="#fff"
-              keyboardType="numeric"/>
-          : <Text style={{fontSize: 15}}>    {this.state.address}</Text>}
-        </Text>
-        
-
-        <View style={styles.bottom}>
-          <TouchableOpacity style={styles.button}>
-          {this.state.wantToChange ?
-            <Text style={styles.buttonText} onPress={this.sendNewInformation.bind(this)}>
-              Update new information
-            </Text>
-          : <Text style={styles.buttonText} onPress={this.changeInformation.bind(this)}>
-              Change your information
+            <View style={styles.inputBox}>
+              <Icon style={styles.imageStyle} size={25} name={'phone'} />
+              <TextInput style={{ flex: 1 }}
+                  onChangeText={(phone) => this.setState({phone: phone})}
+                  underlineColorAndroid='rgba(0,0,0,0)' 
+                  placeholder="Phone"
+                  placeholderTextColor = "#002f6c"
+                  selectionColor="#fff"
+                  keyboardType="numeric"
+                  value={this.state.phone}/>
+            </View>
+          : <Text>
+              <Icon style={styles.imageStyle} size={25} name={'phone'} />
+              <Text style={{fontSize: 15}}>    {this.state.phone}</Text>
             </Text>
           }
-            
-          </TouchableOpacity>
+          <Text></Text>
+        </View>
+
+        <View>
+          
+          {this.state.wantToChange ?
+          <View style={styles.inputBox}>
+            <Icon style={styles.imageStyle} size={25} name={'user'} />
+            <TextInput style={{ flex: 1 }}
+                onChangeText={(username) => this.setState({username: username})}
+                underlineColorAndroid='rgba(0,0,0,0)' 
+                placeholder="Username"
+                placeholderTextColor = "#002f6c"
+                selectionColor="#fff"
+                keyboardType="default"
+                value={this.state.username}/>
+          </View>
+          : <Text>
+              <Icon style={styles.imageStyle} size={25} name={'user'} />
+              <Text style={{fontSize: 15}}>    {this.state.username}</Text>
+            </Text>
+          }
+          <Text></Text>
+        </View>
+
+        <View>
+          {this.state.wantToChange ?
+          <View style={styles.inputBox}>
+            <Icon style={styles.imageStyle} size={25} name={'home'} />
+            <TextInput style={{ flex: 1 }}
+                onChangeText={(address) => this.setState({address: address})}
+                underlineColorAndroid='rgba(0,0,0,0)' 
+                placeholder="address"
+                placeholderTextColor = "#002f6c"
+                selectionColor="#fff"
+                keyboardType="default"
+                value={this.state.address}/>
+          </View>
+          : <Text>
+              <Icon style={styles.imageStyle} size={25} name={'home'} />
+              <Text style={{fontSize: 15}}>    {this.state.address}</Text>
+            </Text>
+          }
+        </View>
+        
+        <View style={styles.bottom}>
+          {this.state.wantToChange ?
+            <View style={{ flexDirection:"row" }}>
+              <TouchableOpacity style={styles.buttonConfirm}> 
+                <Text style={styles.buttonText} onPress={this.sendNewInformation.bind(this)}>
+                  Update new information
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.buttonConfirm, {backgroundColor: "red", width: 100}]}> 
+                <Text style={styles.buttonText} onPress={this.componentDidMount.bind(this)}>
+                  Cancle
+                </Text>
+              </TouchableOpacity>
+            </View>
+          : <TouchableOpacity style={styles.button}> 
+              <Text style={styles.buttonText} onPress={() => this.setState({wantToChange: true})}>
+                Change your information
+              </Text>
+            </TouchableOpacity>
+          }
+          
           <TouchableOpacity style={styles.button}> 
             <Text style={styles.buttonText} onPress={this.signout.bind(this)}>Sign out</Text>
           </TouchableOpacity>
@@ -113,7 +144,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 250,
-    backgroundColor: '#4f83cc',
+    backgroundColor: '#1565c0',
     borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 12
@@ -122,7 +153,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 15
+    marginBottom: 10
   },
   buttonText: {
     fontSize: 16,
@@ -130,13 +161,24 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center'
   },
-  inputBox: {
-    width: 350,
-    backgroundColor: '#eeeeee', 
+  buttonConfirm: {
+    width: 200,
+    backgroundColor: '#4f83cc',
     borderRadius: 25,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    marginVertical: 10,
+    marginRight: 10,
+    paddingVertical: 12
+  },
+  inputBox: {
+    width: 370,
+    height: 42,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#eeeeee',
     color: '#002f6c',
-    marginVertical: 10
+    marginLeft: 5,
+    borderRadius: 20,
+    marginVertical: 5,
+    paddingHorizontal: 16,
   }
 });
