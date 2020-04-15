@@ -9,23 +9,38 @@ class Package extends Component{
     this.state = {};
   }
 
+  acceptPackage(item) {
+    console.log("##################### accept")
+    console.log(item.id)
+    //send to the server
+  }
+
+  refusePackage(item) {
+    console.log("##################### refuse")
+    console.log(item.id)
+    // Send to the server
+  }
+
   render() {
     return(
       <View style={styles.childFlatView}>
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
-            <Text style={styles.route}>{this.props.item.name}</Text>
+            <Text style={styles.route}>{this.props.item.id}</Text>
             <Text style={styles.date}>{this.props.item.date}</Text>
           </View>
 
-          <View style={{ flex: 0, flexDirection:"row"}}>
-            <TouchableOpacity> 
-              <Icon style={{color: '#1565c0'}} size={25} name={'check-circle'}/>
-            </TouchableOpacity>
-            <TouchableOpacity> 
-              <Icon style={{color: 'gray'}} size={25} name={'delete'}/>
-            </TouchableOpacity>
-          </View>
+          { this.props.item.status ?
+            <View style={{ flex: 0, flexDirection:"row"}}>
+              <TouchableOpacity onPress={this.acceptPackage.bind(this, this.props.item)}> 
+                <Icon style={{color: '#1565c0'}} size={25} name={'check-circle'}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.refusePackage.bind(this, this.props.item)}> 
+                <Icon style={{color: 'gray'}} size={25} name={'delete'}/>
+              </TouchableOpacity>
+            </View>
+          : null}
+          
         </View>  
       </View>
       
@@ -38,8 +53,13 @@ class Shipment extends Component{
     super(props);
 
     this.state ={
-      childList: true
+      showChildList: false
+      
     };
+  }
+
+  componentDidMount() {
+    console.log(this.props.item.numberWait)
   }
 
   render() {
@@ -51,19 +71,29 @@ class Shipment extends Component{
             <Text style={styles.date}>{this.props.item.title}</Text>
           </View>
 
-          <View style={{ flex: 0}}>
-            <TouchableOpacity> 
-              <Icon style={{color: 'grey'}} size={25} name={'chevron-right'}/>
-            </TouchableOpacity>
-          </View>
-        </View>
+          {this.props.item.numberWait > 0 ?
+            <View style={{ flex: 0}}>
+              <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
+                <Text style={styles.notifyButton}>{this.props.item.numberWait}</Text>
+              </TouchableOpacity>
+            </View>
+          : 
+            <View style={{ flex: 0}}>
+              <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
+                <Icon style={{color: 'grey'}} size={25} name={'chevron-right'}/>
+              </TouchableOpacity>
+            </View>
+          }
 
-        <FlatList
-          data={this.props.item.packages}
-          renderItem={({item})=>
-           <Package item = {item}/>}
-          keyExtractor={(item, index) => index.toString()}
-        />  
+        </View>
+        
+        { this.state.showChildList ?
+          <FlatList
+            data={this.props.item.packages}
+            renderItem={({item})=>
+            <Package item = {item}/>}
+            keyExtractor={(item, index) => index.toString()}/>
+        : null}
       </View>
       
     )
@@ -87,38 +117,41 @@ export default class History extends Component {
         {
           id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
           title: 'First Item',
+          numberWait: 2,  // the number status which are true
           packages: [
             {
-              name: 'one',
+              id: 'one',
               date: 'date',
-              status: 'waiting for confirm'
+              status: true //waiting for confirm'
             },
             {
-              name: 'two',
+              id: 'two',
               date: 'date',
-              status: 'accepted'
+              status: true //waiting for confirm'
             }
           ]
         },
         {
           id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
           title: 'Second Item',
-          package: [
+          numberWait: 1,
+          packages: [
             {
-              name: 'one',
+              id: 'three',
               date: 'date',
-              status: 'accepted'
+              status: true //waiting for confirm'
             },
             {
-              name: 'two',
+              id: 'four',
               date: 'date',
-              status: 'accepted'
+              status: false // accepted
             }
           ]
         },
         {
           id: '58694a0f-3da1-471f-bd96-145571e29d72',
           title: 'Third Item',
+          numberWait: 0,
         },
       ]
     })
@@ -128,7 +161,7 @@ export default class History extends Component {
     return (
       <View style={styles.container} >
         <Text style={styles.h2text}>
-          Your Shipments 
+          Your Shipments {"\n"}
         </Text>
         <FlatList
           data={this.state.shipments}
@@ -162,17 +195,17 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     paddingTop: 20,
-    borderRadius: 2,
     borderBottomColor: 'gray',
     borderBottomWidth: 0.8,
   },
   childFlatView: {
-    width: 200,
+    width: 250,
     justifyContent: 'center',
     paddingTop: 5,
     borderRadius: 10,
     borderColor: 'gray',
-    borderWidth: 0.8,
+    borderWidth: 0.5,
+    marginLeft: 30
   },
   route: {
     fontFamily: 'Verdana',
@@ -180,6 +213,15 @@ const styles = StyleSheet.create({
   },
   date: {
     color: 'gray'
+  },
+  notifyButton: {
+    width: 30,
+    height: 30,
+    backgroundColor: 'tomato',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    color: 'white',
+    fontSize: 18
   }
-  
 });
