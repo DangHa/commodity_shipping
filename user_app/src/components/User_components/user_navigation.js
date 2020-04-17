@@ -7,7 +7,7 @@ import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom
 
 import User from './user_page'
 import MapNavigation from './Map_components/map_navigation'
-import History from './user_history_page'
+import HistoryNavigation from './User_history_component/history_navigation'
 
 const UserNavigator = createMaterialBottomTabNavigator(
   {
@@ -22,7 +22,7 @@ const UserNavigator = createMaterialBottomTabNavigator(
       }
     },
     History: {
-      screen: History,
+      screen: HistoryNavigation,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <View>

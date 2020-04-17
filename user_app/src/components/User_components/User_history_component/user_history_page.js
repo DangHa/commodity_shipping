@@ -6,60 +6,19 @@ class Package extends Component{
   constructor(props) {
     super(props);
 
-    this.state = {};
-  }
-
-  acceptPackage(item) {
-    console.log("##################### accept")
-    console.log(item.id)
-    //send to the server
-  }
-
-  refusePackage(item) {
-    console.log("##################### refuse")
-    console.log(item.id)
-    // Send to the server
-  }
-
-  render() {
-    return(
-      <View style={styles.childFlatView}>
-        <View style={{ flexDirection:"row"}}>
-          <View style={{ flex: 1, paddingLeft: 5}}>
-            <Text style={styles.route}>{this.props.item.id}</Text>
-            <Text style={styles.date}>{this.props.item.date}</Text>
-          </View>
-
-          { this.props.item.status ?
-            <View style={{ flex: 0, flexDirection:"row"}}>
-              <TouchableOpacity onPress={this.acceptPackage.bind(this, this.props.item)}> 
-                <Icon style={{color: '#1565c0'}} size={25} name={'check-circle'}/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.refusePackage.bind(this, this.props.item)}> 
-                <Icon style={{color: 'gray'}} size={25} name={'delete'}/>
-              </TouchableOpacity>
-            </View>
-          : null}
-          
-        </View>  
-      </View>
-      
-    )
-  }
-}
-
-class Shipment extends Component{
-  constructor(props) {
-    super(props);
-
     this.state ={
       showChildList: false
-      
     };
   }
 
   componentDidMount() {
     console.log(this.props.item.numberWait)
+  }
+
+  requestShipmentForPackage(item){
+    console.log("SEND TO SERVER FOR CONNECT")
+    console.log(item)
+    this.props.navigation.navigate("ShipmentList")
   }
 
   render() {
@@ -71,16 +30,16 @@ class Shipment extends Component{
             <Text style={styles.date}>{this.props.item.title}</Text>
           </View>
 
-          {this.props.item.numberWait > 0 ?
+          {this.props.item.status === 'refused' ?
             <View style={{ flex: 0}}>
               <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
-                <Text style={styles.notifyButton}>{this.props.item.numberWait}</Text>
+                <Icon style={{color: '#1565c0'}} size={25} name={'error'}/>
               </TouchableOpacity>
             </View>
           : 
             <View style={{ flex: 0}}>
               <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
-                <Icon style={{color: 'grey'}} size={25} name={'chevron-right'}/>
+                <Icon style={{color: 'grey'}} size={25} name={'expand-more'}/>
               </TouchableOpacity>
             </View>
           }
@@ -88,11 +47,25 @@ class Shipment extends Component{
         </View>
         
         { this.state.showChildList ?
-          <FlatList
-            data={this.props.item.packages}
-            renderItem={({item})=>
-            <Package item = {item}/>}
-            keyExtractor={(item, index) => index.toString()}/>
+          <View>
+            <View style={{ flexDirection:"row"}}>
+              <View style={{ flex: 1, paddingLeft: 15}}>
+                <Text style={styles.date}>{"\n"}Price: </Text>
+                <Text style={styles.date}>Starting date:</Text>
+                <Text style={styles.date}>Status: {this.props.item.status}</Text>
+              </View>
+            </View>
+            {this.props.item.status === 'refused' ?
+              <View style={{alignItems: 'center', padding:5}}>
+                <TouchableOpacity style={styles.button} onPress={this.requestShipmentForPackage.bind(this, this.props.item)}> 
+                  <Text style={styles.buttonText}>
+                    Choose another shipment
+                  </Text>
+                  {/* <Icon style={{color: 'tomato'}} size={30} name={'check-circle'}/> */}
+                </TouchableOpacity>
+              </View>
+            : null} 
+          </View>
         : null}
       </View>
       
@@ -117,41 +90,17 @@ export default class History extends Component {
         {
           id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
           title: 'First Item',
-          numberWait: 2,  // the number status which are true
-          packages: [
-            {
-              id: 'one',
-              date: 'date',
-              status: true //waiting for confirm'
-            },
-            {
-              id: 'two',
-              date: 'date',
-              status: true //waiting for confirm'
-            }
-          ]
+          status : 'accepted',  // the number status which are true
         },
         {
           id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
           title: 'Second Item',
-          numberWait: 1,
-          packages: [
-            {
-              id: 'three',
-              date: 'date',
-              status: true //waiting for confirm'
-            },
-            {
-              id: 'four',
-              date: 'date',
-              status: false // accepted
-            }
-          ]
+          status : 'refused',   // the number status which are true
         },
         {
           id: '58694a0f-3da1-471f-bd96-145571e29d72',
           title: 'Third Item',
-          numberWait: 0,
+          status : 'waiting',
         },
       ]
     })
@@ -167,7 +116,7 @@ export default class History extends Component {
           data={this.state.shipments}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
-            <Shipment item = {item}/>
+            <Package {...this.props} item = {item}/>
           }
           keyExtractor={item => item.title}
         />
@@ -214,14 +163,16 @@ const styles = StyleSheet.create({
   date: {
     color: 'gray'
   },
-  notifyButton: {
-    width: 30,
-    height: 30,
+  button: {
+    width: 200,
     backgroundColor: 'tomato',
     borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    color: 'white',
-    fontSize: 18
+    paddingVertical: 10
+  },
+  buttonText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#ffffff',
+    textAlign: 'center'
   }
 });

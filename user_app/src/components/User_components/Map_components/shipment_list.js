@@ -46,7 +46,7 @@ class Shipment extends Component{
 
           <View style={{ flex: 0}}>
             <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
-              <Icon style={{color: 'grey'}} size={25} name={'chevron-right'}/>
+              <Icon style={{color: 'grey'}} size={25} name={'expand-more'}/>
             </TouchableOpacity>
           </View>
         </View>
@@ -181,9 +181,19 @@ export default class History extends Component {
     })
   }
 
+  PriceLowToHigh() {
+    console.log("Send to server to get ranking of price")
+  }
+
   render() {
     return (
       <View style={styles.container} >
+        <View style={{ flexDirection:"row" }}>
+          <TouchableOpacity style={[styles.button, {width: 200}]} onPress={this.PriceLowToHigh.bind(this)}> 
+            <Text style={styles.buttonText}>Price: Low to high</Text>
+          </TouchableOpacity>
+        </View>
+
         <FlatList
           data={this.state.shipments}
           showsVerticalScrollIndicator={false}
@@ -230,16 +240,6 @@ const styles = StyleSheet.create({
   },
   date: {
     color: 'gray'
-  },
-  notifyButton: {
-    width: 30,
-    height: 30,
-    backgroundColor: 'tomato',
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    color: 'white',
-    fontSize: 18
   },
   button: {
     width: 60,
