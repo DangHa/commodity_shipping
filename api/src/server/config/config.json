@@ -1,0 +1,10 @@
+{
+    "port": 8080,
+    "database": {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "commodity_shipping",
+        "password": "annie8797",
+        "port": "5432"
+      }
+}
