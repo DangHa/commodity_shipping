@@ -23,6 +23,23 @@ module.exports = {
       }
 
     }catch(e){}
+  },
+
+  async signup(Phone, Password) {
+    try{
+      query = `INSERT INTO public."User"(phone, password)
+        VALUES ('${Phone}', '${Password}')`;
+              
+      var result = await pool.query(query);
+      
+      console.log(result)
+      if (result.rows.length !== 0){
+        return true
+      }else{
+        return false
+      }
+
+    }catch(e){}
   }
 
 };

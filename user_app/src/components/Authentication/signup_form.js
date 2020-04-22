@@ -21,14 +21,38 @@ export default class SignUp_Form extends Component {
             if (password !== confirm_password){
                 alert('password and confirm password are not the same');
             }else {
-                this.props.navigation.navigate("App");
-                await AsyncStorage.setItem('loginCheck', "true");
+                var result = false
 
                 // Send In here
+                let data = {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    mode: 'same-origin',
+                    body: JSON.stringify({
+                        phone: phone,
+                        password: password
+                    }),
+                    headers: {
+                      'Accept':       'application/json',
+                      'Content-Type': 'application/json',
+                    }
+                  }
+                fetch('http://localhost:8080/user/signup', data)
+                    .then(response => response.json())  // promise
+                    .then(json => {
+                        console.log("#####################")
+                        console.log(json)
+                    })
+                
 
                 // Get the result back
+                
 
                 // handle the result
+                if (result === true){
+                    await AsyncStorage.setItem('loginCheck', "true");
+                    this.props.navigation.navigate("App");
+                }
             }
         }catch(error)
         {

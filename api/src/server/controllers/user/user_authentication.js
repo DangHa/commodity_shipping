@@ -20,10 +20,19 @@ module.exports = {
   },
 
   async login(req, res) {
-    const Phone = req.body.username;
+    const Phone = req.body.phone;
     const Password = req.body.password;
 
     const result = await userQuery.login(Phone, Password);
+
+    res.send(result);
+  },
+
+  async signup(req, res) {
+    const Phone = req.body.phone;
+    const Password = req.body.password;
+
+    const result = await userQuery.signup(Phone, Password);
 
     res.send(result);
   },
