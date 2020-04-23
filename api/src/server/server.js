@@ -17,4 +17,3 @@ const port = config.getPort();
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
-

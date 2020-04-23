@@ -31,9 +31,9 @@ module.exports = {
   async signup(req, res) {
     const Phone = req.body.phone;
     const Password = req.body.password;
-
+    
     const result = await userQuery.signup(Phone, Password);
-
+    console.log(result)
     res.send(result);
   },
 

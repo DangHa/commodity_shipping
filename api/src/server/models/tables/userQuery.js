@@ -32,12 +32,9 @@ module.exports = {
               
       var result = await pool.query(query);
       
-      console.log(result)
-      if (result.rows.length !== 0){
-        return true
-      }else{
-        return false
-      }
+      // check whether have any account have the same phone
+      // console.log(result)
+      return true
 
     }catch(e){}
   }
