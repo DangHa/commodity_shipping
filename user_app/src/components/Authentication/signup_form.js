@@ -37,32 +37,23 @@ export default class SignUp_Form extends Component {
                       'Content-Type': 'application/json',
                     }
                   }
-                console.log("#################################1")
-                // fetch('http://172.18.0.1:8080/user/users')
-                //     .then((response) => response.json())
-                //     .then((json) => {
-                //         console.log(json);
-                //     })
-                //     .catch((error) => {
-                //         console.error(error);
-                //     });
 
-                fetch('http://172.18.0.1:8080/user/signup', data)
+                var result = await fetch('http://172.18.0.1:8080/user/signup', data)
                     .then((response) => response.json())
-                    .then(json => {
-                        console.log(json)
+                    .then((json) => {
+                        return json
                     })
                     .catch((error) => {
                         console.error(error);
                     });
-
-                // Get the result back
                 
-
                 // handle the result
                 if (result === true){
+                    alert("New account have been created")
                     await AsyncStorage.setItem('loginCheck', "true");
                     this.props.navigation.navigate("App");
+                }else {
+                    alert("This phone number has already account")
                 }
             }
         }catch(error)

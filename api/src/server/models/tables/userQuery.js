@@ -1,42 +1,28 @@
-const pool = require('../connectToPostgreSQL')
+const userTable = require('./userTable')
 
 module.exports = {
 
   async getAllUsers() {
-    try{
-      var result = await pool.query('SELECT * FROM public."User"');
-      return result.rows
-    }catch(e){}
+    var result = await userTable.getAllUsers();
+    return result
   },
 
   async login(Phone, Password) {
-    try{
-      query = `SELECT * FROM public."User" 
-              WHERE phone = '${Phone}' AND password = '${Password}'`
-              
-      var result = await pool.query(query);
-      
-      if (result.rows.length !== 0){
-        return true
-      }else{
-        return false
-      }
-
-    }catch(e){}
+    var result = await userTable.findUserByPhoneAndPassword(Phone, Password);
+    return result
   },
 
   async signup(Phone, Password) {
-    try{
-      query = `INSERT INTO public."User"(phone, password)
-        VALUES ('${Phone}', '${Password}')`;
-              
-      var result = await pool.query(query);
-      
-      // check whether have any account have the same phone
-      // console.log(result)
-      return true
 
-    }catch(e){}
+    checkingPhone = await userTable.findUserByPhone(Phone)
+
+    if (checkingPhone === false) {
+      await userTable.insertUser(Phone, Password)
+      return JSON.stringify(true)
+    }else{
+      return JSON.stringify(false)
+    }
+
   }
 
 };

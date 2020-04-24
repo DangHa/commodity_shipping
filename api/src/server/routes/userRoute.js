@@ -16,7 +16,6 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/signup', (req, res) => {
-  console.log("tink tink")
   userController.signup(req, res);
 });
 
