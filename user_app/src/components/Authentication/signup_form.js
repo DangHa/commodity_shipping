@@ -51,6 +51,7 @@ export default class SignUp_Form extends Component {
                 if (result === true){
                     alert("New account have been created")
                     await AsyncStorage.setItem('loginCheck', "true");
+                    await AsyncStorage.setItem('userPhone', phone);
                     this.props.navigation.navigate("App");
                 }else {
                     alert("This phone number has already account")

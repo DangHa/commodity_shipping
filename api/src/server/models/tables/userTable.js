@@ -16,11 +16,7 @@ module.exports = {
               
       var result = await pool.query(query);
       
-      if (result.rows.length !== 0){
-        return true
-      }else{
-        return false
-      }
+      return result.rows
 
     }catch(e){}
   },
@@ -45,6 +41,21 @@ module.exports = {
     try{
         query = `INSERT INTO public."User"(phone, password)
           VALUES ('${Phone}', '${Password}')`;
+                
+        var result = await pool.query(query);
+    
+        return true
+  
+    }catch(e){}
+  },
+
+  
+
+  async updateInforUser(OldPhone, Phone, Username, Address){
+    try{
+        query = `UPDATE public."User"
+            SET phone='${Phone}', username='${Username}', address='${Address}'
+            WHERE phone = '${OldPhone}'`;
                 
         var result = await pool.query(query);
     

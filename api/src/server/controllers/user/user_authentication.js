@@ -14,7 +14,7 @@ module.exports = {
 
   },
 
-  // will be fixed on tomorrow
+  // will be fixed
   async setDatabase() {
     await userQuery.setupUser();
   },
@@ -36,4 +36,20 @@ module.exports = {
     res.send(result);
   },
 
+  async getInfoUser(req, res) {
+    const Phone = req.body.phone;
+    
+    const result = await userQuery.getInfoUser(Phone);
+    res.send(result);
+  },
+  
+  async updateInforUser(req, res) {
+    const OldPhone = req.body.oldPhone;
+    const Phone = req.body.phone;
+    const Username = req.body.username;
+    const Address = req.body.address;
+    
+    const result = await userQuery.updateInforUser(OldPhone, Phone, Username, Address);
+    res.send(result);
+  },
 };

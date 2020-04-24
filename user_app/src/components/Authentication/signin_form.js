@@ -29,7 +29,7 @@ export default class SignIn_Form extends Component {
                 'Accept':       'application/json',
                 'Content-Type': 'application/json',
             }
-            }
+        }
 
         var result = await fetch('http://172.18.0.1:8080/user/login', data)
             .then((response) => response.json())
@@ -46,6 +46,7 @@ export default class SignIn_Form extends Component {
         }else if(result === true) {
             this.props.navigation.navigate("App");
             await AsyncStorage.setItem('loginCheck', "true");
+            await AsyncStorage.setItem('userPhone', phone);
         }else {
             alert("Your phone or password was wrong")
         }

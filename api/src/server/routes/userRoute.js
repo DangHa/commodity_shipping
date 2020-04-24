@@ -11,6 +11,14 @@ router.get('/users', (req, res) => {
   userController.getAllUsers(req, res);
 });
 
+router.post('/getInfoUser', (req, res) => {
+  userController.getInfoUser(req, res);
+});
+
+router.post('/updateInforUser', (req, res) => {
+  userController.updateInforUser(req, res);
+});
+
 router.post('/login', (req, res) => {
   userController.login(req, res);
 });
