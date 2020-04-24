@@ -8,8 +8,15 @@ module.exports = {
   },
 
   async login(Phone, Password) {
-    var result = await userTable.findUserByPhoneAndPassword(Phone, Password);
-    return result
+
+    checkingPhone = await userTable.findUserByPhone(Phone)
+
+    if (checkingPhone === false){
+      return JSON.stringify("This phone doesn't have any account")
+    }else{
+      var result = await userTable.findUserByPhoneAndPassword(Phone, Password);
+      return result
+    }
   },
 
   async signup(Phone, Password) {

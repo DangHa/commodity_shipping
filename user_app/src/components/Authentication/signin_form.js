@@ -15,17 +15,39 @@ export default class SignIn_Form extends Component {
  
     signin = async()=>{
         const {phone, password} = this.state;
+
         // Send In here
+        let data = {
+            method: 'POST',
+            credentials: 'same-origin',
+            mode: 'same-origin',
+            body: JSON.stringify({
+                phone: phone,
+                password: password
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            }
+            }
 
-        //Get the result back
-
+        var result = await fetch('http://172.18.0.1:8080/user/login', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        
         // handle the result
-
-        if (phone === '1' && password === '1'){
+        if (result === "This phone doesn't have any account"){
+            alert("This phone doesn't have any account")
+        }else if(result === true) {
             this.props.navigation.navigate("App");
             await AsyncStorage.setItem('loginCheck', "true");
         }else {
-            alert('phone: '+ phone + ' ' + 'password: ' + password);
+            alert("Your phone or password was wrong")
         }
     }
  
