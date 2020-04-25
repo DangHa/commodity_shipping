@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, Text, TouchableOpacity, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Package extends Component{
@@ -11,8 +11,8 @@ class Package extends Component{
     };
   }
 
-  componentDidMount() {
-    console.log(this.props.item.numberWait)
+  async componentDidMount() {
+  
   }
 
   requestShipmentForPackage(item){
@@ -26,8 +26,13 @@ class Package extends Component{
       <View style={styles.flatview}>
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
-            <Text style={styles.route}>{this.props.item.id}</Text>
-            <Text style={styles.date}>{this.props.item.title}</Text>
+            <Text>
+              <Text style={styles.route}>{this.props.item.starting_point}</Text>
+              <Text style={[{fontSize: 17}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
+              <Text style={styles.route}>{this.props.item.destination}</Text>
+            </Text>
+            
+            <Text style={styles.date}>{this.props.item.status}</Text>
           </View>
 
           {this.props.item.status === 'refused' ?
@@ -82,28 +87,38 @@ export default class History extends Component {
     };
   }
 
-  async componentDidMount() {
-    console.log("get data of user from serve");
-    
-    this.setState({
-      shipments: [
-        {
-          id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-          title: 'First Item',
-          status : 'accepted',  // the number status which are true
-        },
-        {
-          id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-          title: 'Second Item',
-          status : 'refused',   // the number status which are true
-        },
-        {
-          id: '58694a0f-3da1-471f-bd96-145571e29d72',
-          title: 'Third Item',
-          status : 'waiting',
-        },
-      ]
-    })
+  async componentDidMount() {  
+    let phone = await AsyncStorage.getItem('userPhone');
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        phone: phone,
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+
+    console.log("phone", data)
+    var result = await fetch('http://172.18.0.1:8080/package/getPackageByPhone', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+          
+    if (result.length !== 0){
+      this.setState({shipments: result})
+    } else {
+      alert("You dont have any package yet")
+    }
   }
 
   render() {

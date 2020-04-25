@@ -49,8 +49,6 @@ module.exports = {
     }catch(e){}
   },
 
-  
-
   async updateInforUser(OldPhone, Phone, Username, Address){
     try{
         query = `UPDATE public."User"

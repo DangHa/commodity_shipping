@@ -39,8 +39,11 @@ module.exports = {
 
   async updateInforUser(OldPhone, Phone, Username, Address){
 
-    result = await userTable.findUserByPhone(Phone)
-
+    var result = []
+    if (OldPhone !== Phone){
+      result = await userTable.findUserByPhone(Phone)
+    }
+    
     if (result.length !== 0) {
       return JSON.stringify("New phone number has already been registed for another account")
     }else{

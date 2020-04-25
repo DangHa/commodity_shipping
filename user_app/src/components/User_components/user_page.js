@@ -97,8 +97,7 @@ export default class User extends Component {
       alert("There are something wrong")
       this.setState({wantToChange: true})
     }
-
-    // wait send back 
+    
   }
 
   render() {
