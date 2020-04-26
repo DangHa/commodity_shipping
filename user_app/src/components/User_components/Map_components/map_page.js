@@ -35,12 +35,14 @@ export default class Map extends Component {
         {
           "coordinate": {}, 
           "description": "", 
-          "title": "Start"
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
         }, 
         {
           "coordinate": {},
           "description": "",
-          "title": "Destination"
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
         }
       ]
     }
