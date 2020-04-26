@@ -197,6 +197,18 @@ export default class Map extends Component {
         longitudeDelta: 0.05
       }
     });
+
+    this.setState({
+      markers: [
+        {
+          "coordinate": {"latitude": coords.latitude, "longitude": coords.longitude}, 
+          "description": "", 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        },
+        this.state.markers[1]
+      ]
+    })
   }
 
   // ------------ Destination textinput ------------------
@@ -288,6 +300,18 @@ export default class Map extends Component {
         longitudeDelta: 0.05
       }
     });
+
+    this.setState({
+      markers: [
+        this.state.markers[0],
+        {
+          "coordinate": {"latitude": coords.latitude, "longitude": coords.longitude}, 
+          "description": "", 
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
+    })
   }
 
   render() {

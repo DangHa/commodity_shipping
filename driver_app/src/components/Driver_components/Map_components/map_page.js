@@ -33,6 +33,20 @@ export default class Map extends Component {
       startingPointName: "",
       destinationPredictions: [],
       destinationName: "",
+      markers: [
+        {
+          "coordinate": {}, 
+          "description": "", 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        }, 
+        {
+          "coordinate": {},
+          "description": "",
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ],
       route: {},
       // origin: {latitude: 21.0250615, longitude: 105.8389873} // test direction
     }
@@ -49,8 +63,8 @@ export default class Map extends Component {
           region: {
               latitude: data.latitude,
               longitude: data.longitude,
-              latitudeDelta: 0.02,
-              longitudeDelta: 0.02
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05
           }
         });
       }
@@ -83,7 +97,24 @@ export default class Map extends Component {
 
     this.setState({
       route: {}
-    })
+    });
+
+    this.setState({
+      markers: [
+        {
+          "coordinate": {}, 
+          "description": "", 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        }, 
+        {
+          "coordinate": {},
+          "description": "",
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
+    });
   }
 
   // ------------ Route ---------------
@@ -113,8 +144,8 @@ export default class Map extends Component {
         start = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
         }
       }else {
         start = this.state.region
@@ -140,18 +171,24 @@ export default class Map extends Component {
       startingPredictions: []
     });
 
-    // Trigger creating route
+    // add a maker
     this.setState({
-      route: {
-        coordinates: [
-          { latitude: this.state.region.latitude, longitude: this.state.region.longitude },
-          { latitude: this.state.start.latitude, longitude: this.state.start.longitude }
-        ]
-      }
-    });
-    
+      markers: [
+        {
+          "coordinate": {"latitude": start.latitude, "longitude": start.longitude}, 
+          "description": prediction.description, 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        },
+        this.state.markers[1]
+      ]
+    })
 
-    console.log(this.state.route)
+    // Trigger creating route
+    if(this.state.destination['latitude']){
+      this.setRoute()
+    }
+    
   };
 
   async onChangeStart(start){  
@@ -182,12 +219,25 @@ export default class Map extends Component {
       start: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05
       }
     });
 
+    this.setState({
+      markers: [
+        {
+          "coordinate": {"latitude": coords.latitude, "longitude": coords.longitude}, 
+          "description": "", 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        },
+        this.state.markers[1]
+      ]
+    })
+
     this.setRoute();
+    console.log("Starting point ", this.state.start)
   }
 
   // ------------ Destination textinput ------------------
@@ -196,20 +246,20 @@ export default class Map extends Component {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_MAP_APIKEY}`;
     
     // get coordinate from place id
-    var description = {}
+    var destination = {}
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
       
       if(json['result']){
-        description = {
+        destination = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
         }
       }else {
-        description = this.state.region
+        destination = this.state.region
       }
       
       
@@ -219,10 +269,10 @@ export default class Map extends Component {
 
     // change the region on map and starting point
     this.setState({
-      region: description
+      region: destination
     });
     this.setState({
-      destination: description
+      destination: destination
     });
     this.setState({
       destinationName: prediction.description
@@ -232,6 +282,19 @@ export default class Map extends Component {
     this.setState({
       destinationPredictions: []
     });
+
+    // add a maker
+    this.setState({
+      markers: [
+        this.state.markers[0],
+        {
+          "coordinate": {"latitude": destination.latitude, "longitude": destination.longitude}, 
+          "description": prediction.description, 
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
+    })
 
     // trigger drawing route 
     if(this.state.start['latitude']){
@@ -267,12 +330,25 @@ export default class Map extends Component {
       destination: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05
       }
     });
 
+    this.setState({
+      markers: [
+        this.state.markers[0],
+        {
+          "coordinate": {"latitude": coords.latitude, "longitude": coords.longitude}, 
+          "description": "", 
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
+    })
+
     this.setRoute();
+    console.log("Destination ", this.state.destination)
   }
 
   render() {
@@ -305,32 +381,19 @@ export default class Map extends Component {
               showsUserLocation={true}>
 
               {/* --- show the marker --- */}
-              {this.state.start['latitude'] ?
-                <MapView.Marker
-                  ref={(ref) => { this.marker = ref; }}
-                  draggable
-                  onDragEnd={(e) => this.setNewStartingPoint(e.nativeEvent.coordinate)}
-                  coordinate={{
-                    latitude:  this.state.start.latitude,
-                    longitude: this.state.start.longitude
-                  }}
-                  title={"Starting point"}
-                  description={this.state.startingPointName}
-                />
-              : null}
-              {this.state.destination['latitude'] ?
-                <MapView.Marker
-                  ref={(ref) => { this.marker = ref; }}
-                  draggable
-                  onDragEnd={(e) => this.setNewDestination(e.nativeEvent.coordinate)}
-                  coordinate={{
-                    latitude:  this.state.destination.latitude,
-                    longitude: this.state.destination.longitude
-                  }}
-                  title={"Destination"}
-                  description={this.state.destinationName}
-                />
-              : null}
+              {this.state.markers.map(function(marker) {
+                if (marker.coordinate['latitude']) {
+                  return <MapView.Marker 
+                    draggable
+                    onDragEnd={marker.draggingFunction}
+                    coordinate={marker.coordinate}
+                    title={marker.title}
+                    description={marker.description}
+                  />  
+                }else{
+                  return null
+                }   
+              })}
 
               {/* --- Route --- */}
               {this.state.route['coordinates'] ?
@@ -343,6 +406,7 @@ export default class Map extends Component {
               : null}
 
             </MapView>
+
             <View style={styles.inputBox}>
               <Icon style={styles.imageStyle} size={15} name={'location-searching'} />
               <TextInput style={{ flex: 1 }}
@@ -368,12 +432,12 @@ export default class Map extends Component {
             
             <View style={styles.bottom}>
               {/* --- Route Change --- */}
-              {this.state.route['coordinates'] ?
-                <TouchableOpacity onPress={this.shipment_detail.bind(this)}>
+              {this.state.start['latitude'] && this.state.destination['latitude'] ?
+                <TouchableOpacity style={styles.styletouchable} onPress={this.shipment_detail.bind(this)}>
                   <Icon style={[styles.imageButton, {backgroundColor: '#1565c0'}, {color: 'white'}]} size={25} name={'done'}/>
                 </TouchableOpacity>
               : null}
-              <TouchableOpacity onPress={this.currentLocation.bind(this)}>
+              <TouchableOpacity style={styles.styletouchable} onPress={this.currentLocation.bind(this)}>
                 <Icon style={styles.imageButton} size={25} name={'my-location'}/>
               </TouchableOpacity>
             </View>
@@ -413,7 +477,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 8,
-    paddingVertical: 8,
+    paddingVertical: 8
+  },
+  styletouchable: {
+    width: 40,
+    height: 40,
     marginLeft: 350,
     marginVertical: 5,
   },
