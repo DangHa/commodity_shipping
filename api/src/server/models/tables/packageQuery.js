@@ -7,4 +7,8 @@ module.exports = {
     return JSON.stringify(result)
   },
 
+  async getPackageDetail(package_id) {
+    result = await packageTable.getPackageDetail(package_id)
+    return JSON.stringify(result)
+  }
 };

@@ -6,7 +6,13 @@ module.exports = {
     const Phone = req.body.phone;
     
     const result = await packageQuery.getPackageByPhone(Phone);
-    console.log(result)
+    res.send(result);
+  },
+
+  async getPackageDetail(req, res) {
+    const package_id = req.body.package_id;
+    
+    const result = await packageQuery.getPackageDetail(package_id);
     res.send(result);
   },
   

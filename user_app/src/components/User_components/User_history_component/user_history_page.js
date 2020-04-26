@@ -7,17 +7,51 @@ class Package extends Component{
     super(props);
 
     this.state ={
-      showChildList: false
+      showChildList: false,
+      packageDetail: []
     };
   }
 
-  async componentDidMount() {
-  
+  async getDetailPackage() {
+
+    // Show the dropdown
+    this.setState({showChildList: !this.state.showChildList})
+
+    if (this.state.showChildList === false) {
+      // Send In here
+      let data = {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        body: JSON.stringify({
+          package_id: this.props.item.package_id,
+        }),
+        headers: {
+          'Accept':       'application/json',
+          'Content-Type': 'application/json',
+        }
+      }
+
+      var result = await fetch('http://172.18.0.1:8080/package/getPackageDetail', data)
+              .then((response) => response.json())
+              .then((json) => {
+                  return json
+              })
+              .catch((error) => {
+                  console.error(error);
+              });
+            
+      if (result.length !== 0){
+        this.setState({packageDetail: result[0]})
+      } else {
+        alert("There are something wrong")
+      }
+    }
+    
   }
 
   requestShipmentForPackage(item){
-    console.log("SEND TO SERVER FOR CONNECT")
-    console.log(item)
+    console.log("Wait when finish create a shipment ")
     this.props.navigation.navigate("ShipmentList")
   }
 
@@ -27,23 +61,23 @@ class Package extends Component{
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
             <Text>
-              <Text style={styles.route}>{this.props.item.starting_point}</Text>
+              <Text style={styles.major}>{this.props.item.starting_point}</Text>
               <Text style={[{fontSize: 17}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
-              <Text style={styles.route}>{this.props.item.destination}</Text>
+              <Text style={styles.major}>{this.props.item.destination}</Text>
             </Text>
             
-            <Text style={styles.date}>{this.props.item.status}</Text>
+            <Text style={styles.minor}>{this.props.item.status}</Text>
           </View>
 
           {this.props.item.status === 'refused' ?
             <View style={{ flex: 0}}>
-              <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
+              <TouchableOpacity onPress={() => this.getDetailPackage()}> 
                 <Icon style={{color: '#1565c0'}} size={25} name={'error'}/>
               </TouchableOpacity>
             </View>
           : 
             <View style={{ flex: 0}}>
-              <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
+              <TouchableOpacity onPress={() => this.getDetailPackage()}> 
                 <Icon style={{color: 'grey'}} size={25} name={'expand-more'}/>
               </TouchableOpacity>
             </View>
@@ -55,9 +89,12 @@ class Package extends Component{
           <View>
             <View style={{ flexDirection:"row"}}>
               <View style={{ flex: 1, paddingLeft: 15}}>
-                <Text style={styles.date}>{"\n"}Price: </Text>
-                <Text style={styles.date}>Starting date:</Text>
-                <Text style={styles.date}>Status: {this.props.item.status}</Text>
+                <Text style={{fontSize: 15}}>{"\n"}Price: {this.state.packageDetail.price}.000 (vnd)</Text>
+                <Text style={{fontSize: 15}}>Weight: {this.state.packageDetail.weight} (kg)</Text>
+                <Text style={{fontSize: 15}}>Space: {this.state.packageDetail.space} (m^3)</Text>
+                <Text style={{fontSize: 15}}>Phone of Receiver: {this.state.packageDetail.phone_of_receiver}</Text>
+                <Text style={{fontSize: 15}}>Starting date: {this.state.packageDetail.starting_date}</Text>
+                <Text style={{fontSize: 15}}>Phone of Driver: {this.state.packageDetail.phone}</Text>
               </View>
             </View>
             {this.props.item.status === 'refused' ?
@@ -104,7 +141,6 @@ export default class History extends Component {
       }
     }
 
-    console.log("phone", data)
     var result = await fetch('http://172.18.0.1:8080/package/getPackageByPhone', data)
             .then((response) => response.json())
             .then((json) => {
@@ -171,12 +207,13 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     marginLeft: 30
   },
-  route: {
+  major: {
     fontFamily: 'Verdana',
-    fontSize: 15
+    fontSize: 16
   },
-  date: {
-    color: 'gray'
+  minor: {
+    color: 'gray',
+    fontSize: 15
   },
   button: {
     width: 200,
