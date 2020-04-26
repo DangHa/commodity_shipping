@@ -31,6 +31,18 @@ export default class Map extends Component {
       startingPointName: "",
       destinationPredictions: [],
       destinationName: "",
+      markers: [
+        {
+          "coordinate": {}, 
+          "description": "", 
+          "title": "Start"
+        }, 
+        {
+          "coordinate": {},
+          "description": "",
+          "title": "Destination"
+        }
+      ]
     }
   }
 
@@ -45,8 +57,8 @@ export default class Map extends Component {
           region: {
               latitude: data.latitude,
               longitude: data.longitude,
-              latitudeDelta: 0.02,
-              longitudeDelta: 0.02
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05
           }
         });
       }
@@ -58,8 +70,6 @@ export default class Map extends Component {
   }
 
   shipment_detail() {
-    console.log(this.state.start),
-    console.log(this.state.destination),
     this.props.navigation.navigate("PackageDetail", {
       startingPointName: this.state.startingPointName,
       destinationName:   this.state.destinationName
@@ -76,6 +86,23 @@ export default class Map extends Component {
 
     this.setState({
       description: {}
+    });
+
+    this.setState({
+      markers: [
+        {
+          "coordinate": {}, 
+          "description": "", 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        }, 
+        {
+          "coordinate": {},
+          "description": "",
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
     });
   }
 
@@ -94,8 +121,8 @@ export default class Map extends Component {
         start = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
         }
       }else {
         start = this.state.region
@@ -114,6 +141,20 @@ export default class Map extends Component {
     });
     this.setState({
       startingPointName: prediction.description
+    })
+
+    
+    // add a maker
+    this.setState({
+      markers: [
+        {
+          "coordinate": {"latitude": start.latitude, "longitude": start.longitude}, 
+          "description": prediction.description, 
+          "title": "Start",
+          "draggingFunction": (e) => this.setNewStartingPoint(e.nativeEvent.coordinate)
+        },
+        this.state.markers[1]
+      ]
     })
 
     // remove the prediction dropdown
@@ -150,8 +191,8 @@ export default class Map extends Component {
       start: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05
       }
     });
   }
@@ -162,20 +203,20 @@ export default class Map extends Component {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_MAP_APIKEY}`;
     
     // get coordinate from place id
-    var description = {}
+    var destination = {}
     try {
       const result = await fetch(apiUrl)
       const json = await result.json();
       
       if(json['result']){
-        description = {
+        destination = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
         }
       }else {
-        description = this.state.region
+        destination = this.state.region
       }
       
       
@@ -185,13 +226,26 @@ export default class Map extends Component {
 
     // change the region on map and starting point
     this.setState({
-      region: description
+      region: destination
     });
     this.setState({
-      destination: description
+      destination: destination
     });
     this.setState({
       destinationName: prediction.description
+    })
+
+    // add a maker
+    this.setState({
+      markers: [
+        this.state.markers[0],
+        {
+          "coordinate": {"latitude": destination.latitude, "longitude": destination.longitude}, 
+          "description": prediction.destination, 
+          "title": "Destination",
+          "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
+        }
+      ]
     })
 
     // remove the prediction dropdown
@@ -228,8 +282,8 @@ export default class Map extends Component {
       destination: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05
       }
     });
   }
@@ -264,34 +318,21 @@ export default class Map extends Component {
               showsUserLocation={true}>
 
               {/* --- show the marker --- */}
-              {this.state.start['latitude'] ?
-                <MapView.Marker
-                  ref={(ref) => { this.marker = ref; }}
-                  draggable
-                  onDragEnd={(e) => this.setNewStartingPoint(e.nativeEvent.coordinate)}
-                  coordinate={{
-                    latitude:  this.state.start.latitude,
-                    longitude: this.state.start.longitude
-                  }}
-                  title={"Starting point"}
-                  description={this.state.startingPointName}
-                />
-              : null}
-              {this.state.destination['latitude'] ?
-                <MapView.Marker
-                  ref={(ref) => { this.marker = ref; }}
-                  draggable
-                  onDragEnd={(e) => this.setNewDestination(e.nativeEvent.coordinate)}
-                  coordinate={{
-                    latitude:  this.state.destination.latitude,
-                    longitude: this.state.destination.longitude
-                  }}
-                  title={"Destination"}
-                  description={this.state.destinationName}
-                />
-              : null}
-
+              {this.state.markers.map(function(marker) {
+                if (marker.coordinate['latitude']) {
+                  return <MapView.Marker 
+                    draggable
+                    onDragEnd={marker.draggingFunction}
+                    coordinate={marker.coordinate}
+                    title={marker.title}
+                    description={marker.description}
+                  />  
+                }else{
+                  return null
+                }   
+              })}
             </MapView>
+
             <View style={styles.inputBox}>
               <Icon style={styles.imageStyle} size={15} name={'location-searching'} />
               <TextInput style={{ flex: 1 }}
@@ -317,13 +358,12 @@ export default class Map extends Component {
             
             <View style={styles.bottom}>
               {/* --- Shipment list --- */}
-              {/* this.state.start['latitude'] && this.state.destination['latitude']  */}
-              {this.state.start['latitude'] ?
-                <TouchableOpacity onPress={this.shipment_detail.bind(this)}>
+              {this.state.start['latitude'] && this.state.destination['latitude'] ?
+                <TouchableOpacity style={styles.styletouchable} onPress={this.shipment_detail.bind(this)}>
                   <Icon style={[styles.imageButton, {backgroundColor: 'tomato'}, {color: 'white'}]} size={25} name={'done'}/>
                 </TouchableOpacity>
               : null}
-              <TouchableOpacity onPress={this.currentLocation.bind(this)}>
+              <TouchableOpacity style={styles.styletouchable} onPress={this.currentLocation.bind(this)}>
                 <Icon style={styles.imageButton} size={25} name={'my-location'}/>
               </TouchableOpacity>
             </View>
@@ -364,6 +404,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 8,
+  },
+  styletouchable: {
+    width: 40,
+    height: 40,
     marginLeft: 350,
     marginVertical: 5,
   },

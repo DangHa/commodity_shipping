@@ -21,6 +21,7 @@ class Shipment extends Component{
 
   componentDidMount() {
     console.log("######################")
+    console.log(this.props.item.markers)
   }
 
 
