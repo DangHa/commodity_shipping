@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, Text, TouchableOpacity, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import RetroMapStyles from '../../../assets/RetroMapStyles'
@@ -20,8 +20,7 @@ class Shipment extends Component{
   }
 
   componentDidMount() {
-    console.log("######################")
-    console.log(this.props.item.markers)
+
   }
 
 
@@ -32,7 +31,7 @@ class Shipment extends Component{
 
   requestShipmentForPackage(item){
     console.log("SEND TO SERVER FOR CONNECT")
-    console.log(item)
+
     this.props.navigation.navigate("MapHome")
   }
 
@@ -101,17 +100,61 @@ export default class History extends Component {
   constructor(props) {
     super(props);
 
-    this.state ={
-      shipments: []
+    const {state} = this.props.navigation;
+
+    this.state = {
+      startingPointName : state.params.startingPointName,
+      destinationName   : state.params.destinationName,
+      weight            : "",
+      space             : "",
+      phoneOfReceiver   : "",
+      suggested_shipments: []
     };
+
   }
 
   async componentDidMount() {
 
     console.log("get data of user from serve");
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        startingPointName: this.state.startingPointName,
+        destinationName  : this.state.destinationName,
+        weight           : this.state.weight,
+        space            : this.state.space
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+  
+    var result = await fetch('http://172.18.0.1:8080/shipments/getSuggestedShipment', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     
+    
+    console.log("data:  ", result)
+    if (result.length !== 0){
+      this.setState({suggested_shipments: result[0]})
+    } else {
+      alert("There are something wrong")
+    }
+
+    // need to fix the data of table again (need marker)
+
     this.setState({
-      shipments: [
+      suggested_shipments: [
         {
           id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
           title: 'First Item',
@@ -196,7 +239,7 @@ export default class History extends Component {
         </View>
 
         <FlatList
-          data={this.state.shipments}
+          data={this.state.suggested_shipments}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
             <Shipment {...this.props} item = {item}/>

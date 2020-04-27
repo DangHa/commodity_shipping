@@ -1,4 +1,4 @@
-const userQuery = require('../../models/tables/userQuery');
+const userQuery = require('../models/tables/userQuery');
 
 module.exports = {
 

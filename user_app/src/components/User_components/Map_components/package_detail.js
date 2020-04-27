@@ -7,12 +7,12 @@ export default class PackageDetail extends Component {
 
     const {state} = this.props.navigation;
 
-    this.state ={
-      route             : state.params.route,
+    this.state = {
       startingPointName : state.params.startingPointName,
       destinationName   : state.params.destinationName,
-      weightCapacity    : 0,
-      spaceCapacity     : 0,
+      weight            : "",
+      space             : "",
+      phoneOfReceiver   : ""
     };
 
     this.sendToServer.bind(this)
@@ -20,10 +20,12 @@ export default class PackageDetail extends Component {
 
   sendToServer = async()=>{
     // Send shipment
-    console.log("Send to server shipment controller")
     this.props.navigation.navigate("ShipmentList", {
         startingPointName: this.state.startingPointName,
-        destinationName:   this.state.destinationName
+        destinationName  : this.state.destinationName,
+        weight           : this.state.weight,
+        space            : this.state.space,
+        phoneOfReceiver  : this.state.phoneOfReceiver
     });
   }
 
@@ -31,30 +33,47 @@ export default class PackageDetail extends Component {
     return (
       <View style={styles.container}>
         <Text>
-          <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Route:{"\n"}{"\n"}</Text>
+          <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Route:{"\n"}</Text>
           <Text style={{fontSize: 14}}>{this.state.startingPointName}</Text>
           <Text style={[{fontSize: 17}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
-          <Text style={{fontSize: 14}}>{this.state.destinationName}</Text> 
+          <Text style={{fontSize: 14}}>{this.state.destinationName}{"\n"}</Text> 
         </Text>
-    
-        <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>{"\n"}Weight capacity: (Kg)</Text>
-        <TextInput style={styles.inputBox}
-          onChangeText={(weightCapacity) => this.setState({weightCapacity})}
-          underlineColorAndroid='rgba(0,0,0,0)' 
-          placeholder="Weight capacity"
-          placeholderTextColor = "#002f6c"
-          selectionColor="#fff"
-          keyboardType="numeric"/>
+
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text>{"\n"}{"\n"}{"\n"}</Text>
+          <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Weight (kg):           </Text>
+          <TextInput style={styles.inputBox}
+            onChangeText={(weight) => this.setState({weight})}
+            underlineColorAndroid='rgba(0,0,0,0)' 
+            placeholder="Weight capacity"
+            placeholderTextColor = "#002f6c"
+            selectionColor="#fff"
+            keyboardType="numeric"/>
+        </View>
           
-        <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Space capacity: (m^3)</Text>
-        <TextInput style={styles.inputBox}
-          onChangeText={(spaceCapacity) => this.setState({spaceCapacity})}
-          underlineColorAndroid='rgba(0,0,0,0)' 
-          placeholder="Space capacity"
-          placeholderTextColor = "#002f6c"
-          selectionColor="#fff"
-          keyboardType="numeric"/>
-        
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text>{"\n"}{"\n"}{"\n"}</Text>
+          <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Space (m^3):         </Text>
+          <TextInput style={styles.inputBox}
+            onChangeText={(space) => this.setState({space})}
+            underlineColorAndroid='rgba(0,0,0,0)' 
+            placeholder="Space capacity"
+            placeholderTextColor = "#002f6c"
+            selectionColor="#fff"
+            keyboardType="numeric"/>
+        </View>
+
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text>{"\n"}{"\n"}{"\n"}</Text>
+          <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Phone of receiver:</Text>
+          <TextInput style={styles.inputBox}
+            onChangeText={(phoneOfReceiver) => this.setState({phoneOfReceiver})}
+            underlineColorAndroid='rgba(0,0,0,0)' 
+            placeholder="Phone of receiver"
+            placeholderTextColor = "#002f6c"
+            selectionColor="#fff"
+            keyboardType="numeric"/>
+        </View>
 
         <View style={styles.bottom}>
           <TouchableOpacity style={styles.button}> 
@@ -72,13 +91,15 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   inputBox: {
-    width: 350,
+    width: 150,
+    height: 40,
     backgroundColor: '#eeeeee', 
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    borderRadius: 20,
+    fontSize: 15,
     color: '#002f6c',
-    marginVertical: 10
+    marginVertical: -10,
+    marginLeft: 20,
+    textAlign: 'center'
   },
   button: {
     width: 280,

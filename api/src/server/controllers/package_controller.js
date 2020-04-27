@@ -1,4 +1,4 @@
-const packageQuery = require('../../models/tables/packageQuery');
+const packageQuery = require('../models/tables/packageQuery');
 
 module.exports = {
 

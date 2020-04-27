@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const userController = require('../controllers/user/user_authentication');
+const userController = require('../controllers/user_authentication');
 
 router.get('/setDatabase', () => {
   userController.setDatabase();
