@@ -14,19 +14,6 @@ CREATE TABLE public."Driver"(
 	address VARCHAR (100)
 );
 
-CREATE TABLE public."Package"(
-	package_id serial PRIMARY KEY,
-	user_id INTEGER REFERENCES public."User"(user_id),
-	shipment_id INTEGER REFERENCES public."Shipment"(shipment_id),
-	weight INTEGER NOT NULL,
-	space INTEGER NOT NULL,
-	price INTEGER,
-	starting_point VARCHAR,
-	destination VARCHAR,
-	phone_of_receiver VARCHAR (50),
-	status VARCHAR (100)
-);
-
 CREATE TABLE public."BOTroad"(
 	road_id serial PRIMARY KEY,
 	name VARCHAR (100) NOT NULL
@@ -46,6 +33,12 @@ CREATE TABLE public."BOTprice"(
 
 CREATE TABLE public."Route"(
 	route_id serial PRIMARY KEY,
+	starting_point VARCHAR,
+	latitude_starting_point VARCHAR,
+	longitude_starting_point VARCHAR,
+	destination VARCHAR,
+	latitude_destination VARCHAR,
+	longitude_destination VARCHAR,
 	roadDescription VARCHAR,
 	length INTEGER NOT NULL
 );
@@ -64,5 +57,23 @@ CREATE TABLE public."Shipment"(
 	route_id INTEGER REFERENCES public."Route"(route_id),
 	starting_date DATE,
 	weightCapacity INTEGER,
-	spaceCapacity INTEGER
+	spaceCapacity INTEGER,
+	fee INTEGER
+);
+
+CREATE TABLE public."Package"(
+	package_id serial PRIMARY KEY,
+	user_id INTEGER REFERENCES public."User"(user_id),
+	shipment_id INTEGER REFERENCES public."Shipment"(shipment_id),
+	weight INTEGER NOT NULL,
+	space INTEGER NOT NULL,
+	price INTEGER,
+	starting_point VARCHAR,
+	latitude_starting_point VARCHAR,
+	longitude_starting_point VARCHAR,
+	destination VARCHAR,
+	latitude_destination VARCHAR,
+	longitude_destination VARCHAR,
+	phone_of_receiver VARCHAR (50),
+	status VARCHAR (100)
 );
