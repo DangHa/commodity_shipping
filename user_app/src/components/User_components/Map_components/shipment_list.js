@@ -15,18 +15,27 @@ class Shipment extends Component{
         longitude: 105.8415019,
         latitudeDelta: 0.1,
         longitudeDelta: 0.1
-      }
+      },
+      markers: [
+        {
+          "title": "Start",
+          "description": "",
+          "coordinate": {
+            "latitude": 21.0250615,
+            "longitude": 105.8411814,
+          }
+        },
+        {  
+          "title": "Destination",
+          "description": "",
+          "coordinate": {
+            "latitude": 21.0042737,
+            "longitude": 105.8415019,
+          }
+        }
+      ],
+      typeOfCar: ""
     };
-  }
-
-  componentDidMount() {
-
-  }
-
-
-  onMapRegionChange(region) {
-    console.log(region)
-    this.setState({ region });
   }
 
   requestShipmentForPackage(item){
@@ -35,17 +44,88 @@ class Shipment extends Component{
     this.props.navigation.navigate("MapHome")
   }
 
+  async getShipmentDetail(shipment_id){
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        shipment_id: shipment_id,
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+  
+    var result = await fetch('http://172.18.0.1:8080/shipments/getShipmentDetail', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    
+    
+    if (result.length !== 0){
+      this.setState({
+        markers: [
+          {
+            "coordinate": {
+              "latitude": parseFloat(result[0].latitude_starting_point), 
+              "longitude": parseFloat(result[0].longitude_starting_point)
+            }, 
+            "description": result[0].starting_point, 
+            "title": "Start",
+          }, 
+          {
+            "coordinate": {
+              "latitude": parseFloat(result[0].latitude_destination),
+              "longitude": parseFloat(result[0].longitude_destination)
+            },
+            "description": result[0].destination,
+            "title": "Destination",
+          }
+        ]
+      })
+      this.setState({
+        typeOfCar: result[0].name,
+      })
+
+    } else {
+      alert("There are something wrong")
+    }
+
+    this.setState({
+      region: {
+        latitude: parseFloat(result[0].latitude_starting_point),
+        longitude: parseFloat(result[0].longitude_starting_point),
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
+      }
+    })
+
+    this.setState({showChildList: !this.state.showChildList})
+  }
+
   render() {
     return(
       <View style={styles.flatview}>
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
-            <Text style={styles.route}>{this.props.item.id}</Text>
-            <Text style={styles.date}>{this.props.item.title}</Text>
+            <Text style={styles.major}>{this.props.item.starting_date}</Text>
+
+            <Text>
+              <Text style={styles.minor}>  {this.props.item.starting_point}</Text>
+              <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
+              <Text style={styles.minor}>{this.props.item.destination}</Text>
+            </Text>  
           </View>
 
           <View style={{ flex: 0}}>
-            <TouchableOpacity onPress={() => this.setState({showChildList: !this.state.showChildList})}> 
+            <TouchableOpacity onPress={() => this.getShipmentDetail(this.props.item.shipment_id)}> 
               <Icon style={{color: 'grey'}} size={25} name={'expand-more'}/>
             </TouchableOpacity>
           </View>
@@ -58,9 +138,9 @@ class Shipment extends Component{
               style={styles.map}
               customMapStyle={ RetroMapStyles }
               region={this.state.region}
-              onRegionChangeComplete={(reg) => this.onMapRegionChange(reg)}>
+              onRegionChangeComplete={(reg) => this.setState({ region: reg })}>
               
-              {this.props.item.markers.map(marker => (
+              {this.state.markers.map(marker => (
                 <MapView.Marker 
                   coordinate={marker.coordinate}
                   title={marker.title}
@@ -70,11 +150,12 @@ class Shipment extends Component{
             
               {/* Need to draw a route */}
             </MapView>
+
             <Text></Text>
             <View style={{ flexDirection:"row", paddingBottom: 10}}>
               <View style={{ flex: 1, paddingLeft: 10}}>
-                <Text style={styles.date}>Price: </Text>
-                <Text style={styles.date}>Starting Date:</Text>
+                <Text style={{fontSize: 15}}>Type of car: {this.state.typeOfCar}</Text>
+                <Text style={{fontSize: 15}}>Price: </Text>
               </View>
 
               <View style={{ flex: 0, paddingRight: 15}}>
@@ -82,7 +163,6 @@ class Shipment extends Component{
                   <Text style={styles.buttonText}>
                     Choose 
                   </Text>
-                  {/* <Icon style={{color: 'tomato'}} size={30} name={'check-circle'}/> */}
                 </TouchableOpacity>
               </View>
                 
@@ -115,8 +195,6 @@ export default class History extends Component {
 
   async componentDidMount() {
 
-    console.log("get data of user from serve");
-
     // Send In here
     let data = {
       method: 'POST',
@@ -144,85 +222,13 @@ export default class History extends Component {
             });
     
     
-    console.log("data:  ", result)
     if (result.length !== 0){
-      this.setState({suggested_shipments: result[0]})
+      this.setState({suggested_shipments: result})
     } else {
       alert("There are something wrong")
     }
 
     // need to fix the data of table again (need marker)
-
-    this.setState({
-      suggested_shipments: [
-        {
-          id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-          title: 'First Item',
-          markers: [
-            {  
-              title: "Start",
-              description: "Bach khoa",
-              coordinate: {
-                latitude: 21.0042737,
-                longitude: 105.8415019,
-              }
-            },
-            {
-              title: "Destination",
-              description: "Ga Ha Noi",
-              coordinate: {
-                latitude: 21.0250615,
-                longitude: 105.8411814,
-              }
-            }
-          ]
-        },
-        {
-          id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-          title: 'Second Item',
-          markers: [
-            {
-              title: "Start",
-              description: "Ga Ha Noi",
-              coordinate: {
-                latitude: 21.0250615,
-                longitude: 105.8411814,
-              }
-            },
-            {  
-              title: "Destination",
-              description: "Bach khoa",
-              coordinate: {
-                latitude: 21.0042737,
-                longitude: 105.8415019,
-              }
-            }
-          ]
-        },
-        {
-          id: '58694a0f-3da1-471f-bd96-145571e29d72',
-          title: 'Third Item',
-          markers: [
-            {  
-              title: "Start",
-              description: "Bach khoa",
-              coordinate: {
-                latitude: 21.0042737,
-                longitude: 105.8415019,
-              }
-            },
-            {
-              title: "Destination",
-              description: "Ga Ha Noi",
-              coordinate: {
-                latitude: 21.0250615,
-                longitude: 105.8411814,
-              }
-            }
-          ]
-        },
-      ]
-    })
   }
 
   PriceLowToHigh() {
@@ -278,12 +284,13 @@ const styles = StyleSheet.create({
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
   },
-  route: {
+  major: {
     fontFamily: 'Verdana',
     fontSize: 16
   },
-  date: {
-    color: 'gray'
+  minor: {
+    color: 'gray',
+    fontSize: 15
   },
   button: {
     width: 60,
