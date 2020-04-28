@@ -1,10 +1,12 @@
-const shipmentTable = require('../models/tables/shipmentTable')
+const shipmentTable = require('../models/shipmentTable')
 
 module.exports = {
 
   async getSuggestedShipment(req, res) {
     const Phone = req.body.phone;
-    
+
+    // need a algoritm for suggesting shipment and reckon the expense
+
     let result = await shipmentTable.getSuggestedShipment(Phone)
 
     response = JSON.stringify(result)
@@ -12,9 +14,10 @@ module.exports = {
   },
 
   async getShipmentDetail(req, res) {
-    const package_id = req.body.package_id;
+    const shipment_id = req.body.shipment_id;
     
-    const result = await shipmentTable.getShipmentDetail(package_id);
+    const result = await shipmentTable.getShipmentDetail(shipment_id);
+
     res.send(result);
   },
   

@@ -1,4 +1,4 @@
-const pool = require('../connectToPostgreSQL')
+const pool = require('./connectToPostgreSQL')
 
 module.exports = {
 
