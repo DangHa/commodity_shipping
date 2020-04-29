@@ -73,8 +73,12 @@ export default class Map extends Component {
 
   shipment_detail() {
     this.props.navigation.navigate("PackageDetail", {
-      startingPointName: this.state.startingPointName,
-      destinationName:   this.state.destinationName
+      startingPointName        : this.state.startingPointName,
+      latitute_starting_point  : this.state.start.latitude,
+      longitude_starting_point : this.state.start.longitude,
+      destinationName          : this.state.destinationName,
+      latitude_destination     : this.state.start.latitude,
+      longitude_destination    : this.state.start.longitude
     });
   }
 

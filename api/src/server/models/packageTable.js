@@ -2,6 +2,47 @@ const pool = require('./connectToPostgreSQL')
 
 module.exports = {
 
+  async createNewPackage(user_id,
+                        shipment_id,
+                        weight,
+                        space,
+                        price,
+                        startingPointName,
+                        latitute_starting_point,
+                        longitude_starting_point,
+                        destinationName,
+                        latitude_destination,
+                        longitude_destination,
+                        phoneOfReceiver) {
+                          
+    try{
+      query = `
+        INSERT INTO public."Package"(
+          user_id,
+          shipment_id,
+          weight,
+          space,
+          price,
+          starting_point,
+          latitude_starting_point,
+          longitude_starting_point,
+          destination,
+          latitude_destination,
+          longitude_destination,
+          phone_of_receiver,
+          status)
+        VALUES ('${user_id}', '${shipment_id}', '${weight}',
+                '${space}', '${price}', '${startingPointName}', 
+                '${latitute_starting_point}', '${longitude_starting_point}',
+                '${destinationName}', '${latitude_destination}', '${longitude_destination}',
+                '${phoneOfReceiver}', 'waitting')`;
+
+        var result = await pool.query(query);
+        return true
+
+    }catch(e){}
+  },
+
   async getPackageDetail(package_id) {
     try{
         query = `

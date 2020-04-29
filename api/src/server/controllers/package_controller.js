@@ -1,7 +1,41 @@
 const packageTable = require('../models/packageTable');
+const userQuery = require('../models/userQuery');
 
 module.exports = {
 
+  async createNewPackage(req, res) {
+    const shipment_id              = req.body.shipment_id;
+    const userphone                = req.body.userphone;
+    const startingPointName        = req.body.startingPointName;
+    const latitute_starting_point  = req.body.latitute_starting_point;
+    const longitude_starting_point = req.body.longitude_starting_point;
+    const destinationName          = req.body.destinationName;
+    const latitude_destination     = req.body.latitude_destination;
+    const longitude_destination    = req.body.longitude_destination;
+    const weight                   = req.body.weight;
+    const space                    = req.body.space;
+    const phoneOfReceiver          = req.body.phoneOfReceiver;
+    const price                    = "100";
+    
+    const userinfor = await userQuery.getInfoUser(userphone);
+
+    const result = await packageTable.createNewPackage(
+                                        userinfor[0].user_id,
+                                        shipment_id,
+                                        weight,
+                                        space,
+                                        price,
+                                        startingPointName,
+                                        latitute_starting_point,
+                                        longitude_starting_point,
+                                        destinationName,
+                                        latitude_destination,
+                                        longitude_destination,
+                                        phoneOfReceiver)
+     
+    res.send(JSON.stringify(result));
+  },
+  
   async getPackageByPhone(req, res) {
     const Phone = req.body.phone;
     

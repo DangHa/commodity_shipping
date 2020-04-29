@@ -8,11 +8,15 @@ export default class PackageDetail extends Component {
     const {state} = this.props.navigation;
 
     this.state = {
-      startingPointName : state.params.startingPointName,
-      destinationName   : state.params.destinationName,
-      weight            : "",
-      space             : "",
-      phoneOfReceiver   : ""
+      startingPointName        : state.params.startingPointName,
+      latitute_starting_point  : state.params.latitute_starting_point,
+      longitude_starting_point : state.params.longitude_starting_point,
+      destinationName          : state.params.destinationName,
+      latitude_destination     : state.params.latitude_destination,
+      longitude_destination    : state.params.longitude_destination,
+      weight                   : "",
+      space                    : "",
+      phoneOfReceiver          : ""
     };
 
     this.sendToServer.bind(this)
@@ -21,11 +25,15 @@ export default class PackageDetail extends Component {
   sendToServer = async()=>{
     // Send shipment
     this.props.navigation.navigate("ShipmentList", {
-        startingPointName: this.state.startingPointName,
-        destinationName  : this.state.destinationName,
-        weight           : this.state.weight,
-        space            : this.state.space,
-        phoneOfReceiver  : this.state.phoneOfReceiver
+        startingPointName        : this.state.startingPointName,
+        latitute_starting_point  : this.state.latitute_starting_point,
+        longitude_starting_point : this.state.longitude_starting_point,
+        destinationName          : this.state.destinationName,
+        latitude_destination     : this.state.latitude_destination,
+        longitude_destination    : this.state.longitude_destination,
+        weight                   : this.state.weight,
+        space                    : this.state.space,
+        phoneOfReceiver          : this.state.phoneOfReceiver
     });
   }
 

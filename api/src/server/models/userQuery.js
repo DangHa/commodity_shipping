@@ -34,7 +34,7 @@ module.exports = {
 
   async getInfoUser(Phone) {
     result = await userTable.findUserByPhone(Phone)
-    return JSON.stringify(result)
+    return result
   },
 
   async updateInforUser(OldPhone, Phone, Username, Address){

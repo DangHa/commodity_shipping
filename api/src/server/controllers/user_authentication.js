@@ -40,7 +40,7 @@ module.exports = {
     const Phone = req.body.phone;
     
     const result = await userQuery.getInfoUser(Phone);
-    res.send(result);
+    res.send(JSON.stringify(result));
   },
   
   async updateInforUser(req, res) {

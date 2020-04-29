@@ -3,6 +3,10 @@ const router = express.Router();
 
 const packageController = require('../controllers/package_controller');
 
+router.post('/createNewPackage', (req, res) => {
+    packageController.createNewPackage(req, res);
+});
+
 router.post('/getPackageByPhone', (req, res) => {
     packageController.getPackageByPhone(req, res);
 });

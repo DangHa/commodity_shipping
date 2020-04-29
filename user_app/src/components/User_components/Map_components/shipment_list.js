@@ -38,8 +38,48 @@ class Shipment extends Component{
     };
   }
 
-  requestShipmentForPackage(item){
-    console.log("SEND TO SERVER FOR CONNECT")
+  async requestShipmentForPackage(item){
+    let userphone = await AsyncStorage.getItem('userPhone');
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        shipment_id               : item.shipment_id,
+        userphone                 : userphone,
+        startingPointName         : this.props.startingPointName,
+        latitute_starting_point   : this.props.latitute_starting_point,
+        longitude_starting_point  : this.props.longitude_starting_point,
+        destinationName           : this.props.destinationName,
+        latitude_destination      : this.props.latitude_destination,
+        longitude_destination     : this.props.longitude_destination,
+        weight                    : this.props.weight,
+        space                     : this.props.space,
+        phoneOfReceiver           : this.props.phoneOfReceiver
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+  
+    var result = await fetch('http://172.18.0.1:8080/package/createNewPackage', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    
+    
+    if (result === true ){
+      alert("Your request has been sent. Now you can see it in your package list !")
+    } else {
+      alert("There are something wrong")
+    }
 
     this.props.navigation.navigate("MapHome")
   }
@@ -183,18 +223,21 @@ export default class History extends Component {
     const {state} = this.props.navigation;
 
     this.state = {
-      startingPointName : state.params.startingPointName,
-      destinationName   : state.params.destinationName,
-      weight            : "",
-      space             : "",
-      phoneOfReceiver   : "",
-      suggested_shipments: []
+      startingPointName        : state.params.startingPointName,
+      latitute_starting_point  : state.params.latitute_starting_point,
+      longitude_starting_point : state.params.longitude_starting_point,
+      destinationName          : state.params.destinationName,
+      latitude_destination     : state.params.latitude_destination,
+      longitude_destination    : state.params.longitude_destination,
+      weight                   : state.params.weight,
+      space                    : state.params.space,
+      phoneOfReceiver          : state.params.phoneOfReceiver,
+      suggested_shipments      : []
     };
 
   }
 
   async componentDidMount() {
-
     // Send In here
     let data = {
       method: 'POST',
@@ -227,8 +270,6 @@ export default class History extends Component {
     } else {
       alert("There are something wrong")
     }
-
-    // need to fix the data of table again (need marker)
   }
 
   PriceLowToHigh() {
@@ -248,7 +289,18 @@ export default class History extends Component {
           data={this.state.suggested_shipments}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
-            <Shipment {...this.props} item = {item}/>
+            <Shipment {...this.props} 
+                      item                      = {item} 
+                      startingPointName         = {this.state.startingPointName}
+                      latitute_starting_point   = {this.state.latitute_starting_point}
+                      longitude_starting_point  = {this.state.longitude_starting_point}
+                      destinationName           = {this.state.destinationName}
+                      latitude_destination      = {this.state.latitude_destination}
+                      longitude_destination     = {this.state.longitude_destination}
+                      weight                    = {this.state.weight}
+                      space                     = {this.state.space}
+                      phoneOfReceiver           = {this.state.phoneOfReceiver}/>
+
           }
           keyExtractor={item => item.title}
         />
