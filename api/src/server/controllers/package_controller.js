@@ -15,7 +15,7 @@ module.exports = {
     const weight                   = req.body.weight;
     const space                    = req.body.space;
     const phoneOfReceiver          = req.body.phoneOfReceiver;
-    const price                    = "100";
+    const price                    = req.body.price;
     
     const userinfor = await userQuery.getInfoUser(userphone);
 

@@ -57,7 +57,8 @@ class Shipment extends Component{
         longitude_destination     : this.props.longitude_destination,
         weight                    : this.props.weight,
         space                     : this.props.space,
-        phoneOfReceiver           : this.props.phoneOfReceiver
+        phoneOfReceiver           : this.props.phoneOfReceiver,
+        price                     : this.props.item.price
       }),
       headers: {
         'Accept':       'application/json',
@@ -195,7 +196,7 @@ class Shipment extends Component{
             <View style={{ flexDirection:"row", paddingBottom: 10}}>
               <View style={{ flex: 1, paddingLeft: 10}}>
                 <Text style={{fontSize: 15}}>Type of car: {this.state.typeOfCar}</Text>
-                <Text style={{fontSize: 15}}>Price: </Text>
+                <Text style={{fontSize: 15}}>Price: {this.props.item.price}</Text>
               </View>
 
               <View style={{ flex: 0, paddingRight: 15}}>

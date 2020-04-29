@@ -9,6 +9,11 @@ module.exports = {
 
     let result = await shipmentTable.getSuggestedShipment(Phone)
 
+    // calculate the price 
+    for (var i = 0; i < result.length; i++) {
+      result[i]["price"] = "100"
+    }
+
     response = JSON.stringify(result)
     res.send(response);
   },
