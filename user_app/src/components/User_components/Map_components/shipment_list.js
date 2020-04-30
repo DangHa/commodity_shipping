@@ -58,7 +58,8 @@ class Shipment extends Component{
         weight                    : this.props.weight,
         space                     : this.props.space,
         phoneOfReceiver           : this.props.phoneOfReceiver,
-        price                     : this.props.item.price
+        price                     : this.props.item.price,
+        package_id                : this.props.package_id
       }),
       headers: {
         'Accept':       'application/json',
@@ -82,7 +83,12 @@ class Shipment extends Component{
       alert("There are something wrong")
     }
 
-    this.props.navigation.navigate("MapHome")
+    if (this.props.package_id === null) {
+      this.props.navigation.navigate("MapHome")
+    }else{
+      this.props.navigation.navigate("History")
+    }
+    
   }
 
   async getShipmentDetail(shipment_id){
@@ -233,6 +239,7 @@ export default class History extends Component {
       weight                   : state.params.weight,
       space                    : state.params.space,
       phoneOfReceiver          : state.params.phoneOfReceiver,
+      package_id               : state.params.package_id,
       suggested_shipments      : []
     };
 
@@ -300,7 +307,8 @@ export default class History extends Component {
                       longitude_destination     = {this.state.longitude_destination}
                       weight                    = {this.state.weight}
                       space                     = {this.state.space}
-                      phoneOfReceiver           = {this.state.phoneOfReceiver}/>
+                      phoneOfReceiver           = {this.state.phoneOfReceiver}
+                      package_id                = {this.state.package_id}/>
 
           }
           keyExtractor={item => item.title}

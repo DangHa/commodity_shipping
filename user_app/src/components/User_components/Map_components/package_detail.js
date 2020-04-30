@@ -19,10 +19,10 @@ export default class PackageDetail extends Component {
       phoneOfReceiver          : ""
     };
 
-    this.sendToServer.bind(this)
+    this.chooseShipment.bind(this)
   }
 
-  sendToServer = async()=>{
+  chooseShipment = async()=>{
     // Send shipment
     this.props.navigation.navigate("ShipmentList", {
         startingPointName        : this.state.startingPointName,
@@ -33,7 +33,8 @@ export default class PackageDetail extends Component {
         longitude_destination    : this.state.longitude_destination,
         weight                   : this.state.weight,
         space                    : this.state.space,
-        phoneOfReceiver          : this.state.phoneOfReceiver
+        phoneOfReceiver          : this.state.phoneOfReceiver,
+        package_id               : null
     });
   }
 
@@ -85,7 +86,7 @@ export default class PackageDetail extends Component {
 
         <View style={styles.bottom}>
           <TouchableOpacity style={styles.button}> 
-            <Text style={styles.buttonText} onPress={this.sendToServer}>Find Shipment</Text>
+            <Text style={styles.buttonText} onPress={this.chooseShipment}>Find Shipment</Text>
           </TouchableOpacity>
         </View>
       </View>

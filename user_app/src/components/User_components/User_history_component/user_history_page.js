@@ -13,7 +13,6 @@ class Package extends Component{
   }
 
   async getDetailPackage() {
-
     // Show the dropdown
     this.setState({showChildList: !this.state.showChildList})
 
@@ -51,8 +50,18 @@ class Package extends Component{
   }
 
   requestShipmentForPackage(item){
-    console.log("Wait when finish create a shipment ")
-    this.props.navigation.navigate("ShipmentList")
+    this.props.navigation.navigate("ShipmentList", {
+      startingPointName        : item.starting_point,
+      latitute_starting_point  : this.state.packageDetail.latitude_starting_point,
+      longitude_starting_point : this.state.packageDetail.longitude_starting_point,
+      destinationName          : item.destination,
+      latitude_destination     : this.state.packageDetail.latitude_destination,
+      longitude_destination    : this.state.packageDetail.longitude_destination,
+      weight                   : this.state.packageDetail.weight,
+      space                    : this.state.packageDetail.space,
+      phoneOfReceiver          : this.state.packageDetail.phone_of_receiver,
+      package_id               : this.state.packageDetail.package_id
+    });
   }
 
   render() {
@@ -120,8 +129,9 @@ export default class History extends Component {
     super(props);
 
     this.state ={
-      shipments: []
+      packages: []
     };
+    
   }
 
   async componentDidMount() {  
@@ -151,11 +161,15 @@ export default class History extends Component {
             });
           
     if (result.length !== 0){
-      this.setState({shipments: result})
+      this.setState({packages: result})
     } else {
       alert("You dont have any package yet")
     }
   }
+
+  willFocus = this.props.navigation.addListener(
+    'willFocus', () => {this.componentDidMount()}
+  );
 
   render() {
     return (
@@ -164,7 +178,7 @@ export default class History extends Component {
           Your Packages {"\n"}
         </Text>
         <FlatList
-          data={this.state.shipments}
+          data={this.state.packages}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
             <Package {...this.props} item = {item}/>

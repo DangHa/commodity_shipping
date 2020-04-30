@@ -47,7 +47,7 @@ export default class Map extends Component {
       ]
     }
   }
-
+  
   componentDidMount() {
     this.getInitialState();
   }
@@ -71,7 +71,7 @@ export default class Map extends Component {
     this.setState({ region });
   }
 
-  shipment_detail() {
+  package_detail() {
     this.props.navigation.navigate("PackageDetail", {
       startingPointName        : this.state.startingPointName,
       latitute_starting_point  : this.state.start.latitude,
@@ -389,7 +389,7 @@ export default class Map extends Component {
             <View style={styles.bottom}>
               {/* --- Shipment list --- */}
               {this.state.start['latitude'] && this.state.destination['latitude'] ?
-                <TouchableOpacity style={styles.styletouchable} onPress={this.shipment_detail.bind(this)}>
+                <TouchableOpacity style={styles.styletouchable} onPress={this.package_detail.bind(this)}>
                   <Icon style={[styles.imageButton, {backgroundColor: 'tomato'}, {color: 'white'}]} size={25} name={'done'}/>
                 </TouchableOpacity>
               : null}

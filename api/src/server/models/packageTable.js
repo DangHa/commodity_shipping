@@ -47,10 +47,14 @@ module.exports = {
     try{
         query = `
         SELECT
-            package_id
+            package_id,
             weight,
             space,
             price,
+            latitude_starting_point,
+            longitude_starting_point,
+            latitude_destination,
+            longitude_destination,
             phone_of_receiver,
             public."Driver".phone,
             public."Shipment".starting_date
@@ -84,5 +88,19 @@ module.exports = {
 
     }catch(e){}
   },
+
+  async updatePackageStatus(package_id, shipment_id) {
+    try{
+      query = `
+      UPDATE public."Package"
+      SET status = 'waitting', shipment_id = ${shipment_id}
+      WHERE package_id = ${package_id}`
+            
+      var result = await pool.query(query);
+      
+      return true
+
+    }catch(e){}
+  }
 
 };

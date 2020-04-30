@@ -16,24 +16,31 @@ module.exports = {
     const space                    = req.body.space;
     const phoneOfReceiver          = req.body.phoneOfReceiver;
     const price                    = req.body.price;
-    
-    const userinfor = await userQuery.getInfoUser(userphone);
+    const package_id               = req.body.package_id;
 
-    const result = await packageTable.createNewPackage(
-                                        userinfor[0].user_id,
-                                        shipment_id,
-                                        weight,
-                                        space,
-                                        price,
-                                        startingPointName,
-                                        latitute_starting_point,
-                                        longitude_starting_point,
-                                        destinationName,
-                                        latitude_destination,
-                                        longitude_destination,
-                                        phoneOfReceiver)
-     
-    res.send(JSON.stringify(result));
+    if (package_id !== null){
+      const result = await packageTable.updatePackageStatus(package_id, shipment_id)
+      res.send(JSON.stringify(result));
+    }else{
+      const userinfor = await userQuery.getInfoUser(userphone);
+
+      const result = await packageTable.createNewPackage(
+                                          userinfor[0].user_id,
+                                          shipment_id,
+                                          weight,
+                                          space,
+                                          price,
+                                          startingPointName,
+                                          latitute_starting_point,
+                                          longitude_starting_point,
+                                          destinationName,
+                                          latitude_destination,
+                                          longitude_destination,
+                                          phoneOfReceiver)
+      
+      res.send(JSON.stringify(result));
+    }
+    
   },
   
   async getPackageByPhone(req, res) {
