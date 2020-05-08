@@ -11,4 +11,8 @@ router.post('/getShipmentDetail', (req, res) => {
     shipmentController.getShipmentDetail(req, res);
 });
 
+router.post('/getShipmentsByDriver', (req, res) => {
+    shipmentController.getShipmentsByDriver(req, res);
+});
+
 module.exports = router;

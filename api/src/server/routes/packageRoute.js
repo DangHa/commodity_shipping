@@ -15,4 +15,12 @@ router.post('/getPackageDetail', (req, res) => {
     packageController.getPackageDetail(req, res);
 });
 
+router.post('/getPackageByShipment', (req, res) => {
+    packageController.getPackageByShipment(req, res);
+});
+
+router.post('/updatePackageStatus', (req, res) => {
+    packageController.updatePackageStatus(req, res);
+});
+
 module.exports = router;

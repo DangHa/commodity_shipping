@@ -19,7 +19,7 @@ module.exports = {
     const package_id               = req.body.package_id;
 
     if (package_id !== null){
-      const result = await packageTable.updatePackageStatus(package_id, shipment_id)
+      const result = await packageTable.updatePackageShipment_id(package_id, shipment_id)
       res.send(JSON.stringify(result));
     }else{
       const userinfor = await userQuery.getInfoUser(userphone);
@@ -56,6 +56,31 @@ module.exports = {
     
     const result = await packageTable.getPackageDetail(package_id);
     res.send(JSON.stringify(result));
+  },
+
+  async getWaitingPackageByShipment(req, res) {
+    const shipment_id = req.body.shipment_id;
+
+    const result = await packageTable.getWaitingPackageByShipment(shipment_id);
+
+    res.send(result);
+  },
+
+  async getPackageByShipment(req, res) {
+    const shipment_id = req.body.shipment_id;
+
+    const result = await packageTable.getPackageByShipment(shipment_id);
+
+    res.send(result);
+  },
+
+  async updatePackageStatus(req, res) {
+    const package_id = req.body.package_id;
+    const status = req.body.status;
+
+    const result = await packageTable.updatePackageStatus(package_id, status);
+
+    res.send(result);
   },
   
 };

@@ -89,7 +89,7 @@ module.exports = {
     }catch(e){}
   },
 
-  async updatePackageStatus(package_id, shipment_id) {
+  async updatePackageShipment_id(package_id, shipment_id) {
     try{
       query = `
       UPDATE public."Package"
@@ -101,6 +101,59 @@ module.exports = {
       return true
 
     }catch(e){}
-  }
+  },
 
+  async getWaitingPackageByShipment(shipment_id) {
+    try{
+      query = `
+      SELECT count(package_id)
+      FROM public."Package"
+      where shipment_id = '${shipment_id}' and status = 'waitting'`
+            
+      var result = await pool.query(query);
+
+      return result.rows[0].count
+
+    }catch(e){}
+  },
+
+  async getPackageByShipment(shipment_id) {
+    try{
+      query = `
+      SELECT package_id,
+            phone, 
+            weight, 
+            space, 
+            price, 
+            starting_point, 
+            destination, 
+            phone_of_receiver, 
+            status
+      FROM public."Package"
+      INNER JOIN public."User" ON public."User".user_id = public."Package".user_id
+      where shipment_id = '${shipment_id}' and status != 'refused'
+      Order by status desc`
+            
+      var result = await pool.query(query);
+
+      return result.rows
+
+    }catch(e){}
+  },
+
+  async updatePackageStatus(package_id, status) {
+
+    try{
+      query = `
+      UPDATE public."Package"
+      SET status = '${status}'
+      WHERE package_id = ${package_id}`
+            
+      var result = await pool.query(query);
+      
+      return true
+
+    }catch(e){}
+  }
+  
 };
