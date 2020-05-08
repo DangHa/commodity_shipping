@@ -14,11 +14,6 @@ module.exports = {
 
   },
 
-  // will be fixed
-  async setDatabase() {
-    await userQuery.setupUser();
-  },
-
   async login(req, res) {
     const Phone = req.body.phone;
     const Password = req.body.password;

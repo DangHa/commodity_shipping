@@ -3,15 +3,11 @@ const router = express.Router();
 
 const userController = require('../controllers/user_controller');
 
-router.get('/users', (req, res) => {
-  userController.getAllUsers(req, res);
-});
-
-router.post('/getInfoUser', (req, res) => {
+router.post('/getInfoDriver', (req, res) => {
   userController.getInfoUser(req, res);
 });
 
-router.post('/updateInforUser', (req, res) => {
+router.post('/updateInforDriver', (req, res) => {
   userController.updateInforUser(req, res);
 });
 

@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Router
 app.use('/user', require('./routes/userRoute')); // this command must behind two commands which use to setting bodyPaser
+app.use('/driver', require('./routes/driverRoute'))
 app.use('/package', require('./routes/packageRoute'))
 app.use('/shipments', require('./routes/shipmentRoute'))
 
