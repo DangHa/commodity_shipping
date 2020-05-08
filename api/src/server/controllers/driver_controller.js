@@ -37,7 +37,7 @@ module.exports = {
   async getInfoDriver(req, res) {
     const Phone = req.body.phone;
     
-    const result = await driverTable.getInfoUser(Phone);
+    const result = await driverTable.findDriverByPhone(Phone);
     res.send(JSON.stringify(result));
   },
   
@@ -47,7 +47,16 @@ module.exports = {
     const Username = req.body.username;
     const Address = req.body.address;
     
-    const result = await driverTable.updateInforUser(OldPhone, Phone, Username, Address);
-    res.send(result);
+    var result = []
+    if (OldPhone !== Phone){
+        result = await driverTable.findDriverByPhone(Phone)
+    }
+    
+    if (result.length !== 0) {
+        res.send(JSON.stringify("New phone number has already been registed for another account"))
+    }else{
+        result = await driverTable.updateInforDriver(OldPhone, Phone, Username, Address)
+        res.send(JSON.stringify(true))
+    }
   },
 };

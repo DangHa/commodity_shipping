@@ -17,22 +17,86 @@ export default class Driver extends Component {
       this.signout.bind(this)
   }
 
-  componentDidMount() {
-    console.log("get data of user from serve");
+  async componentDidMount() {
+    let phone = await AsyncStorage.getItem('userPhone');
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        phone: phone
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+
+    var result = await fetch('http://172.18.0.1:8080/driver/getInfoDriver', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json[0]
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    
     this.setState({
-      wantToChange: false
+      wantToChange: false,
+      phone       : result.phone,
+      username    : result.username,
+      address     : result.address
     })
   }
 
-  signout = async()=>{
+  async signout() {
     this.props.navigation.navigate("Loading");
     await AsyncStorage.setItem('loginCheck', "false");
+    await AsyncStorage.setItem('userPhone', "");
   }
 
-  sendNewInformation() {
-    console.log("Send new user information");
-    this.setState({wantToChange: false})
-    console.log(this.state.wantToChange);
+  async sendNewInformation() {
+    let oldPhone = await AsyncStorage.getItem('userPhone');
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        oldPhone: oldPhone,
+        phone: this.state.phone,
+        username: this.state.username,
+        address: this.state.address
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+
+    var result = await fetch('http://172.18.0.1:8080/driver/updateInforDriver', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    if (result === "New phone number has already been registed for another account"){
+      alert(result)
+    } else if (result === true) {
+      alert("Your information has been updated")
+      await AsyncStorage.setItem('userPhone', this.state.phone);
+      this.componentDidMount()
+      this.setState({wantToChange: true})
+    } else {
+      alert("There are something wrong")
+      this.setState({wantToChange: true})
+    }
     // wait send back 
   }
 

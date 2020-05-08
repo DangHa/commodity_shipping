@@ -4,11 +4,11 @@ const router = express.Router();
 const driverController = require('../controllers/driver_controller');
 
 router.post('/getInfoDriver', (req, res) => {
-    driverController.getInfoUser(req, res);
+    driverController.getInfoDriver(req, res);
 });
 
 router.post('/updateInforDriver', (req, res) => {
-    driverController.updateInforUser(req, res);
+    driverController.updateInforDriver(req, res);
 });
 
 router.post('/login', (req, res) => {
