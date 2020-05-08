@@ -21,22 +21,6 @@ module.exports = {
     }catch(e){}
   },
 
-  async findDriverByPhoneAndPassword(Phone, Password) {
-    try{
-        query = `SELECT * FROM public."Driver" 
-            WHERE phone = '${Phone}' AND password = '${Password}'`
-                
-        var result = await pool.query(query);
-        
-        if (result.rows.length !== 0){
-            return true
-        }else{
-            return false
-        }
-
-    }catch(e){}
-  },
-
   async insertDriver(Phone, Password){
     try{
         query = `INSERT INTO public."Driver"(phone, password)

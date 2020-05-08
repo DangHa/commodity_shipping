@@ -23,7 +23,7 @@ module.exports = {
 
     result = await userTable.findUserByPhone(Phone)
 
-    if (result.length !== 0) {
+    if (result.length === 0) {
       await userTable.insertUser(Phone, Password)
       return JSON.stringify(true)
     }else{

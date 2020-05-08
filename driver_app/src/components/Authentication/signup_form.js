@@ -21,14 +21,41 @@ export default class SignUp_Form extends Component {
             if (password !== confirm_password){
                 alert('password and confirm password are not the same');
             }else {
-                this.props.navigation.navigate("App");
-                await AsyncStorage.setItem('loginCheck', "true");
+                var result = false
 
                 // Send In here
+                let data = {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    mode: 'same-origin',
+                    body: JSON.stringify({
+                        phone: phone,
+                        password: password
+                    }),
+                    headers: {
+                      'Accept':       'application/json',
+                      'Content-Type': 'application/json',
+                    }
+                  }
 
-                // Get the result back
-
+                var result = await fetch('http://172.18.0.1:8080/driver/signup', data)
+                    .then((response) => response.json())
+                    .then((json) => {
+                        return json
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+                
                 // handle the result
+                if (result === true){
+                    alert("New account have been created")
+                    await AsyncStorage.setItem('loginCheck', "true");
+                    await AsyncStorage.setItem('userPhone', phone);
+                    this.props.navigation.navigate("App");
+                }else {
+                    alert("This phone number has already account")
+                }
             }
         }catch(error)
         {

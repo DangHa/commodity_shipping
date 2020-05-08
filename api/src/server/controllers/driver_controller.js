@@ -6,24 +6,32 @@ module.exports = {
     const Phone = req.body.phone;
     const Password = req.body.password;
 
-    result = await driverTable.findDriverByPhone(Phone)
+    var result = await driverTable.findDriverByPhone(Phone)
 
+    var response = JSON.stringify(false)
     if (result.length !== 0){
-      console.log(result)
-      return result
+      if (result[0].password === Password) {
+            response = JSON.stringify(true)
+      }
     }else{
-      return JSON.stringify("This phone doesn't have any account")
+        response = JSON.stringify("This phone doesn't have any account")
     }
 
-    res.send(result);
+    res.send(response);
   },
 
   async signup(req, res) {
     const Phone = req.body.phone;
     const Password = req.body.password;
     
-    const result = await driverTable.signup(Phone, Password);
-    res.send(result);
+    var result = await driverTable.findDriverByPhone(Phone);
+
+    var response = JSON.stringify(false)
+    if (result.length === 0) {
+        await driverTable.insertDriver(Phone, Password)
+        response = JSON.stringify(true)
+    }
+    res.send(response);
   },
 
   async getInfoDriver(req, res) {
