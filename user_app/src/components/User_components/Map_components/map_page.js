@@ -259,7 +259,7 @@ export default class Map extends Component {
         this.state.markers[0],
         {
           "coordinate": {"latitude": destination.latitude, "longitude": destination.longitude}, 
-          "description": prediction.destination, 
+          "description": prediction.description, 
           "title": "Destination",
           "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
         }
