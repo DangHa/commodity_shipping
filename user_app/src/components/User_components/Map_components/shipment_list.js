@@ -280,19 +280,10 @@ export default class History extends Component {
     }
   }
 
-  PriceLowToHigh() {
-    console.log("Send to server to get ranking of price")
-  }
-
   render() {
     return (
       <View style={styles.container} >
-        <View style={{ flexDirection:"row" }}>
-          <TouchableOpacity style={[styles.button, {width: 200}]} onPress={this.PriceLowToHigh.bind(this)}> 
-            <Text style={styles.buttonText}>Price: Low to high</Text>
-          </TouchableOpacity>
-        </View>
-
+      
         <FlatList
           data={this.state.suggested_shipments}
           showsVerticalScrollIndicator={false}
