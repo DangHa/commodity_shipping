@@ -15,4 +15,8 @@ router.post('/getShipmentsByDriver', (req, res) => {
     shipmentController.getShipmentsByDriver(req, res);
 });
 
+router.post('/createNewShipment', (req, res) => {
+    shipmentController.createNewShipment(req, res);
+});
+
 module.exports = router;

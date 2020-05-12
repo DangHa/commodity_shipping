@@ -68,6 +68,38 @@ module.exports = {
       return result.rows
 
     }catch(e){}
-  }
+  },
+
+  async createNewShipment(driver_id,
+                          typeOfCar_id,
+                          route_id,
+                          startingDate,
+                          weightCapacity,
+                          spaceCapacity,
+                          fee){
+    try{
+      query = `
+      INSERT INTO public."Shipment"(
+          driver_id, 
+          typeofcar_id, 
+          route_id, 
+          starting_date,
+          weightcapacity,
+          spacecapacity,
+          fee)
+      VALUES (
+          ${driver_id},
+          ${typeOfCar_id},
+          ${route_id},
+          ${startingDate},
+          ${weightCapacity},
+          ${spaceCapacity},
+          ${fee});`;
+
+      var result = await pool.query(query);
+      return true
+
+    }catch(e){}
+  },
 
 };
