@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
 import { DatePicker, Picker, Item } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -12,26 +12,103 @@ export default class ShipmentForm extends Component {
     this.state ={
       route                   : state.params.route,
       startingPointName       : state.params.startingPointName,
-      latitute_starting_point : state.params.destinationName,
-      longitude_starting_point: state.params.destinationName,
+      latitute_starting_point : state.params.latitute_starting_point,
+      longitude_starting_point: state.params.longitude_starting_point,
       destinationName         : state.params.destinationName,
-      latitude_destination    : state.params.destinationName,
-      longitude_destination   : state.params.destinationName,
+      latitude_destination    : state.params.latitude_destination,
+      longitude_destination   : state.params.longitude_destination,
       length                  : 100,
       weightCapacity          : 0,
       spaceCapacity           : 0,
       startingTime            : new Date(),
       typeOfCar_id            : "1",
+      fee                     : 100,
+      passedBOT               : [],
+
+      showDetailFee           : false
     };
 
     this.sendToServer.bind(this)
     this.setDate = this.setDate.bind(this);
   }
 
+  async componentDidMount(){
+    // Get fee and BOTPassed
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        typeOfCar_id   : this.state.typeOfCar_id,
+        roadDescription: this.state.route.coordinates,
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+
+    var result = await fetch('http://172.18.0.1:8080/route/getFeeAndBOTPassed', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    
+    if (result.hasOwnProperty('fee')){
+      this.setState({ fee: result.fee });
+      this.setState({ passedBOT: result.passedBOT });
+    } else {
+      alert("There are something wrong")
+    }
+  }
+
   sendToServer = async()=>{
-    // Send shipment
-    console.log("Send to server shipment controller")
-    console.log(this.state)
+    let phone = await AsyncStorage.getItem('userPhone');
+
+    // Send In here
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        phone                   : phone,
+        typeOfCar_id            : this.state.typeOfCar_id,
+        startingDate            : this.state.startingTime,
+        weightCapacity          : this.state.weightCapacity,
+        spaceCapacity           : this.state.spaceCapacity,
+        startingPointName       : this.state.startingPointName,
+        latitute_starting_point : this.state.latitute_starting_point,
+        longitude_starting_point: this.state.longitude_starting_point,
+        destinationName         : this.state.destinationName,
+        latitude_destination    : this.state.latitude_destination,
+        longitude_destination   : this.state.longitude_destination,
+        roadDescription         : this.state.route.coordinates,
+        length                  : this.state.length,
+        fee                     : this.state.fee
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+
+    var result = await fetch('http://172.18.0.1:8080/shipments/createNewShipment', data)
+            .then((response) => response.json())
+            .then((json) => {
+                return json
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    
+    if (result === true){
+      alert("You have created a new shipment. You can see it on the shipment list")
+    } else {
+      alert("There are something wrong")
+    }
   }
 
   //Date picker 
@@ -53,8 +130,25 @@ export default class ShipmentForm extends Component {
           <Text style={[{fontSize: 17}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
           <Text style={{fontSize: 14}}>{this.state.destinationName}</Text> 
         </Text>
-    
-        <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>{"\n"}Weight capacity: (Kg)</Text>
+
+        <View style={[{flexDirection:"row", marginVertical:5}]}>
+          <Text style={{ flex: 1}}>
+            <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Fee:  </Text>
+            <Text style={{fontSize: 14}}>{this.state.fee}.000 (vnd)</Text>
+          </Text>
+
+          <View style={{ flex: 0, paddingRight: 200}}>
+            <TouchableOpacity onPress={() => this.setState({showDetailFee: !this.state.showDetailFee})}> 
+              <Icon style={{color: '#1565c0'}} size={25} name={'expand-more'}/>
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        {this.state.showDetailFee ?
+           <Text style={[{fontSize: 14, fontStyle: "italic", paddingLeft: 15, paddingBottom: 10}]}>{this.state.passedBOT}</Text>
+        : null}
+
+        <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Weight capacity: (Kg)</Text>
         <TextInput style={styles.inputBox}
           onChangeText={(weightCapacity) => this.setState({weightCapacity})}
           underlineColorAndroid='rgba(0,0,0,0)' 

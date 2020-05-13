@@ -62,6 +62,7 @@ module.exports = {
     const longitude_destination    = req.body.longitude_destination;
     const roadDescription          = req.body.roadDescription;
     const length                   = req.body.length;
+    const fee                      = req.body.fee;
 
     //create route
     const routeResult = await routeTable.createNewRoute(
@@ -71,12 +72,19 @@ module.exports = {
                                         destinationName,
                                         latitude_destination,
                                         longitude_destination,
-                                        roadDescription,
+                                        changeRoadDescriptionToString(roadDescription),
                                         length)
 
+    var route_id = 0                        
+    if (routeResult.rows.length !== 0) {
+      route_id = routeResult.rows[0].route_id
+    }else{
+      res.send(JSON.stringify(false));
+    }
+    
+    //create PassedBOT
+
     //create shipment
-    const BOT_fee = 200
-    const fee = length*11 + BOT_fee //11 is price of 1 liter of gasoline
     const shipmentResult = await shipmentTable.createNewShipment(
                                         driver_id,
                                         typeOfCar_id,
@@ -86,10 +94,18 @@ module.exports = {
                                         spaceCapacity,
                                         fee)
 
-    //create PassedBOT
-    
-    res.send(JSON.stringify(shipmentResult));
-  
+    res.send(JSON.stringify(true));
   },
   
 };
+
+
+// [{lat1, lon1}, {lat2, lon2}]  -->  lat1 lon1 lat2 lon2
+function changeRoadDescriptionToString(roadDescription){
+  result = ""
+  for (var i =0; i<roadDescription.length;i++) {
+    result += " " + roadDescription[i].latitude + " "
+    result += roadDescription[i].longitude
+  }
+  return result
+}

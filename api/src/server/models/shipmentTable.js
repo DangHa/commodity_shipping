@@ -91,13 +91,14 @@ module.exports = {
           ${driver_id},
           ${typeOfCar_id},
           ${route_id},
-          ${startingDate},
+          '${startingDate}',
           ${weightCapacity},
           ${spaceCapacity},
           ${fee});`;
 
+      console.log(query)
       var result = await pool.query(query);
-      return true
+      return result
 
     }catch(e){}
   },

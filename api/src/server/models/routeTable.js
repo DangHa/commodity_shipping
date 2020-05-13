@@ -47,17 +47,28 @@ module.exports = {
             roaddescription,
             length)
         VALUES (
-            ${startingPointName}, 
-            ${latitute_starting_point}, 
-            ${longitude_starting_point}, 
-            ${destinationName}, 
-            ${latitude_destination}, 
-            ${longitude_destination}, 
-            ${roadDescription}, 
-            ${length});`;
-
+            '${startingPointName}', 
+            '${latitute_starting_point}', 
+            '${longitude_starting_point}', 
+            '${destinationName}', 
+            '${latitude_destination}', 
+            '${longitude_destination}', 
+            '${roadDescription}', 
+            ${length})
+        RETURNING *;`;
+      
+      console.log(query)
       var result = await pool.query(query);
-      return true
+      return result
+
+    }catch(e){}
+  },
+
+  async getBOTroad(){
+    try{
+      query = ``;
+
+      return query
 
     }catch(e){}
   },
