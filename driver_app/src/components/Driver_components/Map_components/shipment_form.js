@@ -17,7 +17,7 @@ export default class ShipmentForm extends Component {
       destinationName         : state.params.destinationName,
       latitude_destination    : state.params.latitude_destination,
       longitude_destination   : state.params.longitude_destination,
-      length                  : 100,
+      length                  : state.params.length,
       weightCapacity          : 0,
       spaceCapacity           : 0,
       startingTime            : new Date(),
@@ -33,6 +33,7 @@ export default class ShipmentForm extends Component {
   }
 
   async componentDidMount(){
+    console.log(this.state)
     // Get fee and BOTPassed
     let data = {
       method: 'POST',

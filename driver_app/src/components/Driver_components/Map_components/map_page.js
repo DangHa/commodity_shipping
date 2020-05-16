@@ -33,6 +33,7 @@ export default class Map extends Component {
       startingPointName: "",
       destinationPredictions: [],
       destinationName: "",
+      length: 0,
       markers: [
         {
           "coordinate": {}, 
@@ -47,7 +48,7 @@ export default class Map extends Component {
           "draggingFunction": (e) => this.setNewDestination(e.nativeEvent.coordinate)
         }
       ],
-      route: {},
+      route: {coordinates: []},
       // origin: {latitude: 21.0250615, longitude: 105.8389873} // test direction
     }
   }
@@ -83,7 +84,8 @@ export default class Map extends Component {
       longitude_starting_point : this.state.start.longitude,
       destinationName          : this.state.destinationName,
       latitude_destination     : this.state.destination.latitude,
-      longitude_destination    : this.state.destination.longitude
+      longitude_destination    : this.state.destination.longitude,
+      length                   : this.state.length
     });
   }
 
@@ -240,8 +242,10 @@ export default class Map extends Component {
       ]
     })
 
-    this.setRoute();
-    console.log("Starting point ", this.state.start)
+    // Trigger creating route
+    if(this.state.destination['latitude']){
+      this.setRoute()
+    }
   }
 
   // ------------ Destination textinput ------------------
@@ -351,8 +355,19 @@ export default class Map extends Component {
       ]
     })
 
-    this.setRoute();
-    console.log("Destination ", this.state.destination)
+    // trigger drawing route 
+    if(this.state.start['latitude']){
+      this.setRoute()
+    }
+  }
+
+  onMapPress = (e) => {
+    this.setState({
+      coordinates: [
+        ...this.state.route.coordinates,
+        e.nativeEvent.coordinate,
+      ],
+    });
   }
 
   render() {
@@ -382,6 +397,7 @@ export default class Map extends Component {
               customMapStyle={ RetroMapStyles }
               region={this.state.region}
               onRegionChangeComplete={(reg) => this.onMapRegionChange(reg)}
+              onPress={this.onMapPress}
               showsUserLocation={true}>
 
               {/* --- show the marker --- */}
@@ -393,6 +409,9 @@ export default class Map extends Component {
                     coordinate={marker.coordinate}
                     title={marker.title}
                     description={marker.description}
+                    onReady={result => {
+                      console.log(`Distance: ${result.distance} km`)
+                    }}
                   />  
                 }else{
                   return null
@@ -400,12 +419,26 @@ export default class Map extends Component {
               })}
 
               {/* --- Route --- */}
-              {this.state.route['coordinates'] ?
+              {this.state.route.coordinates.length >= 2 ?
                 <MapViewDirections
-                  origin      = {this.state.origin}
-                  destination = {this.state.route.coordinates[1]}
+                  origin      = {this.state.route.coordinates[0]}
+                  waypoints   = { (this.state.route.coordinates.length > 2) ? this.state.route.coordinates.slice(1, -1): [] }
+                  destination = {this.state.route.coordinates[this.state.route.coordinates.length-1]}
                   apikey      = {GOOGLE_MAP_APIKEY}
-                  strokeWidth = {3}
+                  strokeWidth = {5}
+                  optimizeWaypoints={true}
+                  strokeColor = "#1565c0"
+                  onStart={(params)=>{
+                    console.log("Draw a direction");
+                  }}
+                  onReady={result => {
+                    console.log(`Distance: ${result.distance} km`)
+                    console.log(`Duration: ${result.duration} min.`)
+
+                    this.setState({
+                      length: result.distance
+                    });
+                  }}
                 />
               : null}
 
