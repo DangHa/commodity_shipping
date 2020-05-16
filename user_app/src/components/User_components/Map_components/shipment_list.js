@@ -16,8 +16,8 @@ class Shipment extends Component{
       region: {
         latitude: 21.0042737,
         longitude: 105.8415019,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1
+        latitudeDelta: 0.08,
+        longitudeDelta: 0.08
       },
       markers: [
         {
@@ -173,8 +173,8 @@ class Shipment extends Component{
       region: {
         latitude: parseFloat(result[0].latitude_starting_point),
         longitude: parseFloat(result[0].longitude_starting_point),
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1
+        latitudeDelta: 0.08,
+        longitudeDelta: 0.08
       }
     })
 
