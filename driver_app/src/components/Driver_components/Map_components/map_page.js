@@ -409,9 +409,6 @@ export default class Map extends Component {
                     coordinate={marker.coordinate}
                     title={marker.title}
                     description={marker.description}
-                    onReady={result => {
-                      console.log(`Distance: ${result.distance} km`)
-                    }}
                   />  
                 }else{
                   return null
@@ -422,7 +419,7 @@ export default class Map extends Component {
               {this.state.route.coordinates.length >= 2 ?
                 <MapViewDirections
                   origin      = {this.state.route.coordinates[0]}
-                  waypoints   = { (this.state.route.coordinates.length > 2) ? this.state.route.coordinates.slice(1, -1): [] }
+                  waypoints   = { (this.state.route.coordinates.length > 2) ? reduceWayPointsToBelow_25(this.state.route.coordinates.slice(1, -1)): [] }
                   destination = {this.state.route.coordinates[this.state.route.coordinates.length-1]}
                   apikey      = {GOOGLE_MAP_APIKEY}
                   strokeWidth = {5}
@@ -437,6 +434,12 @@ export default class Map extends Component {
 
                     this.setState({
                       length: result.distance
+                    });
+
+                    this.setState({
+                      route: {
+                        coordinates: result.coordinates
+                      }
                     });
                   }}
                 />
@@ -484,6 +487,22 @@ export default class Map extends Component {
       </View>
     );
   }
+}
+
+function reduceWayPointsToBelow_25(waypoints) {
+
+  if(waypoints.length > 24){
+    var result = []
+
+    var increase = waypoints/25 + 1 
+    for (var i = 0; i< waypoints.length; i+=increase){
+      result.push(waypoints[i])
+    }
+
+    return result
+  }
+
+  return waypoints
 }
 
 const styles = StyleSheet.create({

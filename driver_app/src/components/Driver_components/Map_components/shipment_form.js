@@ -106,7 +106,8 @@ export default class ShipmentForm extends Component {
             });
     
     if (result === true){
-      alert("You have created a new shipment. You can see it on the shipment list")
+      alert("You have created a new shipment. Now you can see it on the shipment list");
+      this.props.navigation.navigate("MapHome")
     } else {
       alert("There are something wrong")
     }
