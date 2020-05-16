@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { View, FlatList, StyleSheet, Text, TouchableOpacity, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import RetroMapStyles from '../../../assets/RetroMapStyles'
+import RetroMapStyles from '../../../assets/RetroMapStyles';
+import MapViewDirections from "react-native-maps-directions";
+
+const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
 
 class Shipment extends Component{
   constructor(props) {
@@ -34,6 +37,7 @@ class Shipment extends Component{
           }
         }
       ],
+      route : {coordinates: []},
       typeOfCar: ""
     };
   }
@@ -66,7 +70,7 @@ class Shipment extends Component{
         'Content-Type': 'application/json',
       }
     }
-  
+    
     var result = await fetch('http://172.18.0.1:8080/package/createNewPackage', data)
             .then((response) => response.json())
             .then((json) => {
@@ -114,9 +118,9 @@ class Shipment extends Component{
             .catch((error) => {
                 console.error(error);
             });
-    
-    
+
     if (result.length !== 0){
+      // Markers
       this.setState({
         markers: [
           {
@@ -137,6 +141,26 @@ class Shipment extends Component{
           }
         ]
       })
+
+      // Route
+      // Change the Type of roaddescription from string type to array type
+      var array = result[0].roaddescription.split(" ");
+
+      var RouteCoordinates = [];
+      for (var i = 0; i < array.length-1; i+=2) {
+        var newEle = {latitude: array[i],longitude: array[i+1]}
+        RouteCoordinates.push(newEle)
+      };
+
+      this.setState({
+        route: {
+          coordinates: RouteCoordinates
+        }
+      });
+
+      console.log(this.state.route.coordinates)
+
+      // Type of car
       this.setState({
         typeOfCar: result[0].name,
       })
@@ -196,6 +220,15 @@ class Shipment extends Component{
               ))}
             
               {/* Need to draw a route */}
+              <MapViewDirections
+                origin      = {this.state.markers[0].coordinate}
+                waypoints   = { (this.state.route.coordinates.length > 2) ? this.state.route.coordinates.slice(1, -1): [] }
+                destination = {this.state.markers[1].coordinate}
+                apikey      = {GOOGLE_MAP_APIKEY}
+                strokeWidth = {5}
+                optimizeWaypoints={true}
+                strokeColor = "tomato"
+              />
             </MapView>
 
             <Text></Text>

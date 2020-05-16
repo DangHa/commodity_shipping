@@ -107,5 +107,5 @@ function changeRoadDescriptionToString(roadDescription){
     result += " " + roadDescription[i].latitude + " "
     result += roadDescription[i].longitude
   }
-  return result
+  return result.slice(1)
 }

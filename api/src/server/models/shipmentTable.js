@@ -14,6 +14,7 @@ module.exports = {
           public."Route".destination,
           public."Route".latitude_destination,
           public."Route".longitude_destination,
+          public."Route".roaddescription,
           public."TypeOfCar".name
         FROM public."Shipment"
         INNER JOIN public."TypeOfCar" ON public."TypeOfCar".typeofcar_id = public."Shipment".typeofcar_id
