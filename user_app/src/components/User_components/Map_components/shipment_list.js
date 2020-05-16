@@ -158,8 +158,6 @@ class Shipment extends Component{
         }
       });
 
-      console.log(this.state.route.coordinates)
-
       // Type of car
       this.setState({
         typeOfCar: result[0].name,
@@ -222,7 +220,7 @@ class Shipment extends Component{
               {/* Need to draw a route */}
               <MapViewDirections
                 origin      = {this.state.markers[0].coordinate}
-                waypoints   = { (this.state.route.coordinates.length > 2) ? this.state.route.coordinates.slice(1, -1): [] }
+                waypoints   = { (this.state.route.coordinates.length > 2) ? reduceWayPointsToBelow_25(this.state.route.coordinates.slice(1, -1)): [] }
                 destination = {this.state.markers[1].coordinate}
                 apikey      = {GOOGLE_MAP_APIKEY}
                 strokeWidth = {5}
@@ -341,6 +339,22 @@ export default class History extends Component {
     );
   }
 };
+
+function reduceWayPointsToBelow_25(waypoints) {
+  
+  if(waypoints.length > 24){
+    var result = []
+
+    var increase = waypoints/25 + 1 
+    for (var i = 0; i< waypoints.length; i+=increase){
+      result.push(waypoints[i])
+    }
+
+    return result
+  }
+
+  return waypoints
+}
 
 const styles = StyleSheet.create({
   container: {
