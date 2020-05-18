@@ -80,3 +80,21 @@ CREATE TABLE public."Package"(
 	phone_of_receiver VARCHAR (50),
 	status VARCHAR (100)
 );
+
+copy "toll_plaza" (name, globe_code_googlemap)
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/toll_plaza.csv' 
+DELIMITERS ',' 
+CSV 
+HEADER;
+
+copy "TypeOfCar" (name)
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/type_of_c.csv' 
+DELIMITERS ',' 
+CSV 
+HEADER;
+
+copy "BOTprice"
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/bot_price.csv' 
+DELIMITERS ',' 
+CSV 
+HEADER;
