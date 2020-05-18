@@ -14,23 +14,6 @@ CREATE TABLE public."Driver"(
 	address VARCHAR (100)
 );
 
-CREATE TABLE public."BOTroad"(
-	road_id serial PRIMARY KEY,
-	name VARCHAR (100) NOT NULL
-);
-
-CREATE TABLE public."TypeOfCar"(
-	typeofcar_id serial PRIMARY KEY,
-	name VARCHAR (100) NOT NULL
-);
-
-CREATE TABLE public."BOTprice"(
-	road_id INTEGER REFERENCES public."BOTroad"(road_id),
-	typeofcar_id INTEGER REFERENCES public."TypeOfCar"(typeofcar_id),
-	price INTEGER,
-	PRIMARY KEY (road_id, typeofcar_id)
-);
-
 CREATE TABLE public."Route"(
 	route_id serial PRIMARY KEY,
 	starting_point VARCHAR,
@@ -43,11 +26,31 @@ CREATE TABLE public."Route"(
 	length INTEGER NOT NULL
 );
 
-CREATE TABLE public."PassedBOT"(
-	road_id INTEGER REFERENCES public."BOTroad"(road_id),
+CREATE TABLE public."TypeOfCar"(
+	typeofcar_id serial PRIMARY KEY,
+	name VARCHAR (100) NOT NULL
+);
+
+CREATE TABLE public."toll_plaza"(
+	toll_plaza_id serial PRIMARY KEY,
+	name VARCHAR (100) NOT NULL,
+	globe_code_googlemap VARCHAR (50) NOT NULL
+);
+
+CREATE TABLE public."BOTprice"(
+	toll_plaza_id_start INTEGER REFERENCES public."toll_plaza"(toll_plaza_id),
+	toll_plaza_id_end INTEGER REFERENCES public."toll_plaza"(toll_plaza_id),
 	typeofcar_id INTEGER REFERENCES public."TypeOfCar"(typeofcar_id),
+	price INTEGER,
+	PRIMARY KEY (toll_plaza_id_start, toll_plaza_id_end, typeofcar_id)
+);
+
+CREATE TABLE public."PassedBOT"(
 	route_id INTEGER REFERENCES public."Route"(route_id),
-	PRIMARY KEY (road_id, typeofcar_id, route_id)
+	typeofcar_id INTEGER REFERENCES public."TypeOfCar"(typeofcar_id),
+	toll_plaza_id_start INTEGER REFERENCES public."toll_plaza"(toll_plaza_id),
+	toll_plaza_id_end INTEGER REFERENCES public."toll_plaza"(toll_plaza_id),
+	PRIMARY KEY (toll_plaza_id_start, toll_plaza_id_end, typeofcar_id, route_id)
 );
 
 CREATE TABLE public."Shipment"(
