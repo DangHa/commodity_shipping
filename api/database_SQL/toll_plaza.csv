@@ -1,46 +1,47 @@
-name,globe_code_googlemap
-Trạm Pháp Vân,7PG7WV46
-Trạm Thường Tín,7PG7VV9H
-Trạm  Vạn Điểm,7PG7QWF4
-Trạm Cầu Giẽ - Hà Nam,7PG7JWWQ
-Trạm Cao Bồ,7PG872R6
-Trạm Km6,7PH77P3P
-Trạm IC3,7PH77MH8
-Trạm IC4,7PH79J53
-Trạm IC6,7PH79F46
-Trạm IC7,7PH7998H
-Trạm IC8,7PH798RH
-Trạm IC9,7PH7C6FH
-Trạm IC10,7PH7C4QC
-Trạm IC11,7PH6GXMC
-Trạm IC12,7PH6JVWQ
-Trạm IC14,7PH6VMHF
-Trạm IC16,7PJ6582R
-Trạm IC17,7PJ684V3
-Trạm KM237,7PJ6938H
-Trạm hà Nội- Bắc giang,7PH73XR5
-trạm thu khi km104 - Hà nội bắc giang,7PH88784
-Trạm thu phí lối ra QL37 - Cao tốc Bắc Giang - Lạng Sơn,7PH898Q2
-Trạm thu phí lối ra QL37 - Cao tốc Bắc Giang - Lạng Sơn,7PH898Q2
-Trạm thu phí 104 cao tóc bắc Giang lạng sơn,7PH8G962
-Trạm Thu Phí QL279 BOT Bắc Giang - Lạng Sơn,7PH8JHC4
-Trạm Vành đai 3,7PH72W68
-trạm thu phí nút giao QL39 A,7PG8V23J
-Trạm thu phí nút giao QL38B,7PG8V76R
-Trạm thu phí nút giao QL10,7PG8RG3F
-Trạm thu phí nút giao DT353,7PG8QPC8
-Trạm thu phí nút giao DDT353 (Đình vũ),7PG8QPHG
-Trạm thu phí Việt Hưng,7PG8XXF8
-Trạm thu phí Đồng Lá,7PH93528
-Trạm thu phí Cẩm Y,7PH939W2
-Trạm thu phí Đoàn Kết,7PH939JV
-Trạm thu phí Long Phước,7P28QVP2
-Trạm thu phí NH51,7P28QX84
-Trạm thu phí Dầu Giây,7P29W597
-Trạm thu phí Túy Loan,7P7CX5F7
-Trạm thu phí Phong Thử,7P7CV5RG
-Trạm thu phí Hà Lam,7P7CP86J
-Trạm thu phí Tam Kỳ,7P7CGGX9
-Trạm thu phí Chu Lai,7P7CCHRR
-Trạm thu phí Bắc Quảng Ngãi,7P7C5Q52
-Trạm thu phí Quảng Ngãi,7P7C3R7Q
+name,latitude_zone,longitude_zone
+Trạm Pháp Vân,20.907264,105.861437
+Trạm Thường Tín,20.868322,105.880755
+Trạm  Vạn Điểm,20.773758,105.907576
+Trạm Cầu Giẽ - Hà Nam,20.647920,105.938236
+Trạm Cao Bồ,20.291930,106.011746
+Trạm Km6,21.252528,105.739698
+Trạm IC3,21.282996,105.668143
+Trạm IC4,21.357337,105.603286
+Trạm IC6,21.356643,105.469150
+Trạm IC7,21.367028,105.380108
+Trạm IC8,21.393664,105.333807
+Trạm IC9,21.422191,105.229677
+Trạm IC10,21.439076,105.118556
+Trạm IC11,21.533483,104.972777
+Trạm IC12,21.646971,104.891476
+Trạm IC14,21.877554,104.674488
+Trạm IC16,22.155999,104.343488
+Trạm IC17,22.341042,104.104045
+Trạm KM237,22.365777,104.080442
+Trạm hà Nội- Bắc giang,21.090348,105.960562
+trạm thu khi km104 - Hà nội bắc giang,21.315809,106.258626
+Trạm thu phí lối ra QL37 - Cao tốc Bắc Giang - Lạng Sơn21.38,21.388315,106.298078
+Trạm thu phí lối ra QL37 - Cao tốc Bắc Giang - Lạng Sơn,21.388315,106.298078
+Trạm thu phí 104 cao tóc bắc Giang lạng sơn,21.490853,106.374900
+Trạm Thu Phí QL279 BOT Bắc Giang - Lạng Sơn,21.619794,106.555823
+Trạm Vành đai 3,21.003022,105.926474
+trạm thu phí nút giao QL39 A,20.852231,106.032360
+Trạm thu phí nút giao QL38B,20.858964,106.298455
+Trạm thu phí nút giao QL10,20.803156,106.524910
+Trạm thu phí nút giao DT353,20.770391,106.712514
+Trạm thu phí nút giao DDT353 (Đình vũ),20.832334,106.750571
+Trạm thu phí Việt Hưng,20.974237,106.965939
+Trạm thu phí Đồng Lá,21.052119,107.167411
+Trạm thu phí Cẩm Y,21.094214,107.355420
+Trạm thu phí Đoàn Kết,21.082367,107.392656
+Trạm thu phí Long Phước,10.785833,106.851811
+Trạm thu phí Quốc lộ 51,10.765422,106.956380
+Trạm thu phí Dầu Giây,10.918230,107.163986
+Trạm thu phí Túy Loan,15.972602,108.162708
+Trạm thu phí Phong Thử,15.891646,108.175684
+Trạm thu phí Hà Lam,15.710627,108.331967
+Trạm thu phí Tam Kỳ,15.535831,108.453173
+Trạm thu phí Chu Lai,15.440260,108.591028
+Trạm thu phí Bắc Quảng Ngãi,15.160476,108.749529
+Trạm thu phí Quảng Ngãi,15.109538,108.757653
+Trạm Đại Xuyên,20.702097,105.912813

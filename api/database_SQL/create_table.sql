@@ -31,10 +31,15 @@ CREATE TABLE public."TypeOfCar"(
 	name VARCHAR (100) NOT NULL
 );
 
+DROP TABLE public."BOTprice";
+DROP TABLE public."PassedBOT";
+DROP TABLE public."toll_plaza";
+
 CREATE TABLE public."toll_plaza"(
 	toll_plaza_id serial PRIMARY KEY,
 	name VARCHAR (100) NOT NULL,
-	globe_code_googlemap VARCHAR (50) NOT NULL
+	latitude_zone double precision,
+	longitude_zone double precision
 );
 
 CREATE TABLE public."BOTprice"(
@@ -52,6 +57,7 @@ CREATE TABLE public."PassedBOT"(
 	toll_plaza_id_end INTEGER REFERENCES public."toll_plaza"(toll_plaza_id),
 	PRIMARY KEY (toll_plaza_id_start, toll_plaza_id_end, typeofcar_id, route_id)
 );
+
 
 CREATE TABLE public."Shipment"(
 	shipment_id serial PRIMARY KEY,
@@ -81,14 +87,14 @@ CREATE TABLE public."Package"(
 	status VARCHAR (100)
 );
 
-copy "toll_plaza" (name, globe_code_googlemap)
-from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/toll_plaza.csv' 
+copy "TypeOfCar" (name)
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/type_of_c.csv' 
 DELIMITERS ',' 
 CSV 
 HEADER;
 
-copy "TypeOfCar" (name)
-from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/type_of_c.csv' 
+copy "toll_plaza" (name, latitude_zone, longitude_zone)
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/toll_plaza.csv' 
 DELIMITERS ',' 
 CSV 
 HEADER;
