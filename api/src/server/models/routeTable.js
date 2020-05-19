@@ -64,13 +64,4 @@ module.exports = {
     }catch(e){}
   },
 
-  async getBOTroad(){
-    try{
-      query = ``;
-
-      return query
-
-    }catch(e){}
-  },
-
 };

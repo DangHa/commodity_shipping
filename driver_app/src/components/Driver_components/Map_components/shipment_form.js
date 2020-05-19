@@ -33,7 +33,6 @@ export default class ShipmentForm extends Component {
   }
 
   async componentDidMount(){
-    console.log(this.state)
     // Get fee and BOTPassed
     let data = {
       method: 'POST',
@@ -42,6 +41,7 @@ export default class ShipmentForm extends Component {
       body: JSON.stringify({
         typeOfCar_id   : this.state.typeOfCar_id,
         roadDescription: this.state.route.coordinates,
+        length         : this.state.length,
       }),
       headers: {
         'Accept':       'application/json',
@@ -49,7 +49,7 @@ export default class ShipmentForm extends Component {
       }
     }
 
-    var result = await fetch('http://172.18.0.1:8080/route/getFeeAndBOTPassed', data)
+    var result = await fetch('http://172.18.0.1:8080/bot/getFeeAndBOTPassed', data)
             .then((response) => response.json())
             .then((json) => {
                 return json
@@ -180,11 +180,11 @@ export default class ShipmentForm extends Component {
             selectedValue={this.state.typeOfCar_id}
             onValueChange={this.chooseTypeOfCar.bind(this)}
           >
-            <Picker.Item label="Xe dưới 12 ghế ngồi, xe tải có tải trọng dưới 2 tấn; các loại xe buýt vận tải khách công cộng" value="0" />
-            <Picker.Item label="Xe từ 12 ghế ngồi đến 30 ghế; xe tải có tải trọng từ 2 tấn đến dưới 4 tấn" value="1" />
-            <Picker.Item label="Xe từ 31 ghế ngồi trở lên; xe tải có tải trọng từ 4 tấn đến dưới 10 tấn" value="2" />
-            <Picker.Item label="Xe tải có tải trọng từ 10 tấn đến dưới 18 tấn; xe chở hàng bằng container 20 fit" value="3" />
-            <Picker.Item label="Xe tải có tải trọng từ 18 tấn trở lên; xe chở hàng bằng container 40 fit" value="4" />
+            <Picker.Item label="Xe dưới 12 ghế ngồi, xe tải có tải trọng dưới 2 tấn; các loại xe buýt vận tải khách công cộng" value="1" />
+            <Picker.Item label="Xe từ 12 ghế ngồi đến 30 ghế; xe tải có tải trọng từ 2 tấn đến dưới 4 tấn" value="2" />
+            <Picker.Item label="Xe từ 31 ghế ngồi trở lên; xe tải có tải trọng từ 4 tấn đến dưới 10 tấn" value="3" />
+            <Picker.Item label="Xe tải có tải trọng từ 10 tấn đến dưới 18 tấn; xe chở hàng bằng container 20 fit" value="4" />
+            <Picker.Item label="Xe tải có tải trọng từ 18 tấn trở lên; xe chở hàng bằng container 40 fit" value="5" />
           </Picker>
         </Item>
 

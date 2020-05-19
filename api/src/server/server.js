@@ -15,7 +15,7 @@ app.use('/user', require('./routes/userRoute')); // this command must behind two
 app.use('/driver', require('./routes/driverRoute'))
 app.use('/package', require('./routes/packageRoute'))
 app.use('/shipments', require('./routes/shipmentRoute'))
-app.use('/route', require('./routes/routeRoute'))
+app.use('/bot', require('./routes/BOTRoute'))
 
 const port = config.getPort();
 app.listen(port, () => {
