@@ -16,6 +16,23 @@ module.exports = {
   
     }catch(e){}
 
+  },
+
+  async find_toll_plaze_price(toll_plaza_id_start, toll_plaza_id_end, typeOfCar_id) {
+    try{
+        query = `
+        SELECT *
+          FROM public."BOTprice"
+        WHERE toll_plaza_id_start = '${toll_plaza_id_start}'
+          AND toll_plaza_id_end = '${toll_plaza_id_end}'
+          AND typeofcar_id = '${typeOfCar_id}';`
+                
+        var result = await pool.query(query);
+        
+        return result.rows
+  
+    }catch(e){}
+
   }
 
 };

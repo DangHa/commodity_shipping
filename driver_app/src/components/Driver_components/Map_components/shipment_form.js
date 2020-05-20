@@ -29,6 +29,7 @@ export default class ShipmentForm extends Component {
     };
 
     this.sendToServer.bind(this)
+    this.componentDidMount.bind(this)
     this.setDate = this.setDate.bind(this);
   }
 
@@ -118,12 +119,22 @@ export default class ShipmentForm extends Component {
     this.setState({ startingTime: newDate });
   }
 
-  // DropDown
-  chooseTypeOfCar(value) {
-    this.setState({ typeOfCar_id: value });
+  // to fix error of dropdown
+  componentDidUpdate(pP, pS, sS) {
+    if (pS.typeOfCar_id !== this.state.typeOfCar_id){
+      this.componentDidMount()
+    }
   }
 
   render() {
+    const BOT_infor = this.state.passedBOT.map((bot) => {
+      return (
+        <View style={[{ paddingLeft: 15, paddingBottom: 10 }]}>
+          <Text style={[{fontSize: 12, fontStyle: "italic"}]}>{bot.start_toll.name} --> {bot.end_toll.name}: {bot.fee}.000 (vnd)</Text>
+        </View>
+      )
+    })
+
     return (
       <View style={styles.container}>
         <Text>
@@ -139,15 +150,20 @@ export default class ShipmentForm extends Component {
             <Text style={{fontSize: 14}}>{this.state.fee}.000 (vnd)</Text>
           </Text>
 
-          <View style={{ flex: 0, paddingRight: 200}}>
+          <View style={{ flex: 0, paddingRight: 100}}>
             <TouchableOpacity onPress={() => this.setState({showDetailFee: !this.state.showDetailFee})}> 
               <Icon style={{color: '#1565c0'}} size={25} name={'expand-more'}/>
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {this.state.showDetailFee ?
-           <Text style={[{fontSize: 14, fontStyle: "italic", paddingLeft: 15, paddingBottom: 10}]}>{this.state.passedBOT}</Text>
+          <View>
+            {BOT_infor}
+            <View style={[{ paddingLeft: 15, paddingBottom: 10 }]}>
+              <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {this.state.length/100*10 * 15000} (vnd)</Text>
+            </View>
+          </View>
         : null}
 
         <Text style={[{fontSize: 16}, {fontWeight: "bold"}]}>Weight capacity: (Kg)</Text>
@@ -178,7 +194,7 @@ export default class ShipmentForm extends Component {
             placeholderStyle={{ color: "#bfc6ea" }}
             placeholderIconColor="#007aff"
             selectedValue={this.state.typeOfCar_id}
-            onValueChange={this.chooseTypeOfCar.bind(this)}
+            onValueChange={(item) => {this.setState({ typeOfCar_id: item });}}
           >
             <Picker.Item label="Xe dưới 12 ghế ngồi, xe tải có tải trọng dưới 2 tấn; các loại xe buýt vận tải khách công cộng" value="1" />
             <Picker.Item label="Xe từ 12 ghế ngồi đến 30 ghế; xe tải có tải trọng từ 2 tấn đến dưới 4 tấn" value="2" />

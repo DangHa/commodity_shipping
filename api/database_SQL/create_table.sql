@@ -39,7 +39,8 @@ CREATE TABLE public."toll_plaza"(
 	toll_plaza_id serial PRIMARY KEY,
 	name VARCHAR (100) NOT NULL,
 	latitude_zone double precision,
-	longitude_zone double precision
+	longitude_zone double precision,
+	expressway_name VARCHAR (100)
 );
 
 CREATE TABLE public."BOTprice"(
@@ -93,7 +94,7 @@ DELIMITERS ','
 CSV 
 HEADER;
 
-copy "toll_plaza" (name, latitude_zone, longitude_zone)
+copy "toll_plaza" (name, latitude_zone, longitude_zone, expressway_name)
 from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/toll_plaza.csv' 
 DELIMITERS ',' 
 CSV 
