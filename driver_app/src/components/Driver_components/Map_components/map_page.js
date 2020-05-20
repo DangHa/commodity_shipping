@@ -4,6 +4,7 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from "react-native-maps-directions";
+import { DatePicker, Picker, Item } from 'native-base';
 
 import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
@@ -49,7 +50,7 @@ export default class Map extends Component {
         }
       ],
       route: {coordinates: []},
-      // origin: {latitude: 21.0250615, longitude: 105.8389873} // test direction
+      weight_BOT: "0.1",
     }
   }
 
@@ -370,6 +371,17 @@ export default class Map extends Component {
     });
   }
 
+  changeWeight_BOT(weight) {
+    if (weight >= 0.1 && weight <= 0.9){
+      this.setState({ weight_BOT : weight})
+    }
+  }
+
+  async getSuggestedDirection(){
+    console.log(this.state.weight_BOT)
+    // send starting, end point and weight bot to server 
+  }
+
   render() {
     // Autocomplete place dropdowns
     const startingPredictions = this.state.startingPredictions.map(prediction => (
@@ -471,6 +483,22 @@ export default class Map extends Component {
               {destinationPredictions}
             
             <View style={styles.bottom}>
+              <View style={[{flexDirection:"row", marginBottom: -45, marginLeft: 5}]}>
+                <TextInput style={[styles.inputBox, {width: 100, marginVertical: 0}]}
+                    onChangeText={(weight) => this.changeWeight_BOT(weight)} 
+                    underlineColorAndroid='rgba(0,0,0,0)' 
+                    placeholder=" 0.1 -> 0.9"
+                    selectionColor="#fff"
+                    keyboardType="numeric"/>
+
+                <View style={[{marginBottom: 0, marginLeft: 10}]}>
+                  <TouchableOpacity style={styles.button}> 
+                    <Text style={styles.buttonText} onPress={this.getSuggestedDirection.bind(this)}>Direction with weigh BOT</Text>
+                  </TouchableOpacity>
+                </View>
+              
+              </View>
+
               {/* --- Route Change --- */}
               {this.state.start['latitude'] && this.state.destination['latitude'] ?
                 <TouchableOpacity style={styles.styletouchable} onPress={this.shipment_detail.bind(this)}>
@@ -555,5 +583,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
+  },
+  button: {
+    width: 200,
+    backgroundColor: '#1565c0',
+    borderRadius: 25,
+    paddingVertical: 10,
+  },
+  buttonText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#ffffff',
+    textAlign: 'center'
   }
 });
