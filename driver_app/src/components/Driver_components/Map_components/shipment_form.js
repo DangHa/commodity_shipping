@@ -161,7 +161,7 @@ export default class ShipmentForm extends Component {
           <View>
             {BOT_infor}
             <View style={[{ paddingLeft: 15, paddingBottom: 10 }]}>
-              <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {this.state.length/100*10 * 15000} (vnd)</Text>
+              <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {parseInt(this.state.length/100*10 * 15000)} (vnd) -- length: {parseInt(this.state.length)} (km)</Text>
             </View>
           </View>
         : null}
