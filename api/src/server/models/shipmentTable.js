@@ -28,17 +28,26 @@ module.exports = {
     }catch(e){}
   },
 
-  async getSuggestedShipment(Phone) {
+  async getSuggestedShipment(weight, space) {
     try{
         query = `
         SELECT
-            shipment_id,
-            starting_date,
-            public."Route".starting_point,
-	          public."Route".destination
+          shipment_id,
+          starting_date,
+          public."Route".starting_point,
+          public."Route".destination,
+          public."Route".latitude_starting_point,
+          public."Route".longitude_starting_point,
+          public."Route".latitude_destination,
+          public."Route".longitude_destination,
+          public."Route".roaddescription,
+          public."Route".length,
+          typeofcar_id
         FROM public."Shipment"
         INNER JOIN public."Route" ON public."Route".route_id = public."Shipment".route_id
-        WHERE public."Shipment".starting_date >= now()::date`
+        WHERE public."Shipment".starting_date >= now()::date
+        AND public."Shipment".weightcapacity >= ${weight}
+        AND public."Shipment".spacecapacity >= ${space};`
               
         var result = await pool.query(query);
         

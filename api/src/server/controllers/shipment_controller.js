@@ -6,17 +6,87 @@ const routeTable = require('../models/routeTable')
 module.exports = {
 
   async getSuggestedShipment(req, res) {
-    const Phone = req.body.phone;
+    const latitute_starting_point  = req.body.latitute_starting_point;
+    const longitude_starting_point = req.body.longitude_starting_point;
+    const latitude_destination     = req.body.latitude_destination;
+    const longitude_destination    = req.body.longitude_destination;
+    const weight                   = req.body.weight;
+    const space                    = req.body.space;
 
-    // need a algoritm for suggesting shipment and reckon the expense
+    // the first two criteria (weight, space)
+    let result = await shipmentTable.getSuggestedShipment(weight, space)
 
-    let result = await shipmentTable.getSuggestedShipment(Phone)
+    // use coordinate
+    // step 1: get the total of distance between start and end point to the road through the waypoint of road description
+    // step 2: sort result by distance
+    // stop 3: get top 5 roads which have the shorest distance
 
-    // calculate the price 
+    var distance = []
     for (var i = 0; i < result.length; i++) {
-      result[i]["price"] = "100"
+      var roadDescription = changeRoadDescriptionToObject(result[i].roaddescription)
+      
+      var shorest_distance_starting = 10000
+      var shorest_distance_endding = 10000
+      for (var j = 0; j < roadDescription.length; j++){
+        var newDistance_starting = Math.pow((roadDescription[j].latitude - latitute_starting_point), 2) + Math.pow((roadDescription[j].longitude - longitude_starting_point), 2)
+        var newDistance_end = Math.pow((roadDescription[j].latitude - latitude_destination), 2) + Math.pow((roadDescription[j].longitude - longitude_destination), 2)
+        
+        if (shorest_distance_starting > newDistance_starting) {
+          shorest_distance_starting = newDistance_starting
+        }
+
+        if (shorest_distance_endding > newDistance_end) {
+          shorest_distance_endding = newDistance_end
+        }
+      }
+      distance.push(shorest_distance_starting + shorest_distance_endding)
     }
 
+    // sort
+    for (var i = 0; i < distance.length; i++) {
+      for (var j = 0; j < distance.length; j++) {
+        if(distance[i] < distance[j]){
+          var temp = distance[i]
+          distance[i] = distance[j]
+          distance[j] = temp 
+
+          temp = result[i]
+          result[i] = result[j]
+          result[j] = temp 
+        }
+      }
+    }
+
+    //get top 5
+    if (result.length > 5) {
+      result = result.slice(0, 5)
+    }
+    
+    // calculate the price to create ranking of the last 5 shipments
+    // price = moneyOfCar1*typeOfCar + length/100*moneyOf100Km + moneyOf1Kg*weight + space*moneyOf1M3
+    var moneyOfCar1 = 2
+    var moneyOf100Km = 5
+    var moneyOf1Kg = 2
+    var moneyOf1M3 = 2
+
+    for (var i = 0; i < result.length; i++) {
+      result[i]["price"] = moneyOfCar1*result[i].typeofcar_id + result[i].length/100*moneyOf100Km + moneyOf1Kg*weight + moneyOf1M3*space
+      delete result[i].length
+      delete result[i].typeofcar_id
+    }
+
+    //sort 
+    for (var i = 0; i < result.length; i++) {
+      for (var j = 0; j < result.length; j++) {
+        if(result[i]["price"] < result[j]["price"]){
+          var temp = result[i]["price"]
+          result[i]["price"] = result[j]["price"]
+          result[j]["price"] = temp 
+        }
+      }
+    }
+
+    console.log(result)
     response = JSON.stringify(result)
     res.send(response);
   },
@@ -108,4 +178,16 @@ function changeRoadDescriptionToString(roadDescription){
     result += roadDescription[i].longitude
   }
   return result.slice(1)
+}
+
+// lat1 lon1 lat2 lon2  -->  [{lat1, lon1}, {lat2, lon2}]
+function changeRoadDescriptionToObject(roadDescription) {
+  var array = roadDescription.split(" ");
+
+  var result = [];
+  for (var i = 0; i < array.length-1; i+=2) {
+    var newEle = {latitude: array[i], longitude: array[i+1]}
+    result.push(newEle)
+  };
+  return result
 }

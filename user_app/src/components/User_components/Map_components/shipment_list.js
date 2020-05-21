@@ -184,7 +184,7 @@ class Shipment extends Component{
       <View style={styles.flatview}>
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
-            <Text style={styles.major}>{this.props.item.starting_date}</Text>
+            <Text style={[styles.major, {color: "#1565c0"}]}>{this.props.item.starting_date}</Text>
 
             <Text>
               <Text style={styles.minor}>  {this.props.item.starting_point}</Text>
@@ -232,8 +232,15 @@ class Shipment extends Component{
             <Text></Text>
             <View style={{ flexDirection:"row", paddingBottom: 10}}>
               <View style={{ flex: 1, paddingLeft: 10}}>
-                <Text style={{fontSize: 15}}>Type of car: {this.state.typeOfCar}</Text>
-                <Text style={{fontSize: 15}}>Price: {this.props.item.price}</Text>
+                <Text>
+                  <Text style={{fontSize: 15, color: "#1565c0"}}>Type of car:  </Text>
+                  <Text style={[{fontSize: 12, fontStyle: "italic"}]}>{this.state.typeOfCar}</Text>
+                </Text>
+                <Text>
+                  <Text style={{fontSize: 15, color: "#1565c0"}}>Price:  </Text>
+                  <Text style={[{fontSize: 15}]}>{this.props.item.price*1000} (vnd)</Text>
+                </Text>
+                
               </View>
 
               <View style={{ flex: 0, paddingRight: 15}}>
@@ -283,17 +290,19 @@ export default class History extends Component {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        startingPointName: this.state.startingPointName,
-        destinationName  : this.state.destinationName,
-        weight           : this.state.weight,
-        space            : this.state.space
+        latitute_starting_point : this.state.latitute_starting_point,
+        longitude_starting_point: this.state.longitude_starting_point,
+        latitude_destination    : this.state.latitude_destination,
+        longitude_destination   : this.state.longitude_destination,
+        weight                  : this.state.weight,
+        space                   : this.state.space
       }),
       headers: {
         'Accept':       'application/json',
         'Content-Type': 'application/json',
       }
     }
-  
+
     var result = await fetch('http://172.18.0.1:8080/shipments/getSuggestedShipment', data)
             .then((response) => response.json())
             .then((json) => {
@@ -388,8 +397,8 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   minor: {
-    color: 'gray',
-    fontSize: 15
+    color: 'black',
+    fontSize: 12
   },
   button: {
     width: 60,
