@@ -83,9 +83,9 @@ class Package extends Component{
         <View style={{ flexDirection:"row"}}>
           <View style={{ flex: 1, paddingLeft: 5}}>
             <Text>
-              <Text style={styles.major}>{this.props.item.starting_point}</Text>
-              <Text style={[{fontSize: 17}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
-              <Text style={styles.major}>{this.props.item.destination}</Text>
+              <Text style={{color: "tomato", fontSize: 14}}>{this.props.item.starting_point}</Text>
+              <Text style={[{fontSize: 13}, {fontWeight: "bold"}]}>{"\n"}--> </Text> 
+              <Text style={{color: "tomato", fontSize: 14}}>{this.props.item.destination}</Text>
             </Text>
             
             <Text style={styles.minor}>Phone of sender: {this.props.item.phone}</Text>
@@ -313,7 +313,8 @@ const styles = StyleSheet.create({
   },
   major: {
     fontFamily: 'Verdana',
-    fontSize: 15
+    fontSize: 15,
+    color: "#1565c0"
   },
   minor: {
     color: 'gray'
