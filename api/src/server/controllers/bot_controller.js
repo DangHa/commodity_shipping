@@ -1,7 +1,4 @@
 const botQuery = require('../models/botTables');
-const fetch = require("node-fetch");
-
-const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
 
 module.exports = {
 

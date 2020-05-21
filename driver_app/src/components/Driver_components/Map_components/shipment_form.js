@@ -89,7 +89,8 @@ export default class ShipmentForm extends Component {
         longitude_destination   : this.state.longitude_destination,
         roadDescription         : this.state.route.coordinates,
         length                  : this.state.length,
-        fee                     : this.state.fee
+        fee                     : this.state.fee,
+        passedBOT               : this.state.passedBOT, 
       }),
       headers: {
         'Accept':       'application/json',

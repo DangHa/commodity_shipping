@@ -106,7 +106,6 @@ module.exports = {
           ${spaceCapacity},
           ${fee});`;
 
-      console.log(query)
       var result = await pool.query(query);
       return result
 

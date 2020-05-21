@@ -33,6 +33,21 @@ module.exports = {
   
     }catch(e){}
 
-  }
+  },
+
+  async CreatePassedBOT(route_id, typeofcar_id, toll_plaza_id_start, toll_plaza_id_end){
+    try{
+        query = `
+        INSERT INTO public."PassedBOT"(
+          route_id, typeofcar_id, toll_plaza_id_start, toll_plaza_id_end)
+        VALUES (${route_id}, ${typeofcar_id}, ${toll_plaza_id_start}, ${toll_plaza_id_end})`;
+                
+        var result = await pool.query(query);
+    
+        return true
+  
+    }catch(e){}
+  },
+
 
 };

@@ -2,6 +2,7 @@ const shipmentTable = require('../models/shipmentTable')
 const driverTable = require('../models/driverTable')
 const packageTable = require('../models/packageTable')
 const routeTable = require('../models/routeTable')
+const botQuery = require('../models/botTables');
 
 module.exports = {
 
@@ -133,6 +134,7 @@ module.exports = {
     const roadDescription          = req.body.roadDescription;
     const length                   = req.body.length;
     const fee                      = req.body.fee;
+    const passedBOT                = req.body.passedBOT
 
     //create route
     const routeResult = await routeTable.createNewRoute(
@@ -145,7 +147,7 @@ module.exports = {
                                         changeRoadDescriptionToString(roadDescription),
                                         length)
 
-    var route_id = 0                        
+    var route_id = 1                        
     if (routeResult.rows.length !== 0) {
       route_id = routeResult.rows[0].route_id
     }else{
@@ -153,6 +155,16 @@ module.exports = {
     }
     
     //create PassedBOT
+    for (var i = 0; i < passedBOT.length; i++){
+      var toll_plaza_id_start = passedBOT[i].start_toll.toll_plaza_id
+      var toll_plaza_id_end   = passedBOT[i].end_toll.toll_plaza_id
+
+      const routeResult = await botQuery.CreatePassedBOT(
+                                        route_id,
+                                        typeOfCar_id,
+                                        toll_plaza_id_start,
+                                        toll_plaza_id_end)
+    }
 
     //create shipment
     const shipmentResult = await shipmentTable.createNewShipment(
