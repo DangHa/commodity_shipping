@@ -390,9 +390,11 @@ export default class Map extends Component {
         credentials: 'same-origin',
         mode: 'same-origin',
         body: JSON.stringify({
-          starting_point   : this.state.startingPointName,
-          destination      : this.state.destinationName,
-          weight_BOT       : this.state.weight_BOT,
+          latitute_starting_point   : this.state.start.latitude,
+          longitude_starting_point  : this.state.start.longitude,
+          latitude_destination      : this.state.destination.latitude,
+          longitude_destination     : this.state.destination.longitude,
+          weight_BOT                : this.state.weight_BOT,
         }),
         headers: {
           'Accept':       'application/json',
