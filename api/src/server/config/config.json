@@ -1,10 +1,18 @@
 {
-    "port": 8080,
-    "database": {
-        "user": "postgres",
-        "host": "localhost",
-        "database": "commodity_shipping",
-        "password": "annie8797",
-        "port": "5432"
-      }
+  "user_database": {
+    "user": "postgres",
+    "host": "localhost",
+    "database": "commodity_shipping",
+    "password": "annie8797",
+    "port": "5432"
+  },
+  "vietnam_road_system": {
+    "user": "postgres",
+    "host": "localhost",
+    "database": "vietnam_road_system",
+    "password": "annie8797",
+    "port": "5432"
+  },
+
+  "port": 8080
 }

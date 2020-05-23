@@ -1,4 +1,4 @@
-const userTable = require('./userTable')
+const userTable = require('./connection_to_database/connectToUserDatabase')
 
 module.exports = {
 
