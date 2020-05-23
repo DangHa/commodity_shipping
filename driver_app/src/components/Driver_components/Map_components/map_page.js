@@ -379,7 +379,43 @@ export default class Map extends Component {
 
   async getSuggestedDirection(){
     console.log(this.state.weight_BOT)
-    // send starting, end point and weight bot to server 
+
+    if (this.state.startingPointName === "" || this.state.destinationName === ""){
+      alert("You haven't had the starting point or destination yet")
+    }else {
+
+      // send starting, end point and weight bot to server 
+      let data = {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        body: JSON.stringify({
+          starting_point   : this.state.startingPointName,
+          destination      : this.state.destinationName,
+          weight_BOT       : this.state.weight_BOT,
+        }),
+        headers: {
+          'Accept':       'application/json',
+          'Content-Type': 'application/json',
+        }
+      }
+
+      var result = await fetch('http://172.18.0.1:8080/direction/getSuggestedDirection', data)
+              .then((response) => response.json())
+              .then((json) => {
+                  return json
+              })
+              .catch((error) => {
+                  console.error(error);
+              });
+      
+      if (result !== null){
+        // this.setState({ route: this.state.roate });
+      } else {
+        alert("There are something wrong")
+      }
+    }
+
   }
 
   render() {
