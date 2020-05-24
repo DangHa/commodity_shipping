@@ -13,7 +13,18 @@ module.exports = {
     console.log("starting point: ", latitute_starting_point, ", ", longitude_starting_point);
     console.log("destination: ", latitude_destination, ", ", longitude_destination);
     console.log(weight);
+
+    const result = await suggestedDirection.find_toll_plaze(
+                                latitute_starting_point,
+                                longitude_starting_point,
+                                latitude_destination,
+                                longitude_destination);
     
+    console.log(result)
+    for( var i = 0; i < result.length; i++) {
+      // get coordinate of route
+    }
+
     res.send([true]);
   },
 }
