@@ -17,6 +17,7 @@ app.use('/package', require('./routes/packageRoute'))
 app.use('/shipments', require('./routes/shipmentRoute'))
 app.use('/bot', require('./routes/BOTRoute'))
 app.use('/direction', require('./routes/suggested_direction'))
+app.use('/admin', require('./routes/adminRoute'))
 
 const port = config.getPort();
 app.listen(port, () => {

@@ -3,7 +3,6 @@ const userQuery = require('../models/userQuery');
 module.exports = {
 
   async getAllUsers(req, res) {
-    // you must wait in here because test of model is waitting OI database
     try {
       const result = await userQuery.getAllUsers();
 
