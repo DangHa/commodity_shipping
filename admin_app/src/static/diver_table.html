@@ -48,7 +48,7 @@
         }
       }
 
-      function getUser() {
+      function getDriver() {
         refreshTable();
 
         fetch('/drivers/getAllDrivers') 
@@ -120,6 +120,7 @@
                 row.getElementsByTagName("td")[2].innerHTML = oldPhone
               }
               console.log("data: ", data.json)
+              getDriver();
             });
 
       };
@@ -144,7 +145,7 @@
             });
       };
 
-      getUser();
+      getDriver();
     </script>
     
   </body>

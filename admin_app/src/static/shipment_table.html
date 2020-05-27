@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href = "mycss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="topnav">
+      <a href="/index.html">Users</a>
+      <a href="/diver_table.html">Drivers</a>
+      <a class="active" href="/shipment_table.html">Shipments</a>
+      <a href="/bot_table.html">BOT</a>
+      <a href="/statistic.html">Statistic</a>
+    </div>
+
+    <br/>
+
+    <div style="padding-left: 20px; padding-right: 20px">
+      <table class="table table-hover table-bordered" style="width:100%" id="shipment_table">
+        <tr>
+        <th data-column-id="username" style="text-align:center">Route</th>
+          <th data-column-id="username" style="text-align:center">Departure day</th>
+          <th data-column-id="address" style="text-align:center">Driver's name</th> 
+          <th data-column-id="phone" style="text-align:center">Driver Phone</th>
+          <th data-column-id="action" style="text-align:center">Fee</th>
+          <th data-column-id="action" style="text-align:center">Weight Total</th>
+          <th data-column-id="action" style="text-align:center">Space Total</th>
+          <th data-column-id="action" style="text-align:center">Number of packages</th>
+          <th data-column-id="action" style="text-align:center">Action</th>
+        </tr>
+      </table>
+    </div>
+    
+    <script>
+      
+      function refreshTable() {
+        var elmtTable = document.getElementById('shipment_table');
+        var tableRows = elmtTable.getElementsByTagName('tr');
+        var rowCount = tableRows.length;
+
+        for (var x=rowCount-1; x>0; x--) {
+          elmtTable.removeChild(tableRows[x]);
+        }
+      }
+
+      function getShipment() {
+        refreshTable();
+
+        fetch('/shipments/getAllShipments') 
+          .then((resp) => resp.json())
+          .then(function(data) {
+            //push data into table
+            var table = document.getElementById("shipment_table");
+
+            for (var i = 0; i < data.length; i++) {
+              var row = table.insertRow(i+1);
+              row.id = data[i].shipment_id
+
+              console.log("dhdkfhskjfkl")
+              var route = row.insertCell(0);
+              route.style.textAlign = "center";
+                
+              var starting_date = row.insertCell(1);
+              starting_date.style.textAlign = "center";
+              
+              var driverName = row.insertCell(2);
+              driverName.style.textAlign = "center";
+              
+              console.log("dhdkfhskjfkl")
+
+              var phone = row.insertCell(3);
+              phone.style.textAlign = "center";
+
+              var fee = row.insertCell(4);
+              fee.style.textAlign = "center";
+              
+              var weight_total = row.insertCell(5);
+              weight_total.style.textAlign = "center";
+
+              var space_total = row.insertCell(6);
+              space_total.style.textAlign = "center";
+
+              var number_package = row.insertCell(7);
+              number_package.style.textAlign = "center";
+              
+              var action = row.insertCell(8);
+              action.style.textAlign = "center";
+            
+
+              route.innerHTML = data[i].starting_point 
+                                + "<br> --> " 
+                                + data[i].destination
+              driverName.innerHTML = data[i].username
+              phone.innerHTML = data[i].phone
+              starting_date.innerHTML = data[i].starting_date
+              fee.innerHTML = data[i].fee
+              weight_total.innerHTML = data[i].weight_total
+              space_total.innerHTML = data[i].space_total
+              number_package.innerHTML = data[i].number_of_package
+
+              if (data[i].status === "deleted") {
+                action.innerHTML  = "Has been deleted"
+              }else{
+                action.innerHTML = "<tr><td><button onclick='delete_item("+data[i].shipment_id+")' class='btn'><i class='fa fa-trash'></i></button></td></tr>"
+              }
+            }
+          })
+          .catch(function() {});
+      };
+
+      function delete_item(shipment_id){
+        //send to server
+        fetch('/shipments/deleteShipment', {
+                method: 'post',
+                body: JSON.stringify({
+                    shipment_id: shipment_id
+                }),
+                headers: { 'Content-type': 'application/json' }
+              })
+            .then((resp) => resp.json())
+            .then(function(data) {
+              if (data === true) {
+                const row = document.getElementById(shipment_id);
+
+                var action = row.getElementsByTagName("td")[8]
+                action.innerHTML = "Has been deleted" 
+              }
+            });
+      };
+
+      getShipment();
+    </script>
+    
+  </body>
+</html>

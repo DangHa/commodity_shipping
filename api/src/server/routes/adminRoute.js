@@ -4,6 +4,7 @@ const router = express.Router();
 
 const userController = require('../controllers/user_controller');
 const driverController = require('../controllers/driver_controller');
+const shipmentController = require('../controllers/shipment_controller');
 
 
 
@@ -31,6 +32,15 @@ router.post('/updateInforDriver', (req, res) => {
 
 router.post('/deleteDriver', (req, res) => {
     driverController.deleteDriver(req, res);
+});
+
+// Shipment
+router.get('/getAllShipments', (req, res) => {
+    shipmentController.getAllShipments(req, res);
+});
+
+router.post('/deleteShipment', (req, res) => {
+    shipmentController.deleteShipment(req, res);
 });
 
 

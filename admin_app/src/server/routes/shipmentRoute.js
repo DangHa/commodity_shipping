@@ -3,20 +3,13 @@ const router = express.Router();
 
 const shipmentController = require('../controllers/shipment_controller');
 
-router.post('/getSuggestedShipment', (req, res) => {
-    shipmentController.getSuggestedShipment(req, res);
+router.get('/getAllShipments', (req, res) => {
+    shipmentController.getAllShipments(req, res);
 });
 
-router.post('/getShipmentDetail', (req, res) => {
-    shipmentController.getShipmentDetail(req, res);
+router.post('/deleteShipment', (req, res) => {
+    shipmentController.deleteShipment(req, res);
 });
-
-router.post('/getShipmentsByDriver', (req, res) => {
-    shipmentController.getShipmentsByDriver(req, res);
-});
-
-router.post('/createNewShipment', (req, res) => {
-    shipmentController.createNewShipment(req, res);
-});
+  
 
 module.exports = router;

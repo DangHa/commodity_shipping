@@ -112,4 +112,51 @@ module.exports = {
     }catch(e){}
   },
 
+  // for admin
+  async getAllShipments() {
+    try{
+      query = `
+      SELECT
+        shipment_id,
+        starting_date,
+        fee,
+        public."Driver".phone,
+        public."Driver".username,
+        public."Route".starting_point,
+        public."Route".destination,
+        public."TypeOfCar".name,
+        public."Shipment".status,
+        (SELECT sum(public."Package".space) as space_total
+          FROM public."Package"
+          WHERE public."Package".shipment_id = public."Shipment".shipment_id),
+        (SELECT sum(public."Package".weight) as weight_total
+          FROM public."Package"
+          WHERE public."Package".shipment_id = public."Shipment".shipment_id),
+        (SELECT count(public."Package".package_id) as number_of_package
+          FROM public."Package"
+          WHERE public."Package".shipment_id = public."Shipment".shipment_id)
+      FROM public."Shipment" 
+      INNER JOIN public."TypeOfCar" ON public."TypeOfCar".typeofcar_id = public."Shipment".typeofcar_id
+      INNER JOIN public."Driver" ON public."Driver".driver_id = public."Shipment".driver_id
+      INNER JOIN public."Route" ON public."Route".route_id = public."Shipment".route_id`
+
+      var result = await pool.query(query);
+      return result.rows
+    }catch(e){}
+  },
+
+  async deleteShipment(shipment_id){
+    try{
+        query = `
+        UPDATE public."Shipment"
+          SET status='deleted'
+          WHERE shipment_id=${shipment_id};`;
+                
+        var result = await pool.query(query);
+    
+        return true
+  
+    }catch(e){}
+  },
+
 };

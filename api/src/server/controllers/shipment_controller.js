@@ -178,6 +178,26 @@ module.exports = {
 
     res.send(JSON.stringify(true));
   },
+
+  // for admin
+  async getAllShipments(req, res) {
+    try {
+      const result = await shipmentTable.getAllShipments();
+
+      res.send(result);
+    }catch(e){
+      console.log(e)
+    }
+
+  },
+
+  async deleteShipment(req, res) {
+    const shipment_id = req.body.shipment_id;
+    
+    const result = await shipmentTable.deleteShipment(shipment_id);
+    
+    res.send(JSON.stringify(result));
+  },
   
 };
 
