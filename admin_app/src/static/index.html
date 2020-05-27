@@ -16,69 +16,133 @@
 
   <body>
     <div class="topnav">
-      <a class="active" href="#home">Drivers</a>
-      <a href="#news">Users</a>
+      <a class="active" href="#home">User</a>
+      <a href="#news">Driver</a>
       <a href="#contact">Shipments</a>
+      <a href="#contact">BOT</a>
       <a href="#about">Statistic</a>
     </div>
 
     <br/>
 
-    <div >
-      <table class="table table-hover" style="width:100%" id="user_table">
+    <div style="padding-left: 20px; padding-right: 20px">
+      <table class="table table-hover table-bordered" style="width:100%" id="user_table">
         <tr>
-          <th data-column-id="username">Username</th>
-          <th data-column-id="address">Address</th> 
-          <th data-column-id="phone">Phone</th>
-          <th data-column-id="action">Action</th>
+          <th data-column-id="username" style="text-align:center">Username</th>
+          <th data-column-id="address" style="text-align:center">Address</th> 
+          <th data-column-id="phone" style="text-align:center">Phone</th>
+          <th data-column-id="action" style="text-align:center">Action</th>
         </tr>
       </table>
     </div>
     
     <script>
-      fetch('/users/getAllUsers') 
-                .then((resp) => resp.json())
-                .then(function(data) {
-                  //push data into table
-                  var table = document.getElementById("user_table");
+      
+      function refreshTable() {
+        var elmtTable = document.getElementById('user_table');
+        var tableRows = elmtTable.getElementsByTagName('tr');
+        var rowCount = tableRows.length;
 
-                  for (var i = 0; i < data.length; i++) {
-                    var row = table.insertRow(i+1);
-                    row.id = data[i].user_id
-                    var username = row.insertCell(0);
-                    username.setAttribute('contentEditable', 'true');
-                    var address = row.insertCell(1);
-                    address.setAttribute('contentEditable', 'true');
-                    var phone = row.insertCell(2);
-                    phone.setAttribute('contentEditable', 'true');
-                    var action = row.insertCell(3);
+        for (var x=rowCount-1; x>0; x--) {
+          elmtTable.removeChild(tableRows[x]);
+        }
+      }
 
-                    username.innerHTML = data[i].username
-                    address.innerHTML = data[i].address
-                    phone.innerHTML = data[i].phone
-                    action.innerHTML = "<tr><td><button onclick='edit_item("+data[i].user_id+")' class='btn btn-primary'>Edit</button></td></tr>    "
-                                      + "<tr><td><button onclick='delete_item("+data[i].user_id+")' class='btn'><i class='fa fa-trash'></i></button></td></tr>"
-                  }
-                })
-                .catch(function() {});
+      function getUser() {
+        refreshTable();
+
+        fetch('/users/getAllUsers') 
+          .then((resp) => resp.json())
+          .then(function(data) {
+            //push data into table
+            var table = document.getElementById("user_table");
+
+            for (var i = 0; i < data.length; i++) {
+              var row = table.insertRow(i+1);
+              row.id = data[i].user_id
+
+              var username = row.insertCell(0);
+              username.setAttribute('contentEditable', 'true');
+              username.style.textAlign = "center";
+              
+              var address = row.insertCell(1);
+              address.setAttribute('contentEditable', 'true');
+              address.style.textAlign = "center";
+              
+              var phone = row.insertCell(2);
+              phone.setAttribute('contentEditable', 'true');
+              phone.style.textAlign = "center";
+              phone.id = data[i].phone
+              
+              var action = row.insertCell(3);
+              action.style.textAlign = "center";
+
+              username.innerHTML = data[i].username
+              address.innerHTML = data[i].address
+              phone.innerHTML = data[i].phone
+
+              if (data[i].status === "deleted") {
+                action.innerHTML  = "Has been deleted"
+              }else{
+                action.innerHTML = "<tr><td><button onclick='edit_item("+data[i].user_id+")' class='btn btn-primary'>Edit</button></td></tr> "
+                                  + "<tr><td><button onclick='delete_item("+data[i].user_id+")' class='btn'><i class='fa fa-trash'></i></button></td></tr>"
+              }
+            }
+          })
+          .catch(function() {});
+      };
 
       function edit_item(user_id){
-        const row = document.getElementById(user_id); 
+        const row = document.getElementById(user_id);
 
         const username = row.getElementsByTagName("td")[0].innerText
         const address  = row.getElementsByTagName("td")[1].innerText
         const phone    = row.getElementsByTagName("td")[2].innerText
+        const oldPhone = row.getElementsByTagName("td")[2].id
         
-        console.log("username: ", username)
-        console.log("address: ", address)
-        console.log("phone: ", phone)
         // send to server
-        
+        fetch('/users/updateInforUser', {
+                method: 'post',
+                body: JSON.stringify({
+                  oldPhone: oldPhone,
+                  phone   : phone,
+                  username: username,
+                  address : address,
+                }),
+                headers: { 'Content-type': 'application/json' }
+              })
+            .then((resp) => resp.json())
+            .then(function(data) {
+              if (data.json !== true) {
+                alert(data.json)
+                row.getElementsByTagName("td")[2].innerHTML = oldPhone
+              }
+              console.log("data: ", data.json)
+            });
+
       };
 
       function delete_item(user_id){
         //send to server
-      }
+        fetch('/users/deleteUser', {
+                method: 'post',
+                body: JSON.stringify({
+                  user_id: user_id
+                }),
+                headers: { 'Content-type': 'application/json' }
+              })
+            .then((resp) => resp.json())
+            .then(function(data) {
+              if (data === true) {
+                const row = document.getElementById(user_id);
+
+                var action = row.getElementsByTagName("td")[3]
+                action.innerHTML = "Has been deleted" 
+              }
+            });
+      };
+
+      getUser();
     </script>
     
   </body>

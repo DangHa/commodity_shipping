@@ -37,13 +37,18 @@ module.exports = {
     return result
   },
 
+  async deleteUser(user_id) {
+    result = await userTable.deleteUser(user_id)
+    return result
+  }, 
+
   async updateInforUser(OldPhone, Phone, Username, Address){
 
     var result = []
     if (OldPhone !== Phone){
       result = await userTable.findUserByPhone(Phone)
     }
-    
+
     if (result.length !== 0) {
       return JSON.stringify("New phone number has already been registed for another account")
     }else{

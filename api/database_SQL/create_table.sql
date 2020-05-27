@@ -3,7 +3,8 @@ CREATE TABLE public."User"(
 	phone VARCHAR (50) NOT NULL,
 	password VARCHAR (50) NOT NULL,
 	username VARCHAR (100),
-	address VARCHAR (100)
+	address VARCHAR (100),
+	status VARCHAR (100),
 );
 
 CREATE TABLE public."Driver"(
@@ -11,7 +12,8 @@ CREATE TABLE public."Driver"(
 	phone VARCHAR (50) NOT NULL,
 	password VARCHAR (50) NOT NULL,
 	username VARCHAR (100),
-	address VARCHAR (100)
+	address VARCHAR (100),
+	status VARCHAR (100),
 );
 
 CREATE TABLE public."Route"(
@@ -68,7 +70,8 @@ CREATE TABLE public."Shipment"(
 	starting_date DATE,
 	weightCapacity INTEGER,
 	spaceCapacity INTEGER,
-	fee INTEGER
+	fee INTEGER,
+	status VARCHAR (100),
 );
 
 CREATE TABLE public."Package"(

@@ -49,6 +49,20 @@ module.exports = {
     }catch(e){}
   },
 
+  async deleteUser(user_id){
+    try{
+        query = `
+        UPDATE public."User"
+          SET status='deleted'
+          WHERE user_id=${user_id};`;
+                
+        var result = await pool.query(query);
+    
+        return true
+  
+    }catch(e){}
+  },
+
   async updateInforUser(OldPhone, Phone, Username, Address){
     try{
         query = `UPDATE public."User"

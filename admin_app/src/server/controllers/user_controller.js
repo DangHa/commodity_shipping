@@ -8,7 +8,6 @@ module.exports = {
       fetch('http://localhost:8080/admin/getAllUsers')
           .then(res => res.json())
           .then(json => {
-            console.log(json)
             res.send(json);
           })
           .catch(err => console.log(err))
@@ -19,22 +18,55 @@ module.exports = {
 
   },
 
-  // async login(req, res) {
-  //   const Phone = req.body.phone;
-  //   const Password = req.body.password;
+  async deleteUser(req, res) {
+    try {
+      const user_id = req.body.user_id;
 
-  //   const result = await userQuery.login(Phone, Password);
+      fetch('http://localhost:8080/admin/deleteUser', {
+            method: 'post',
+            body: JSON.stringify({
+              user_id: user_id
+            }),
+            headers: { 'Content-type': 'application/json' }
+          })
+        .then(res => res.json())
+        .then(json => {
+          console.log(json)
+          res.send(json);
+        })
+        .catch(err => console.log(err))
 
-  //   res.send(result);
-  // },
+    }catch(e){
+      console.log(e)
+    }
+  },
 
-  // async updateInforUser(req, res) {
-  //   const OldPhone = req.body.oldPhone;
-  //   const Phone = req.body.phone;
-  //   const Username = req.body.username;
-  //   const Address = req.body.address;
-    
-  //   const result = await userQuery.updateInforUser(OldPhone, Phone, Username, Address);
-  //   res.send(result);
-  // },
+  async updateInforUser(req, res) {
+    try {
+      const OldPhone = req.body.oldPhone;
+      const Phone    = req.body.phone;
+      const Username = req.body.username;
+      const Address  = req.body.address;
+
+      fetch('http://localhost:8080/admin/updateInforUser', {
+            method: 'post',
+            body: JSON.stringify({
+              oldPhone: OldPhone,
+              phone   : Phone,
+              username: Username,
+              address : Address,
+            }),
+            headers: { 'Content-type': 'application/json' }
+          })
+        .then(res => res.json())
+        .then(json => {
+          console.log(json)
+          res.send(JSON.stringify({json}));
+        })
+        .catch(err => console.log(err))
+
+    }catch(e){
+      console.log(e)
+    }
+  },
 };

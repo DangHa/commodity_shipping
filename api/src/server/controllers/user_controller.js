@@ -37,6 +37,13 @@ module.exports = {
     res.send(JSON.stringify(result));
   },
   
+  async deleteUser(req, res) {
+    const user_id = req.body.user_id;
+    
+    const result = await userQuery.deleteUser(user_id);
+    res.send(JSON.stringify(result));
+  },
+
   async updateInforUser(req, res) {
     const OldPhone = req.body.oldPhone;
     const Phone = req.body.phone;
