@@ -30,7 +30,6 @@ module.exports = {
           })
         .then(res => res.json())
         .then(json => {
-          console.log(json)
           res.send(json);
         })
         .catch(err => console.log(err))
