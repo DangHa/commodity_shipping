@@ -40,6 +40,25 @@ module.exports = {
     const result = await driverTable.findDriverByPhone(Phone);
     res.send(JSON.stringify(result));
   },
+
+  async getAllDrivers(req, res) {
+    try {
+      const result = await driverTable.getAllDrivers();
+
+      res.send(result);
+    }catch(e){
+      console.log(e)
+    }
+
+  },
+
+  async deleteDriver(req, res) {
+    const driver_id = req.body.driver_id;
+    
+    const result = await driverTable.deleteDriver(driver_id);
+    
+    res.send(JSON.stringify(result));
+  },
   
   async updateInforDriver(req, res) {
     const OldPhone = req.body.oldPhone;

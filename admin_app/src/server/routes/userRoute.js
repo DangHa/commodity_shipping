@@ -15,17 +15,4 @@ router.post('/deleteUser', (req, res) => {
   userController.deleteUser(req, res);
 });
 
-
-// router.post('/getInfoUser', (req, res) => {
-//   userController.getInfoUser(req, res);
-// });
-
-// router.post('/login', (req, res) => {
-//   userController.login(req, res);
-// });
-
-// router.post('/signup', (req, res) => {
-//   userController.signup(req, res);
-// });
-
 module.exports = router;

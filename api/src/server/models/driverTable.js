@@ -2,7 +2,7 @@ const pool = require('./connection_to_database/connectToUserDatabase')
 
 module.exports = {
 
-  async getAllDriver() {
+  async getAllDrivers() {
     try{
       var result = await pool.query('SELECT * FROM public."Driver"');
       return result.rows
@@ -25,6 +25,20 @@ module.exports = {
     try{
         query = `INSERT INTO public."Driver"(phone, password)
           VALUES ('${Phone}', '${Password}')`;
+                
+        var result = await pool.query(query);
+    
+        return true
+  
+    }catch(e){}
+  },
+
+  async deleteDriver(driver_id){
+    try{
+        query = `
+        UPDATE public."Driver"
+          SET status='deleted'
+          WHERE driver_id=${driver_id};`;
                 
         var result = await pool.query(query);
     

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href = "mycss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="topnav">
+      <a href="/index.html">Users</a>
+      <a class="active" href="/diver_table.html">Drivers</a>
+      <a href="/shipment_table.html">Shipments</a>
+      <a href="/bot_table.html">BOT</a>
+      <a href="/statistic.html">Statistic</a>
+    </div>
+
+    <br/>
+
+    <div style="padding-left: 20px; padding-right: 20px">
+      <table class="table table-hover table-bordered" style="width:100%" id="driver_table">
+        <tr>
+          <th data-column-id="username" style="text-align:center">Username</th>
+          <th data-column-id="address" style="text-align:center">Address</th> 
+          <th data-column-id="phone" style="text-align:center">Phone</th>
+          <th data-column-id="action" style="text-align:center">Action</th>
+        </tr>
+      </table>
+    </div>
+    
+    <script>
+      
+      function refreshTable() {
+        var elmtTable = document.getElementById('driver_table');
+        var tableRows = elmtTable.getElementsByTagName('tr');
+        var rowCount = tableRows.length;
+
+        for (var x=rowCount-1; x>0; x--) {
+          elmtTable.removeChild(tableRows[x]);
+        }
+      }
+
+      function getUser() {
+        refreshTable();
+
+        fetch('/drivers/getAllDrivers') 
+          .then((resp) => resp.json())
+          .then(function(data) {
+            //push data into table
+            var table = document.getElementById("driver_table");
+
+            console.log(data)
+
+            for (var i = 0; i < data.length; i++) {
+              var row = table.insertRow(i+1);
+              row.id = data[i].driver_id
+
+              var username = row.insertCell(0);
+              username.setAttribute('contentEditable', 'true');
+              username.style.textAlign = "center";
+              
+              var address = row.insertCell(1);
+              address.setAttribute('contentEditable', 'true');
+              address.style.textAlign = "center";
+              
+              var phone = row.insertCell(2);
+              phone.setAttribute('contentEditable', 'true');
+              phone.style.textAlign = "center";
+              phone.id = data[i].phone
+              
+              var action = row.insertCell(3);
+              action.style.textAlign = "center";
+
+              username.innerHTML = data[i].username
+              address.innerHTML = data[i].address
+              phone.innerHTML = data[i].phone
+
+              if (data[i].status === "deleted") {
+                action.innerHTML  = "Has been deleted"
+              }else{
+                action.innerHTML = "<tr><td><button onclick='edit_item("+data[i].driver_id+")' class='btn btn-primary'>Edit</button></td></tr> "
+                                  + "<tr><td><button onclick='delete_item("+data[i].driver_id+")' class='btn'><i class='fa fa-trash'></i></button></td></tr>"
+              }
+            }
+          })
+          .catch(function() {});
+      };
+
+      function edit_item(driver_id){
+        const row = document.getElementById(driver_id);
+
+        const username = row.getElementsByTagName("td")[0].innerText
+        const address  = row.getElementsByTagName("td")[1].innerText
+        const phone    = row.getElementsByTagName("td")[2].innerText
+        const oldPhone = row.getElementsByTagName("td")[2].id
+        
+        // send to server
+        fetch('/drivers/updateInforDriver', {
+                method: 'post',
+                body: JSON.stringify({
+                  oldPhone: oldPhone,
+                  phone   : phone,
+                  username: username,
+                  address : address,
+                }),
+                headers: { 'Content-type': 'application/json' }
+              })
+            .then((resp) => resp.json())
+            .then(function(data) {
+              if (data.json !== true) {
+                alert(data.json)
+                row.getElementsByTagName("td")[2].innerHTML = oldPhone
+              }
+              console.log("data: ", data.json)
+            });
+
+      };
+
+      function delete_item(driver_id){
+        //send to server
+        fetch('/drivers/deleteDriver', {
+                method: 'post',
+                body: JSON.stringify({
+                  driver_id: driver_id
+                }),
+                headers: { 'Content-type': 'application/json' }
+              })
+            .then((resp) => resp.json())
+            .then(function(data) {
+              if (data === true) {
+                const row = document.getElementById(driver_id);
+
+                var action = row.getElementsByTagName("td")[3]
+                action.innerHTML = "Has been deleted" 
+              }
+            });
+      };
+
+      getUser();
+    </script>
+    
+  </body>
+</html>
