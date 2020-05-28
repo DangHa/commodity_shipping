@@ -145,6 +145,36 @@ module.exports = {
     }catch(e){}
   },
 
+  async statistic_shipment() {
+    try{
+      query = `
+      SELECT
+        count(public."Shipment".shipment_id) as numberOfShipment,
+        to_char(starting_date,'Mon') as mon
+      FROM public."Shipment"
+      GROUP BY mon`
+
+      var result = await pool.query(query);
+      return result.rows
+    }catch(e){}
+  },
+
+  async statistic_package() {
+    try{
+      query = `
+      SELECT 
+        count(public."Package".package_id) as numberOfpackage,
+        to_char(starting_date,'Mon') as mon
+      FROM public."Shipment"
+      INNER JOIN public."Package" ON public."Package".shipment_id = public."Shipment".shipment_id
+      GROUP BY mon`
+
+      var result = await pool.query(query);
+      return result.rows
+    }catch(e){}
+  },
+
+
   async deleteShipment(shipment_id){
     try{
         query = `
@@ -158,5 +188,7 @@ module.exports = {
   
     }catch(e){}
   },
+
+
 
 };

@@ -5,6 +5,7 @@ const router = express.Router();
 const userController = require('../controllers/user_controller');
 const driverController = require('../controllers/driver_controller');
 const shipmentController = require('../controllers/shipment_controller');
+const BOTController = require('../controllers/bot_controller');
 
 
 
@@ -41,6 +42,16 @@ router.get('/getAllShipments', (req, res) => {
 
 router.post('/deleteShipment', (req, res) => {
     shipmentController.deleteShipment(req, res);
+});
+
+// BOT
+router.get('/getAllBOT', (req, res) => {
+    BOTController.getAllBOT(req, res);
+});
+
+// statistic
+router.get('/statistic', (req, res) => {
+    shipmentController.statistic(req, res);
 });
 
 

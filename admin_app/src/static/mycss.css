@@ -29,6 +29,18 @@ body {
     color: white;
 }
 
+/* table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table td {
+    word-wrap: break-word;       
+    overflow-wrap: break-word;     
+} */
+
+
+
 /* .btn {
   background-color: DodgerBlue;
   border: none;

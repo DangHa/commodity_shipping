@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      
+    <title>Signin Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href = "mycss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  </head>
+
+  <body>
+    <div class="topnav">
+      <a href="/index.html">Users</a>
+      <a href="/diver_table.html">Drivers</a>
+      <a href="/shipment_table.html">Shipments</a>
+      <a class="active" href="/statistic.html">Statistic</a>
+    </div>
+
+    <br/>
+
+    <canvas id="myChart" width="350" height="150"></canvas>
+    
+    <script>
+
+        fetch('/statistic/statistic') 
+            .then((resp) => resp.json())
+            .then(function(data) {
+                //push data into table
+
+                var labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                
+                var shipmentdata = data.shipment
+                var numberofshipment = [0,0,0,0,0,0,0,0,0,0,0,0]
+                for (var i = 0; i < shipmentdata.length; i++){
+                    var index_label = labels.indexOf(shipmentdata[i].mon)
+
+                    numberofshipment[index_label] = parseInt(shipmentdata[i].numberofshipment)
+                }
+
+                var packagedata = data.package
+                var numberofpackage = [0,0,0,0,0,0,0,0,0,0,0,0]
+                for (var i = 0; i < packagedata.length; i++){
+                    var index_label = labels.indexOf(packagedata[i].mon)
+
+                    numberofpackage[index_label] = parseInt(packagedata[i].numberofpackage)
+                }
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'Number of shipment',
+                            data: numberofshipment,
+                            borderColor: "#3e95cd",
+                            borderWidth: 1
+                        },{
+                            label: 'Number of package',
+                            data: numberofpackage,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                })
+                
+            })
+            .catch(function() {});
+
+    </script>
+    
+  </body>
+</html>

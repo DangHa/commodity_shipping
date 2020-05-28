@@ -198,6 +198,23 @@ module.exports = {
     
     res.send(JSON.stringify(result));
   },
+
+  async statistic(req, res) {
+    try {
+      const shipment = await shipmentTable.statistic_shipment();
+      const package = await shipmentTable.statistic_package();
+
+      const result = {
+        shipment: shipment,
+        package: package
+      }
+
+      res.send(result)
+    }catch(e){
+      console.log(e)
+    }
+
+  },
   
 };
 

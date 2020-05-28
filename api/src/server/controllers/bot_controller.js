@@ -136,7 +136,34 @@ module.exports = {
     }
     res.send(response);
   },
-  
+
+  //for admin 
+  async getAllBOT(req, res) {
+    try {
+      const result = await botQuery.getAllBOT();
+
+      var response = [] //[{expressway, []]
+      var expressway = []
+      for (var i = 0; i < result.length; i++){
+        if (!expressway.includes(result[i].expressway)){
+          expressway.push(result[i].expressway)
+          response.push({
+            expressway: result[i].expressway,
+            details   : [result[i]]
+          })
+        }else{
+          response[response.length-1].details.push(result[i])          
+        }
+      }
+
+      console.log(response[0])
+
+      res.send(response);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
 };
 
 function remove_duplication(array) {

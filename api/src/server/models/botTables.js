@@ -49,5 +49,31 @@ module.exports = {
     }catch(e){}
   },
 
+  // for admin
+  async getAllBOT(){
+    try{
+      query = `
+      SELECT
+        public."TypeOfCar".name as car,
+        (SELECT public."toll_plaza".name as starting_point
+          FROM public."toll_plaza" 
+          WHERE public."toll_plaza".toll_plaza_id = public."BOTprice".toll_plaza_id_start),
+        (SELECT public."toll_plaza".name as destination
+          FROM public."toll_plaza"
+          WHERE public."toll_plaza".toll_plaza_id = public."BOTprice".toll_plaza_id_end),
+        (SELECT public."toll_plaza".expressway_name as expressway
+          FROM public."toll_plaza"
+          WHERE public."toll_plaza".toll_plaza_id = public."BOTprice".toll_plaza_id_end),
+        price
+      FROM public."BOTprice" 
+      INNER JOIN public."TypeOfCar" ON public."TypeOfCar".typeofcar_id = public."BOTprice".typeofcar_id
+      ORDER BY expressway;`
+              
+      var result = await pool.query(query);
+      
+      return result.rows
+  
+    }catch(e){}
+  },
 
 };
