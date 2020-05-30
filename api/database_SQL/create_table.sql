@@ -108,3 +108,21 @@ from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/bot_price.
 DELIMITERS ',' 
 CSV 
 HEADER;
+
+-- Table of vietnam road system
+DROP TABLE public."BOT_ways";
+
+CREATE TABLE public."BOT_ways"(
+	road_id serial PRIMARY KEY,
+	name VARCHAR,
+	osm_id BIGINT,
+	highest_price INTEGER
+);
+
+copy "BOT_ways" (name, osm_id, highest_price)
+from '/home/ha/workspace/javascript/commodity_convey/api/database_SQL/expressway_osm.csv' 
+DELIMITERS ',' 
+CSV 
+HEADER;
+
+
