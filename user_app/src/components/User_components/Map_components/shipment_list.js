@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, FlatList, StyleSheet, Text, TouchableOpacity, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import RetroMapStyles from '../../../assets/RetroMapStyles';
 import MapViewDirections from "react-native-maps-directions";
 
@@ -148,7 +148,7 @@ class Shipment extends Component{
 
       var RouteCoordinates = [];
       for (var i = 0; i < array.length-1; i+=2) {
-        var newEle = {latitude: array[i],longitude: array[i+1]}
+        var newEle = {latitude: parseFloat(array[i]),longitude: parseFloat(array[i+1])}
         RouteCoordinates.push(newEle)
       };
 
@@ -218,15 +218,20 @@ class Shipment extends Component{
               ))}
             
               {/* Need to draw a route */}
-              <MapViewDirections
-                origin      = {this.state.markers[0].coordinate}
-                waypoints   = { (this.state.route.coordinates.length > 2) ? reduceWayPointsToBelow_25(this.state.route.coordinates.slice(1, -1)): [] }
-                destination = {this.state.markers[1].coordinate}
-                apikey      = {GOOGLE_MAP_APIKEY}
-                strokeWidth = {5}
-                optimizeWaypoints={true}
-                strokeColor = "tomato"
+              <Polyline
+                coordinates= {this.state.route.coordinates}
+                strokeColor="tomato" // fallback for when `strokeColors` is not supported by the map-provider
+                strokeColors={[
+                  '#7F0000',
+                  '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                  '#B24112',
+                  '#E5845C',
+                  '#238C23',
+                  '#7F0000'
+                ]}
+                strokeWidth={5}
               />
+
             </MapView>
 
             <Text></Text>
@@ -348,22 +353,6 @@ export default class History extends Component {
     );
   }
 };
-
-function reduceWayPointsToBelow_25(waypoints) {
-  
-  if(waypoints.length > 24){
-    var result = []
-
-    var increase = waypoints/25 + 1 
-    for (var i = 0; i< waypoints.length; i+=increase){
-      result.push(waypoints[i])
-    }
-
-    return result
-  }
-
-  return waypoints
-}
 
 const styles = StyleSheet.create({
   container: {

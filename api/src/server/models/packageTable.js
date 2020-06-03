@@ -77,13 +77,14 @@ module.exports = {
             package_id,
             starting_point,
             destination,
-            status
+            public."Package".status
         FROM public."Package"
         INNER JOIN public."User" ON public."User".user_id = public."Package".user_id
         WHERE public."User".phone = '${Phone}';`
               
+        console.log(query)
         var result = await pool.query(query);
-        
+        console.log(query)
         return result.rows
 
     }catch(e){}
@@ -128,7 +129,7 @@ module.exports = {
             starting_point, 
             destination, 
             phone_of_receiver, 
-            status
+            public."Package".status
       FROM public."Package"
       INNER JOIN public."User" ON public."User".user_id = public."Package".user_id
       where shipment_id = '${shipment_id}' and status != 'refused'
