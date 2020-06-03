@@ -16,7 +16,7 @@ module.exports = {
             ORDER BY the_geom <-> ST_GeometryFromText('POINT(${longitude_destination} ${latitude_destination})',4326) 
             LIMIT 1)
         
-          SELECT seq, edge, length, ST_AsText(b.the_geom), b.the_geom
+          SELECT length_m, ST_AsText(b.the_geom)
             FROM pgr_Astar('
               SELECT gid as id, public."ways".osm_id, source_osm AS source, target_osm AS target, x1, y1, x2, y2, 
                 COALESCE(highest_price, 1) as highest_price, length,

@@ -22,19 +22,23 @@ module.exports = {
                                 weight);
     
     // console.log(result)
-    var response = []
+    var roadDescription = []
+    var osm_length = 0
 
     for( var i = 0; i < result.length; i++) {
       var osm_data_form_route = result[i].st_astext.slice(11, -1)
 
       var presented_road = changeOSMDataToPresentedData(osm_data_form_route)
       // get coordinate of route
-      response = [...response, ...presented_road]
+      roadDescription = [...roadDescription, ...presented_road]
+
+      osm_length += result[i].length_m/1000
     }
 
-    console.log(response[10])
-
-    res.send(response);
+    res.send({
+      roadDescription: roadDescription,
+      osm_length: osm_length
+    });
   },
 }
 

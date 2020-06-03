@@ -36,6 +36,7 @@ export default class Map extends Component {
       destinationPredictions: [],
       destinationName: "",
       length: 0,
+      osm_length: 0,
       markers: [
         {
           "coordinate": {}, 
@@ -89,7 +90,8 @@ export default class Map extends Component {
       destinationName          : this.state.destinationName,
       latitude_destination     : this.state.destination.latitude,
       longitude_destination    : this.state.destination.longitude,
-      length                   : this.state.length
+      length                   : this.state.length,
+      osm_length               : this.state.osm_length
     });
   }
 
@@ -427,11 +429,10 @@ export default class Map extends Component {
                   console.error(error);
               });
  
-      if (result.length !== 0){
+      if (result.length !== null){
         this.setState({
-          osm_route: {
-            coordinates: result
-          }
+          osm_route : {coordinates: result.roadDescription},
+          osm_length: result.osm_length
         });
       } else {
         alert("There are something wrong")

@@ -19,6 +19,7 @@ export default class ShipmentForm extends Component {
       latitude_destination    : state.params.latitude_destination,
       longitude_destination   : state.params.longitude_destination,
       length                  : state.params.length,
+      osm_length              : state.params.osm_length,
       weightCapacity          : 0,
       spaceCapacity           : 0,
       startingTime            : new Date(),
@@ -37,6 +38,7 @@ export default class ShipmentForm extends Component {
 
   async componentDidMount(){
     var roadDescription = this.state.route.coordinates
+
     if (this.state.use_recommend_system === true) {
       if (this.state.osm_route.coordinates === []){
         alert('You havenot used the recommender system before')
@@ -53,7 +55,7 @@ export default class ShipmentForm extends Component {
       body: JSON.stringify({
         typeOfCar_id   : this.state.typeOfCar_id,
         roadDescription: roadDescription,
-        length         : this.state.length,
+        length         : this.state.length
       }),
       headers: {
         'Accept':       'application/json',
@@ -82,7 +84,9 @@ export default class ShipmentForm extends Component {
     let phone = await AsyncStorage.getItem('userPhone');
 
     var roadDescription = this.state.route.coordinates
+    var length = this.state.length
     if (this.state.use_recommend_system === true) {
+      length          = this.state.osm_length
       roadDescription = shortRequest(this.state.osm_route.coordinates)
     }
 
@@ -196,7 +200,10 @@ export default class ShipmentForm extends Component {
             <Text></Text>
             {BOT_infor}
             <View style={[{ paddingLeft: 15, paddingBottom: 10 }]}>
-              <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {parseInt(this.state.length/100*10 * 15000)} (vnd) -- length: {parseInt(this.state.length)} (km)</Text>
+              {this.state.use_recommend_system === false?
+                <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {parseInt(this.state.length/100*10 * 15000)} (vnd) -- length: {parseInt(this.state.length)} (km)</Text>
+              : <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {parseInt(this.state.osm_length/100*10 * 15000)} (vnd) -- length: {parseInt(this.state.osm_length)} (km)</Text>
+              }
             </View>
           </View>
         : null}
