@@ -82,9 +82,7 @@ module.exports = {
         INNER JOIN public."User" ON public."User".user_id = public."Package".user_id
         WHERE public."User".phone = '${Phone}';`
               
-        console.log(query)
         var result = await pool.query(query);
-        console.log(query)
         return result.rows
 
     }catch(e){}

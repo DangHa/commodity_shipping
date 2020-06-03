@@ -46,7 +46,6 @@ module.exports = {
   async getPackageByPhone(req, res) {
     const Phone = req.body.phone;
     
-    console.log(Phone)
     const result = await packageTable.getPackageByPhone(Phone)
      
     res.send(JSON.stringify(result));
