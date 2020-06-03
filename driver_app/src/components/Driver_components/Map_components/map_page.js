@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, TextInput, Text, TouchableOpacity} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from "react-native-maps-directions";
@@ -9,6 +9,7 @@ import { DatePicker, Picker, Item } from 'native-base';
 import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
 const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
+const zoom_default = 0.1
 
 // Get location 
 const getLocation = () => {
@@ -50,7 +51,8 @@ export default class Map extends Component {
         }
       ],
       route: {coordinates: []},
-      weight_BOT: "0.1",
+      osm_route: {coordinates: []},
+      weight_BOT: ""
     }
   }
 
@@ -65,8 +67,8 @@ export default class Map extends Component {
           region: {
               latitude: data.latitude,
               longitude: data.longitude,
-              latitudeDelta: 0.05,
-              longitudeDelta: 0.05
+              latitudeDelta: zoom_default,
+              longitudeDelta: zoom_default
           }
         });
       }
@@ -80,6 +82,7 @@ export default class Map extends Component {
   shipment_detail() {
     this.props.navigation.navigate("ShipmentDetail", { 
       route                    : this.state.route,
+      osm_route                : this.state.osm_route,
       startingPointName        : this.state.startingPointName,
       latitute_starting_point  : this.state.start.latitude,
       longitude_starting_point : this.state.start.longitude,
@@ -134,6 +137,11 @@ export default class Map extends Component {
         ]
       }
     });
+
+    //reset osm_direction
+    this.setState({
+      osm_route: {coordinates: []}
+    });
   }
 
   // ------------ Starting textinput ----------------
@@ -151,8 +159,8 @@ export default class Map extends Component {
         start = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05
+          latitudeDelta: zoom_default,
+          longitudeDelta: zoom_default
         }
       }else {
         start = this.state.region
@@ -226,8 +234,8 @@ export default class Map extends Component {
       start: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05
+        latitudeDelta: zoom_default,
+        longitudeDelta: zoom_default
       }
     });
 
@@ -264,8 +272,8 @@ export default class Map extends Component {
         destination = {
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05
+          latitudeDelta: zoom_default,
+          longitudeDelta: zoom_default
         }
       }else {
         destination = this.state.region
@@ -339,8 +347,8 @@ export default class Map extends Component {
       destination: {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05
+        latitudeDelta: zoom_default,
+        longitudeDelta: zoom_default
       }
     });
 
@@ -372,16 +380,24 @@ export default class Map extends Component {
   }
 
   changeWeight_BOT(weight) {
-    if (weight >= 0.1 && weight <= 0.9){
-      this.setState({ weight_BOT : weight})
-    }
+    this.setState({ weight_BOT : weight})
   }
 
   async getSuggestedDirection(){
     console.log(this.state.weight_BOT)
 
-    if (this.state.startingPointName === "" || this.state.destinationName === ""){
-      alert("You haven't had the starting point or destination yet")
+    // check weight of BOT
+    if (this.state.weight_BOT < 0.1 || this.state.weight_BOT > 1){
+      alert("You should just put a number between 0.1-1. 0.1 is for choosing to go through BOT roads, while 1 is for avoiding")
+      return
+    }else if (this.state.weight_BOT === ""){
+      alert("You haven't had the weight for BOT ways")
+      return
+    }
+
+    // check starting point and destination
+    if (this.state.startingPointName === "" || this.state.destinationName === "" ){
+      alert("You haven't had the starting point, destination yet")
     }else {
 
       // send starting, end point and weight bot to server 
@@ -410,14 +426,17 @@ export default class Map extends Component {
               .catch((error) => {
                   console.error(error);
               });
-      
-      if (result !== null){
-        // this.setState({ route: this.state.roate });
+ 
+      if (result.length !== 0){
+        this.setState({
+          osm_route: {
+            coordinates: result
+          }
+        });
       } else {
         alert("There are something wrong")
       }
     }
-
   }
 
   render() {
@@ -465,15 +484,31 @@ export default class Map extends Component {
                 }   
               })}
 
-              {/* --- Route --- */}
-              {this.state.route.coordinates.length >= 2 ?
+              {/* --- OSM Direction --- */}
+              {this.state.osm_route.coordinates.length >= 2?
+                <Polyline
+                    coordinates= {this.state.osm_route.coordinates}
+                    strokeColor="green" // fallback for when `strokeColors` is not supported by the map-provider
+                    strokeColors={[
+                      '#7F0000',
+                      '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                      '#B24112',
+                      '#E5845C',
+                      '#238C23',
+                      '#7F0000'
+                    ]}
+                    strokeWidth={5}
+                  />
+              : null }
+
+              {/* --- Google Direction --- */}
+              {this.state.route.coordinates.length >= 2?
                 <MapViewDirections
                   origin      = {this.state.route.coordinates[0]}
-                  waypoints   = { (this.state.route.coordinates.length > 2) ? reduceWayPointsToBelow_25(this.state.route.coordinates.slice(1, -1)): [] }
+                  waypoints   = { [] }
                   destination = {this.state.route.coordinates[this.state.route.coordinates.length-1]}
                   apikey      = {GOOGLE_MAP_APIKEY}
                   strokeWidth = {5}
-                  optimizeWaypoints={true}
                   strokeColor = "#1565c0"
                   onStart={(params)=>{
                     console.log("Draw a direction");
@@ -521,21 +556,22 @@ export default class Map extends Component {
               {destinationPredictions}
             
             <View style={styles.bottom}>
-              <View style={[{flexDirection:"row", marginBottom: -45, marginLeft: 5}]}>
-                <TextInput style={[styles.inputBox, {width: 100, marginVertical: 0}]}
-                    onChangeText={(weight) => this.changeWeight_BOT(weight)} 
-                    underlineColorAndroid='rgba(0,0,0,0)' 
-                    placeholder=" 0.1 -> 0.9"
-                    selectionColor="#fff"
-                    keyboardType="numeric"/>
+              {this.state.start['latitude'] && this.state.destination['latitude'] ?
+                <View style={[{flexDirection:"row", marginBottom: -45, marginLeft: 5}]}>
+                  <TextInput style={[styles.inputBox, {width: 100, marginVertical: 0}]}
+                      onChangeText={(weight) => this.changeWeight_BOT(weight)} 
+                      underlineColorAndroid='rgba(0,0,0,0)' 
+                      placeholder=" 0.1 -> 1"
+                      selectionColor="#fff"
+                      keyboardType="numeric"/>
 
-                <View style={[{marginBottom: 0, marginLeft: 10}]}>
-                  <TouchableOpacity style={styles.button}> 
-                    <Text style={styles.buttonText} onPress={this.getSuggestedDirection.bind(this)}>Direction with weigh BOT</Text>
-                  </TouchableOpacity>
+                  <View style={[{marginBottom: 0, marginLeft: 10}]}>
+                    <TouchableOpacity style={styles.button}> 
+                      <Text style={styles.buttonText} onPress={this.getSuggestedDirection.bind(this)}>Direction with weigh BOT</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              
-              </View>
+              : null}
 
               {/* --- Route Change --- */}
               {this.state.start['latitude'] && this.state.destination['latitude'] ?
@@ -553,22 +589,6 @@ export default class Map extends Component {
       </View>
     );
   }
-}
-
-function reduceWayPointsToBelow_25(waypoints) {
-
-  if(waypoints.length > 24){
-    var result = []
-
-    var increase = waypoints/25 + 1 
-    for (var i = 0; i< waypoints.length; i+=increase){
-      result.push(waypoints[i])
-    }
-
-    return result
-  }
-
-  return waypoints
 }
 
 const styles = StyleSheet.create({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
-import { DatePicker, Picker, Item } from 'native-base';
+import { DatePicker, Picker, Item, CheckBox, ListItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ShipmentForm extends Component {
@@ -11,6 +11,7 @@ export default class ShipmentForm extends Component {
 
     this.state ={
       route                   : state.params.route,
+      osm_route               : state.params.osm_route,
       startingPointName       : state.params.startingPointName,
       latitute_starting_point : state.params.latitute_starting_point,
       longitude_starting_point: state.params.longitude_starting_point,
@@ -24,6 +25,7 @@ export default class ShipmentForm extends Component {
       typeOfCar_id            : "1",
       fee                     : 100,
       passedBOT               : [],
+      use_recommend_system    : false,
 
       showDetailFee           : false
     };
@@ -34,6 +36,15 @@ export default class ShipmentForm extends Component {
   }
 
   async componentDidMount(){
+    var roadDescription = this.state.route.coordinates
+    if (this.state.use_recommend_system === true) {
+      if (this.state.osm_route.coordinates === []){
+        alert('You havenot used the recommender system before')
+      }else{
+        roadDescription = shortRequest(this.state.osm_route.coordinates)
+      }
+    }
+
     // Get fee and BOTPassed
     let data = {
       method: 'POST',
@@ -41,7 +52,7 @@ export default class ShipmentForm extends Component {
       mode: 'same-origin',
       body: JSON.stringify({
         typeOfCar_id   : this.state.typeOfCar_id,
-        roadDescription: this.state.route.coordinates,
+        roadDescription: roadDescription,
         length         : this.state.length,
       }),
       headers: {
@@ -122,7 +133,7 @@ export default class ShipmentForm extends Component {
 
   // to fix error of dropdown
   componentDidUpdate(pP, pS, sS) {
-    if (pS.typeOfCar_id !== this.state.typeOfCar_id){
+    if (pS.typeOfCar_id !== this.state.typeOfCar_id || pS.use_recommend_system !== this.state.use_recommend_system){
       this.componentDidMount()
     }
   }
@@ -160,6 +171,24 @@ export default class ShipmentForm extends Component {
 
         {this.state.showDetailFee ?
           <View>
+            <ListItem>
+              <CheckBox style={[{borderRadius: 5}]}
+                        checked={!this.state.use_recommend_system}
+                        onPress={() => this.setState({use_recommend_system: false})}/>
+              <Body>
+                <Text> Choose using Google direction</Text>
+              </Body>
+            </ListItem>
+            <ListItem>
+              <CheckBox style={[{borderRadius: 5}]} 
+                        checked={this.state.use_recommend_system}
+                        onPress={() => this.setState({use_recommend_system: true})}/>
+              <Body>
+                <Text> Choose using direction of recommender system</Text>
+              </Body>
+            </ListItem>
+
+            <Text></Text>
             {BOT_infor}
             <View style={[{ paddingLeft: 15, paddingBottom: 10 }]}>
               <Text style={[{fontSize: 12}]}>- Gasoline expenditure: {parseInt(this.state.length/100*10 * 15000)} (vnd) -- length: {parseInt(this.state.length)} (km)</Text>
@@ -236,6 +265,22 @@ export default class ShipmentForm extends Component {
     );
   }
 };
+
+function shortRequest(roadDescription) {
+  
+  if (roadDescription.length > 350) {
+
+    var result = []
+    var increase = parseInt(roadDescription.length/350)
+    for (var i = 0 ;i< roadDescription.length; i+=increase ){
+      result.push(roadDescription[i])
+    }
+
+    return result
+  }
+
+  return roadDescription
+}
 
 const styles = StyleSheet.create({
   container: {
