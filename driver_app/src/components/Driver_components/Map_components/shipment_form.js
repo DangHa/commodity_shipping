@@ -81,6 +81,11 @@ export default class ShipmentForm extends Component {
   sendToServer = async()=>{
     let phone = await AsyncStorage.getItem('userPhone');
 
+    var roadDescription = this.state.route.coordinates
+    if (this.state.use_recommend_system === true) {
+      roadDescription = shortRequest(this.state.osm_route.coordinates)
+    }
+
     // Send In here
     let data = {
       method: 'POST',
@@ -98,7 +103,7 @@ export default class ShipmentForm extends Component {
         destinationName         : this.state.destinationName,
         latitude_destination    : this.state.latitude_destination,
         longitude_destination   : this.state.longitude_destination,
-        roadDescription         : this.state.route.coordinates,
+        roadDescription         : roadDescription,
         length                  : this.state.length,
         fee                     : this.state.fee,
         passedBOT               : this.state.passedBOT, 
