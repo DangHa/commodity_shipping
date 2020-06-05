@@ -130,7 +130,7 @@ module.exports = {
             public."Package".status
       FROM public."Package"
       INNER JOIN public."User" ON public."User".user_id = public."Package".user_id
-      where shipment_id = '${shipment_id}' and status != 'refused'
+      where shipment_id = ${shipment_id} and public."Package".status != 'refused'
       Order by status desc`
             
       var result = await pool.query(query);

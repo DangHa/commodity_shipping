@@ -279,11 +279,10 @@ export default class ShipmentForm extends Component {
 };
 
 function shortRequest(roadDescription) {
-  
-  if (roadDescription.length > 350) {
+  if (roadDescription.length > 500) {
 
     var result = []
-    var increase = parseInt(roadDescription.length/350)
+    var increase = parseInt(roadDescription.length/500)
     for (var i = 0 ;i< roadDescription.length; i+=increase ){
       result.push(roadDescription[i])
     }

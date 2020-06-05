@@ -22,14 +22,17 @@ module.exports = {
           var check_lon = lonStreet[lonStreet.length-1]-lon
 
           if (Math.abs(check_lon) > 0.02 && Math.abs(check_lat) > 0.02){
-            latStreet.push(latStreet[latStreet.length-1]-check_lat/4)
-            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon/4)
+            latStreet.push(latStreet[latStreet.length-1]-check_lat/5)
+            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon/5)
 
-            latStreet.push(latStreet[latStreet.length-1]-check_lat*2/4)
-            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon*2/4)
+            latStreet.push(latStreet[latStreet.length-1]-check_lat*2/5)
+            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon*2/5)
 
-            latStreet.push(latStreet[latStreet.length-1]-check_lat*3/4)
-            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon*3/4)
+            latStreet.push(latStreet[latStreet.length-1]-check_lat*3/5)
+            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon*3/5)
+
+            latStreet.push(latStreet[latStreet.length-1]-check_lat*4/5)
+            lonStreet.push(lonStreet[lonStreet.length-1]-check_lon*4/5)
           }
 
           latStreet.push(lat)

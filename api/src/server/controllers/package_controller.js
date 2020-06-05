@@ -70,7 +70,7 @@ module.exports = {
     const shipment_id = req.body.shipment_id;
 
     const result = await packageTable.getPackageByShipment(shipment_id);
-
+    
     res.send(result);
   },
 
