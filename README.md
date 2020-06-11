@@ -4,9 +4,9 @@
 
 ## Description
 This system was created to help drivers can maximise their income in each their shipments
-For example: a driver has a plan travelling from Hanoi,Vietnam to HoChiMinh city, Vietnam by a 4-seat car. He uses Uber to fill up the three rest seats, but the luggage compartment is still not filled up. This system will help this driver to fill up the rest capacity of the car which means he can optimise the money for each travel.
+For example: a driver has a plan travelling from Hanoi,Vietnam to HoChiMinh,Vietnam by a 4-seat car. He uses Uber to fill up the three rest seats, but the luggage compartment is still not filled up. This system will help this driver to fill up the rest capacity of the car which means he can optimise the money for each travel.
 
-How it works. It a driver has still 100 (Kg) and 100 (M^3) for his car. He will register the information of this shipment on the system, then this information will be shown for users who has packages to choose if this travel fit with their demand.
+How it works. If a driver has still 100 (Kg) and 100 (M^3) for his car. He will register the information of this shipment on the system, then this information will be shown for users who has packages to choose if this travel fit with their demand.
 
 The information of 1 shipment consists: <br/>
     -, Starting point <br/>
@@ -14,7 +14,7 @@ The information of 1 shipment consists: <br/>
     -, Direction (The system will have a recommender system to helps drivers choose the direction which does not pass the toll plazas in Vietnam, it means reducing the cost of travel) <br/>
     -, Weight capacity <br/>
     -, Space capacity <br/>
-    -, Starting day (after this day, system won't recommend this shipment to users have packages anymore) <br/>
+    -, Starting day (after this day, the system won't recommend this shipment to users have packages anymore) <br/>
 
 - **System Overview**
 
@@ -34,19 +34,19 @@ The information of 1 shipment consists: <br/>
 
 
 ## Pathfinding recommender system  
-This recommender system helps drivers to find suitable direction by criteria such as expenditure, length and time
+This recommender system helps drivers to find suitable direction by criteria such as time, length of way and expense
 
 - **Data used by recommender system** <br/>
 
   -, The data of Vietnam road system is come from OpenStreetMap and be extracted by geofabrik (geofabrik.de)<br/>
-  -, The data of Vietnam toll plaza is from some newspapers on the internet <br/>
+  -, The data of Vietnam toll plaza is from some Vietnam newspapers <br/>
 
 - **A-star Algorithm** <br/>
 
-  The pathfinding algorithm is A* algorithm with the cost when consider in each node is <br/>
+  The pathfinding algorithm is A* algorithm with the cost which be calculated in each node is <br/>
 
           cost = Cost_of_node * h()
-        with h() = sqrt(dx) + sqrt(dy) (x, y is coordinate of nodes on earth)
+        with h() = sqrt(dx) + sqrt(dy) (x, y are earth coordinates of node)
 
 - **Value of Cost_of_node** <br/>
 
@@ -68,7 +68,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
     priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
 
 
-  Now it can care about the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
+  Now it can be affected by the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
   ![length*priority_of_road](https://gitlab.com/dangha997/commodity_carrier/uploads/53023afa0069a1fa20951c09f50a554c/image.png)
 
@@ -93,6 +93,9 @@ This recommender system helps drivers to find suitable direction by criteria suc
 ![Fuzzy logic](https://gitlab.com/dangha997/commodity_carrier/uploads/a39b0165c3e26a998d9bff9b273b485c/image.png)
 
 ## How to run
+
+  - Database
+    Follow instruction in file 1_README_for_creating-database.md in /api/database_SQL
 
   - For mobile app <br/>
     Install Adroid studio and also set up some environment link (follow instruction to install on ubuntu)
