@@ -66,7 +66,9 @@ This recommender system helps drivers to find suitable direction by criteria suc
     priority_of_road = 1.8 when roads are 'primary','primary_link','primary_junction' <br/>
     priority_of_road = 1.3 when roads are 'trunk','trunk_link','trunk_junction' <br/>
     priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
-
+  
+  -> This numbers has been chosen from the attributes of the data of length and h(). <br/>
+  Briefly, length ~ (0.00001, 9)  and h() ~ (0.0001 -> 5). length is always in this range,no matter node being considered is close to the destination, while the range of h() will be changed
 
   Now it can be affected by the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
@@ -94,7 +96,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
 ## How to run
 
-  - Database
+  - Database <br/>
     Follow instruction in file 1_README_for_creating-database.md in /api/database_SQL
 
   - For mobile app <br/>
