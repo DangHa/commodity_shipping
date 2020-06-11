@@ -1,4 +1,4 @@
-# Automatic car (Using fuzzy logic)
+# COMMODITY SHIPPING (optimising the shipping commodity capacity)
 
 
 ## Description
@@ -30,6 +30,7 @@ The information of 1 shipment consists:
 
 ![Diagram_user_app](https://gitlab.com/dangha997/commodity_carrier/uploads/960683afd02c1d5837dabeb856dee854/image.png)
 ![User_app_interface](https://gitlab.com/dangha997/commodity_carrier/uploads/331a9d9c734e3c9d65e8942a2e889702/image.png)
+
 
 ## Pathfinding recommender system  
 This recommender system helps drivers to find suitable direction by criteria such as expenditure, length and time
