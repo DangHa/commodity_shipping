@@ -49,14 +49,17 @@ This recommender system helps drivers to find suitable direction by criteria suc
         with h() = sqrt(dx) + sqrt(dy) (x, y are earth coordinates of node)
 
 - **Value of Cost_of_node** <br/>
+    * ***influence of length*** <br/>
 
-      Cost_of_node = length
+          Cost_of_node = length
 
   Only find the shortest path. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
   ![length](https://gitlab.com/dangha997/commodity_carrier/uploads/78cde2d617c5967b31c44c7b0ba30b6d/image.png)
 
-        Cost_of_node = length * priority_of_road
+    * ***influence of priority_of_road*** <br/> 
+
+          Cost_of_node = length * priority_of_road
 
   -, With priority_of_road is <br/>
     priority_of_road = -1.0 when roads are 'steps','footway','pedestrian' <br/>
@@ -74,15 +77,28 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
   ![length*priority_of_road](https://gitlab.com/dangha997/commodity_carrier/uploads/53023afa0069a1fa20951c09f50a554c/image.png)
 
+  The result now is similar to the Google Map  <br/>
+
+  ![Google Map](https://gitlab.com/dangha997/commodity_carrier/uploads/9c66b64f6286f8dc825c8797e45ab4be/image.png)
+    
+  Even we have a result is better than Google map. An example of finding a path from Giap bat,Hanoi to Hai Phong city<br/>
+
+  ![Recommender system](https://gitlab.com/dangha997/commodity_carrier/uploads/f235222cd84758d3c7897d7a95a05c61/image.png)
+  ![Google Map](https://gitlab.com/dangha997/commodity_carrier/uploads/20de4bcd08f0cf114cc6b6d77b3b2595/image.png)
+  <br/>From the images above. Google Map recommends the road through the TanMai road which is a small road, it's the shortest but will take a lot of time if a car wants to go through. Whereas the recommender system suggests direction run on GiaiPhong road-a big road, then go on CT20-Vanh Dai 3 which is far more better way. <br/>
+  From this point, we can speculate that the GoogleMap's algorithm also is A*, and Google map has weight of h() is bigger than weight of cost between two nodes, so it just choose the road on the West when destination is in the East. Even though the road on the West is far more better <br/> <br/>
+
+    * ***influence of price_of_road*** <br/> 
+
           Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight
 
-  -, With price_highest_of_road is come from the BOT_toll_plaza table
+  -, With price_highest_of_road is come from the BOT_toll_plaza table<br/>
         weight is from user choose and send to the server
 
   An example of finding a path from Thaibinh city to Hanoi city
   ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/ad81581ea87f5ede8cc50f56c44b6bcd/image.png)
 
-  An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API)
+  An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API. The former runs on the QL1A which doesn't have any toll plaza, while the latter runs CT01 which have 4 toll plazas)
   ![length*priority_of_road*price_highest_of_road2](https://gitlab.com/dangha997/commodity_carrier/uploads/3d18090cdb7bee4d3a5d71e0541a017c/image.png)
 
 ## Tools used
