@@ -16,7 +16,7 @@ The information of 1 shipment consists: <br/>
     -, Space capacity <br/>
     -, Starting day (after this day, system won't recommend this shipment to users have packages anymore) <br/>
 
-- System Overview
+- **System Overview**
 
 ![Overview system](https://gitlab.com/dangha997/commodity_carrier/uploads/22c41974673a5da80ca7221034b84825/image.png)
 
@@ -41,7 +41,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
   -, The data of Vietnam road system is come from OpenStreetMap and be extracted by geofabrik (geofabrik.de)<br/>
   -, The data of Vietnam toll plaza is from some newspapers on the internet <br/>
 
-- **A* Algorithm** <br/>
+- **A-star Algorithm** <br/>
 
   The pathfinding algorithm is A* algorithm with the cost when consider in each node is <br/>
 
