@@ -16,73 +16,72 @@ The information of 1 shipment consists: <br/>
     -, Space capacity <br/>
     -, Starting day (after this day, system won't recommend this shipment to users have packages anymore) <br/>
 
-- <strong> System Overview <strong>
+- System Overview
 
 ![Overview system](https://gitlab.com/dangha997/commodity_carrier/uploads/22c41974673a5da80ca7221034b84825/image.png)
 
 ## Interfaces of 2 mobile apps
 
-- <strong> Driver App <strong>
+- **Driver App**
 
 ![Diagram_driver_app](https://gitlab.com/dangha997/commodity_carrier/uploads/105b6366c18e22c8a02606e7db473c2e/image.png)
 ![Driver_app_interface](https://gitlab.com/dangha997/commodity_carrier/uploads/515356d0c5fdc57faf3ec47e81718da5/Driver_app_interface.png)
 
-- <strong> User App <strong>
+- **User App**
 
 ![Diagram_user_app](https://gitlab.com/dangha997/commodity_carrier/uploads/960683afd02c1d5837dabeb856dee854/image.png)
 ![User_app_interface](https://gitlab.com/dangha997/commodity_carrier/uploads/331a9d9c734e3c9d65e8942a2e889702/image.png)
 
 
 ## Pathfinding recommender system  
-
 This recommender system helps drivers to find suitable direction by criteria such as expenditure, length and time
 
-  - <strong> Data used by recommender system <strong> <br/>
+- **Data used by recommender system** <br/>
 
-    -, The data of Vietnam road system is come from OpenStreetMap and be extracted by geofabrik (geofabrik.de)<br/>
-    -, The data of Vietnam toll plaza is from some newspapers on the internet <br/>
+  -, The data of Vietnam road system is come from OpenStreetMap and be extracted by geofabrik (geofabrik.de)<br/>
+  -, The data of Vietnam toll plaza is from some newspapers on the internet <br/>
 
-  - <strong> A* Algorithm <strong> <br/>
+- **A* Algorithm** <br/>
 
-    The pathfinding algorithm is A* algorithm with the cost when consider in each node is <br/>
+  The pathfinding algorithm is A* algorithm with the cost when consider in each node is <br/>
 
           cost = Cost_of_node * h()
         with h() = sqrt(dx) + sqrt(dy) (x, y is coordinate of nodes on earth)
 
-  - <strong> Value of Cost_of_node <strong> <br/>
+- **Value of Cost_of_node** <br/>
 
-        Cost_of_node = length
+      Cost_of_node = length
 
-    Only find the shortest path. An example of finding a path from Thaibinh city to Hanoi city <br/>
+  Only find the shortest path. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
-    ![length](https://gitlab.com/dangha997/commodity_carrier/uploads/78cde2d617c5967b31c44c7b0ba30b6d/image.png)
+  ![length](https://gitlab.com/dangha997/commodity_carrier/uploads/78cde2d617c5967b31c44c7b0ba30b6d/image.png)
 
         Cost_of_node = length * priority_of_road
 
-    - With priority_of_road is <br/>
-      priority_of_road = -1.0 when roads are 'steps','footway','pedestrian' <br/>
-      priority_of_road = 8.0 when roads are 'residential','living_street' <br/> 
-      priority_of_road = 2.5 when roads are 'tertiary' <br/>
-      priority_of_road = 2.0 when roads are 'secondary', 'secondary_link' <br/>
-      priority_of_road = 1.8 when roads are 'primary','primary_link','primary_junction' <br/>
-      priority_of_road = 1.3 when roads are 'trunk','trunk_link','trunk_junction' <br/>
-      priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
+  -, With priority_of_road is <br/>
+    priority_of_road = -1.0 when roads are 'steps','footway','pedestrian' <br/>
+    priority_of_road = 8.0 when roads are 'residential','living_street' <br/> 
+    priority_of_road = 2.5 when roads are 'tertiary' <br/>
+    priority_of_road = 2.0 when roads are 'secondary', 'secondary_link' <br/>
+    priority_of_road = 1.8 when roads are 'primary','primary_link','primary_junction' <br/>
+    priority_of_road = 1.3 when roads are 'trunk','trunk_link','trunk_junction' <br/>
+    priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
 
 
-    Now it can care about the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
+  Now it can care about the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
-    ![length*priority_of_road](https://gitlab.com/dangha997/commodity_carrier/uploads/53023afa0069a1fa20951c09f50a554c/image.png)
+  ![length*priority_of_road](https://gitlab.com/dangha997/commodity_carrier/uploads/53023afa0069a1fa20951c09f50a554c/image.png)
 
-         Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight
+          Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight
 
-    - With price_highest_of_road is come from the BOT_toll_plaza table
-          weight is from user choose and send to the server
+  -, With price_highest_of_road is come from the BOT_toll_plaza table
+        weight is from user choose and send to the server
 
-    An example of finding a path from Thaibinh city to Hanoi city
-    ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/ad81581ea87f5ede8cc50f56c44b6bcd/image.png)
+  An example of finding a path from Thaibinh city to Hanoi city
+  ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/ad81581ea87f5ede8cc50f56c44b6bcd/image.png)
 
-    An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API)
-    ![length*priority_of_road*price_highest_of_road2](https://gitlab.com/dangha997/commodity_carrier/uploads/3d18090cdb7bee4d3a5d71e0541a017c/image.png)
+  An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API)
+  ![length*priority_of_road*price_highest_of_road2](https://gitlab.com/dangha997/commodity_carrier/uploads/3d18090cdb7bee4d3a5d71e0541a017c/image.png)
 
 ## Tools used
     - React-native
