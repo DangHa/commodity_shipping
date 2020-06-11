@@ -86,7 +86,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
   ![Recommender system](https://gitlab.com/dangha997/commodity_carrier/uploads/f235222cd84758d3c7897d7a95a05c61/image.png)
   ![Google Map](https://gitlab.com/dangha997/commodity_carrier/uploads/20de4bcd08f0cf114cc6b6d77b3b2595/image.png)
   <br/>From the images above. Google Map recommends the road through the TanMai road which is a small road, it's the shortest but will take a lot of time if a car wants to go through. Whereas the recommender system suggests direction run on GiaiPhong road-a big road, then go on CT20-Vanh Dai 3 which is far more better way. <br/>
-  From this point, we can speculate that the GoogleMap's algorithm also is A*, and Google map has weight of h() is bigger than weight of cost between two nodes, so it just choose the road on the West when destination is in the East. Even though the road on the West is far more better <br/> <br/>
+  From this point, we can speculate that the GoogleMap's algorithm also is A*, and Google map has weight of h() is bigger than weight of cost between two nodes, so it can't choose the road on the West when destination is in the East. Even though the road on the West is far more better <br/> <br/>
 
     * ***influence of price_of_road*** <br/> 
 
