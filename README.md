@@ -1,4 +1,5 @@
-# COMMODITY SHIPPING (optimising the shipping commodity capacity)
+# COMMODITY SHIPPING
+### (optimising the shipping commodity capacity)
 
 
 ## Description
@@ -8,12 +9,13 @@ For example: a driver has a plan travelling from Hanoi,Vietnam to HoChiMinh city
 How it works. It a driver has still 100 (Kg) and 100 (M^3) for his car. He will register the information of this shipment on the system, then this information will be shown for users who has packages to choose if this travel fit with their demand.
 
 The information of 1 shipment consists:
- -, Starting point
- -, Destination
- -, Direction (The system will have a recommender system to helps drivers choose the direction which does not pass the toll plazas in Vietnam, it means reducing the cost of travel)
- -, Weight capacity
- -, Space capacity
- -, Starting day (after this day, system won't recommend this shipment to users have packages anymore)
+
+        - Starting point
+        - Destination
+        - Direction (The system will have a recommender system to helps drivers choose the direction which does not pass the toll plazas in Vietnam, it means reducing the cost of travel)
+        - Weight capacity
+        - Space capacity
+        - Starting day (after this day, system won't recommend this shipment to users have packages anymore)
 
 - <strong> System Overview <strong>
 
@@ -33,13 +35,17 @@ The information of 1 shipment consists:
 
 
 ## Pathfinding recommender system  
+
 This recommender system helps drivers to find suitable direction by criteria such as expenditure, length and time
 
   - <strong> Data used by recommender system <strong>
+
     . The data of Vietnam road system is come from OpenStreetMap and be extracted by geofabrik (geofabrik.de)
+
     . The data of Vietnam toll plaza is from some newspapers on the internet 
 
   - <strong> Algorithm <strong>
+
     The pathfinding algorithm is A* algorithm with the cost when consider in each node is
 
           cost = Cost_of_node * h()
