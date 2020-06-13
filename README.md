@@ -65,8 +65,8 @@ This recommender system helps drivers to find suitable direction by criteria suc
     priority_of_road = -1.0 when roads are 'steps','footway','pedestrian' <br/>
     priority_of_road = 8.0 when roads are 'residential','living_street' <br/> 
     priority_of_road = 2.5 when roads are 'tertiary' <br/>
-    priority_of_road = 2.0 when roads are 'secondary', 'secondary_link' <br/>
-    priority_of_road = 1.8 when roads are 'primary','primary_link','primary_junction' <br/>
+    priority_of_road = 1.8 when roads are 'secondary', 'secondary_link' <br/>
+    priority_of_road = 1.5 when roads are 'primary','primary_link','primary_junction' <br/>
     priority_of_road = 1.3 when roads are 'trunk','trunk_link','trunk_junction' <br/>
     priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
   
@@ -81,13 +81,6 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
   ![Google Map](https://gitlab.com/dangha997/commodity_carrier/uploads/9c66b64f6286f8dc825c8797e45ab4be/image.png)
     
-  Even we have a result is better than Google map. An example of finding a path from Giap bat,Hanoi to Hai Phong city<br/>
-
-  ![Recommender system](https://gitlab.com/dangha997/commodity_carrier/uploads/f235222cd84758d3c7897d7a95a05c61/image.png)
-  ![Google Map](https://gitlab.com/dangha997/commodity_carrier/uploads/20de4bcd08f0cf114cc6b6d77b3b2595/image.png)
-  <br/>From the images above. Google Map recommends the road through the TanMai road which is a small road, it's the shortest but will take a lot of time if a car wants to go through. Whereas the recommender system suggests direction run on GiaiPhong road-a big road, then go on CT20-Vanh Dai 3 which is far more better way. <br/>
-  From this point, we can speculate that the GoogleMap's algorithm also is A*, and Google map has weight of h() is bigger than weight of cost between two nodes, so it can't choose the road on the West when destination is in the East. Even though the road on the West is far more better <br/> <br/>
-
     * ***influence of price_of_road*** <br/> 
 
           Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight

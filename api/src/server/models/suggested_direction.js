@@ -26,7 +26,9 @@ module.exports = {
                 END 
                 AS cost,
                 CASE
-                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") THEN length * penalty * highest_price/100 * ${weight_BOT}
+                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2 * highest_price/100  * ${weight_BOT}
+                   WHEN public."ways".osm_id NOT IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2  * ${weight_BOT}
+                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway <> ''YES'' THEN length * penalty * highest_price/100  * ${weight_BOT}
                    ELSE length * penalty
                 END 
                 AS reverse_cost
