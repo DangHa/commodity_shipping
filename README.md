@@ -45,7 +45,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
   The pathfinding algorithm is A* algorithm with the cost which be calculated in each node is <br/>
 
-          cost = Cost_of_node * h()
+          cost = Cost_of_node + h()
         with h() = sqrt(dx) + sqrt(dy) (x, y are earth coordinates of node)
 
 - **Value of Cost_of_node** <br/>
