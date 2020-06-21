@@ -88,7 +88,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
   -, With price_highest_of_road is come from the BOT_toll_plaza table<br/>
         weight is from user choose and send to the server
 
-  An example of finding a path from Thaibinh city to Hanoi city
+  An example of finding a path from Thaibinh city to Hanoi city. The recommender system's result avoid the direction passing the CT01 (Pháp vân- Cầu giẽ)- a BOT project where you have to pay if you want to go through
   ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/782ce689f4db973c3d8d778fd79e1cbf/image.png)
 
   An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API. The former runs on the QL1A which doesn't have any toll plaza, while the latter runs CT01 which have 4 toll plazas)
