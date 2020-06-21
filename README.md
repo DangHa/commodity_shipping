@@ -89,7 +89,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
         weight is from user choose and send to the server
 
   An example of finding a path from Thaibinh city to Hanoi city
-  ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/ad81581ea87f5ede8cc50f56c44b6bcd/image.png)
+  ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/782ce689f4db973c3d8d778fd79e1cbf/image.png)
 
   An example of finding a path from Ninhbinh city to Hanoi city (Green way is from recommender system with weight = 1, Blue is from Google Map API. The former runs on the QL1A which doesn't have any toll plaza, while the latter runs CT01 which have 4 toll plazas)
   ![length*priority_of_road*price_highest_of_road2](https://gitlab.com/dangha997/commodity_carrier/uploads/3d18090cdb7bee4d3a5d71e0541a017c/image.png)
