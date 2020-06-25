@@ -4,7 +4,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Loading from './src/components/loadingScreen'
 import UserNavigator from './src/components/User_components/user_navigation'
 import AuthenticationNavigator from './src/components/Authentication/authentication_navigation'
-
+console.disableYellowBox = true;
 
 const AppNavigation = createAppContainer(createSwitchNavigator(
   {
