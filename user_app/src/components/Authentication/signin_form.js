@@ -43,6 +43,8 @@ export default class SignIn_Form extends Component {
         // handle the result
         if (result === "This phone doesn't have any account"){
             alert("This phone doesn't have any account")
+        }else if (result === "This account has been deleted"){
+            alert("The account of this phone has been deleted")
         }else if(result === true) {
             this.props.navigation.navigate("App");
             await AsyncStorage.setItem('loginCheck', "true");

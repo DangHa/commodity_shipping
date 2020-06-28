@@ -5,8 +5,9 @@ export default class Loading extends Component {
     componentDidMount = async()=> {
         //If the user have signed in turn to home page
         let loginCheck = await AsyncStorage.getItem('loginCheck');
-      
-        if (loginCheck === "true") {
+        let phone = await AsyncStorage.getItem('userPhone');
+        
+        if (loginCheck === "true" && phone !== null) {
           this.props.navigation.navigate("App");
         }else {
           this.props.navigation.navigate("Authentic");

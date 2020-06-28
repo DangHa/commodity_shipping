@@ -5,13 +5,16 @@ module.exports = {
   async login(req, res) {
     const Phone = req.body.phone;
     const Password = req.body.password;
-
+    
     var result = await driverTable.findDriverByPhone(Phone)
-
+    
     var response = JSON.stringify(false)
     if (result.length !== 0){
       if (result[0].password === Password) {
-            response = JSON.stringify(true)
+        response = JSON.stringify(true)
+      }
+      if (result[0].status === "deleted") {
+        response = JSON.stringify("This account has been deleted")
       }
     }else{
         response = JSON.stringify("This phone doesn't have any account")
