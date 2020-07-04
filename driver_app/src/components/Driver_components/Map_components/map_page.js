@@ -8,7 +8,7 @@ import MapViewDirections from "react-native-maps-directions";
 import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
 const GOOGLE_MAP_APIKEY = 'AIzaSyDI3l4n3NL_KbvvLtO8DuSfl4mImgrANoM';
-const zoom_default = 0.1
+const zoom_default = 0.2
 
 // Get location 
 const getLocation = () => {
@@ -78,7 +78,6 @@ export default class Map extends Component {
   }
 
   onMapRegionChange(region) {
-    console.log("change ")
     this.setState({ region });
   }
 
@@ -466,8 +465,7 @@ export default class Map extends Component {
       </Text>
     ));
 
-    
-
+  
     return (
       
       <View style={{ flex: 1 }}>
@@ -476,11 +474,12 @@ export default class Map extends Component {
           <View style={styles.container}>
             <MapView
               provider={PROVIDER_GOOGLE}
-              ref={map => this._map = map}
+              ref={map => {this.map = map;}}
               style={styles.map}
               customMapStyle={ RetroMapStyles }
-              region={this.state.region}
-              onRegionChangeComplete={(reg) => this.onMapRegionChange(reg)}
+              initialRegion = {this.state.region}
+              // region={this.state.region}
+              onRegionChangeComplete={(region) => this.onMapRegionChange(region)}
               onPress={this.onMapPress}
               showsUserLocation={true}>
 
