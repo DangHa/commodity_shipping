@@ -8,7 +8,7 @@ Run code in file create_table.sql
 
 Step 1: Download data of Vietnam road system from this website https://download.geofabrik.de/asia/vietnam.html
 
-Step 2: Install pgrouting and create a database which will have pgrouting extension
+Step 2: Install pgrouting extension in vietnam_road_system database 
 
 Step 3: Install osm2pgrouting and transfer osm data to relational data in postgresql (it takes about 1 hour with almost 1.5 million ways)
 

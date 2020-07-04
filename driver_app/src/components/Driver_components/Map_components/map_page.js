@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, TextInput, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TextInput, Text, TouchableOpacity, ActivityIndicator, Modal} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from "react-native-maps-directions";
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
@@ -54,7 +53,7 @@ export default class Map extends Component {
       route: {coordinates: []},
       osm_route: {coordinates: []},
       weight_BOT: "",
-      spinner: false
+      loading: false
     }
   }
 
@@ -396,6 +395,8 @@ export default class Map extends Component {
   async getSuggestedDirection(){
     console.log(this.state.weight_BOT)
 
+    this.setState({ loading : true})
+
     // check weight of BOT
     if (this.state.weight_BOT < 0.1 || this.state.weight_BOT > 1){
       alert("You should just put a number between 0.1-1. 0.1 is for choosing to go through BOT roads, while 1 is for avoiding")
@@ -442,6 +443,8 @@ export default class Map extends Component {
           osm_route : {coordinates: result.roadDescription},
           osm_length: result.osm_length
         });
+
+        this.setState({ loading : false})
       } else {
         alert("There are something wrong")
       }
@@ -465,7 +468,9 @@ export default class Map extends Component {
     
 
     return (
+      
       <View style={{ flex: 1 }}>
+        <CustomProgressBar isModalVisible = {this.state.loading} />
         {this.state.region['latitude'] ?
           <View style={styles.container}>
             <MapView
@@ -596,9 +601,24 @@ export default class Map extends Component {
           </View>
         : null}
       </View>
+                
     );
   }
 }
+
+// Loading spiner
+const CustomProgressBar = ({ isModalVisible }) => (
+  <Modal 
+    transparent
+    visible={isModalVisible} >
+    <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,.0001) !important', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.6)', padding: 25 }}>
+        <Text style={{ fontSize: 20, fontWeight: '200', color: 'white' }}>Please wait</Text>
+        <ActivityIndicator size="large" />
+      </View>
+    </View>
+  </Modal>
+);
 
 const styles = StyleSheet.create({
   container: {

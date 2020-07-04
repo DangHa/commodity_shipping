@@ -3,10 +3,10 @@
 
 
 ## Description
-This system was created to help drivers can maximise their income in each their shipments
+This system was created to help drivers can maximise their income in each their shipment
 For example: a driver has a plan travelling from Hanoi,Vietnam to HoChiMinh,Vietnam by a 4-seat car. He uses Uber to fill up the three rest seats, but the luggage compartment is still not filled up. This system will help this driver to fill up the rest capacity of the car which means he can optimise the money for each travel.
 
-How it works. If a driver has still 100 (Kg) and 100 (M^3) for his car. He will register the information of this shipment on the system, then this information will be shown for users who has packages to choose if this travel fit with their demand.
+How it works. If a driver has still 100 (Kg) and 100 (M^3) in his car. He will register these information of this shipment on the system, then those information will be shown for users who has packages to choose if this travel fit with their demand.
 
 The information of 1 shipment consists: <br/>
     -, Starting point <br/>
@@ -85,8 +85,8 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
           Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight
 
-  -, With price_highest_of_road is come from the BOT_toll_plaza table<br/>
-        weight is from user choose and send to the server
+  -, price_highest_of_road is come from the BOT_toll_plaza table<br/>
+  -, weight is from user choose and send to the server <br/>
 
   An example of finding a path from Thaibinh city to Hanoi city. The recommender system's result avoid the direction passing the CT01 (Pháp vân- Cầu giẽ)- a BOT project where you have to pay if you want to go through
   ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/782ce689f4db973c3d8d778fd79e1cbf/image.png)
