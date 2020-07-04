@@ -4,7 +4,7 @@ import MapView, {PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from "react-native-maps-directions";
-import { DatePicker, Picker, Item } from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import RetroMapStyles from '../../../assets/RetroMapStyles'
 // import ShipmentForm from './shipment_form'
@@ -53,7 +53,8 @@ export default class Map extends Component {
       ],
       route: {coordinates: []},
       osm_route: {coordinates: []},
-      weight_BOT: ""
+      weight_BOT: "",
+      spinner: false
     }
   }
 
@@ -97,6 +98,8 @@ export default class Map extends Component {
 
   // --- Back to origin location , reset all other location states
   currentLocation() {
+  
+
     this.getInitialState();
 
     this.setState({
@@ -107,8 +110,9 @@ export default class Map extends Component {
       description: {}
     });
 
+
     this.setState({
-      route: {}
+      route: {coordinates: []}
     });
 
     this.setState({
