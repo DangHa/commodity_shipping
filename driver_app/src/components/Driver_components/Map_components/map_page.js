@@ -77,6 +77,7 @@ export default class Map extends Component {
   }
 
   onMapRegionChange(region) {
+    console.log("change ")
     this.setState({ region });
   }
 
@@ -395,8 +396,6 @@ export default class Map extends Component {
   async getSuggestedDirection(){
     console.log(this.state.weight_BOT)
 
-    this.setState({ loading : true})
-
     // check weight of BOT
     if (this.state.weight_BOT < 0.1 || this.state.weight_BOT > 1){
       alert("You should just put a number between 0.1-1. 0.1 is for choosing to go through BOT roads, while 1 is for avoiding")
@@ -411,6 +410,7 @@ export default class Map extends Component {
       alert("You haven't had the starting point, destination yet")
     }else {
 
+      this.setState({ loading : true})
       // send starting, end point and weight bot to server 
       let data = {
         method: 'POST',
