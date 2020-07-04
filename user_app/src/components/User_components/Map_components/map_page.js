@@ -13,7 +13,8 @@ const getLocation = () => {
       (resolve, reject) => {
           Geolocation.getCurrentPosition(
               (data) => resolve(data.coords),
-              (err) => reject(err)
+              (err) => reject(err),
+              { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
           );
       }
   );
