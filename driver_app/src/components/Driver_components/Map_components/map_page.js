@@ -116,6 +116,11 @@ export default class Map extends Component {
     });
 
     this.setState({
+      osm_route: {coordinates: []}
+    });
+
+
+    this.setState({
       markers: [
         {
           "coordinate": {}, 
