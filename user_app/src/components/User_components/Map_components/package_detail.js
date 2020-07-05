@@ -24,7 +24,10 @@ export default class PackageDetail extends Component {
 
   chooseShipment = async()=>{
     // Send shipment
-    this.props.navigation.navigate("ShipmentList", {
+    if (this.state.weight === "" || this.state.space === "" || this.state.phoneOfReceiver === "") {
+      alert("You should fill all the rows")
+    }else {
+      this.props.navigation.navigate("ShipmentList", {
         startingPointName        : this.state.startingPointName,
         latitute_starting_point  : this.state.latitute_starting_point,
         longitude_starting_point : this.state.longitude_starting_point,
@@ -35,7 +38,9 @@ export default class PackageDetail extends Component {
         space                    : this.state.space,
         phoneOfReceiver          : this.state.phoneOfReceiver,
         package_id               : null
-    });
+      });
+    }
+    
   }
 
   render() {
