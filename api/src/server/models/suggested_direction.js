@@ -21,14 +21,14 @@ module.exports = {
               SELECT gid as id, public."ways".osm_id, source_osm AS source, target_osm AS target, x1, y1, x2, y2, 
                 COALESCE(highest_price, 1) as highest_price, length,
                 CASE
-                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") THEN length * penalty * highest_price/100 * ${weight_BOT}
+                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") THEN length * penalty * POWER(highest_price/100, ${weight_BOT})
                    ELSE length * penalty
                 END 
                 AS cost,
                 CASE
-                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2 * highest_price/100  * ${weight_BOT}
-                   WHEN public."ways".osm_id NOT IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2  * ${weight_BOT}
-                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway <> ''YES'' THEN length * penalty * highest_price/100  * ${weight_BOT}
+                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2 * POWER(highest_price/100, ${weight_BOT})
+                   WHEN public."ways".osm_id NOT IN (SELECT osm_id FROM public."BOT_ways") AND oneway = ''YES'' THEN length * penalty * 2
+                   WHEN public."ways".osm_id IN (SELECT osm_id FROM public."BOT_ways") AND oneway <> ''YES'' THEN length * penalty * POWER(highest_price/100, ${weight_BOT})
                    ELSE length * penalty
                 END 
                 AS reverse_cost

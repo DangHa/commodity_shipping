@@ -83,7 +83,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
     
     * ***influence of price_of_road*** <br/> 
 
-          Cost_of_node = length * priority_of_road * price_highest_of_road/100 * weight
+          Cost_of_node = length * priority_of_road * (price_highest_of_road/100)^weight
 
   -, price_highest_of_road is come from the BOT_toll_plaza table<br/>
   -, weight is from user choose and send to the server <br/>

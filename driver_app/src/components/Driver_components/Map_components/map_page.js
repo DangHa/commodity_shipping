@@ -402,8 +402,8 @@ export default class Map extends Component {
     console.log(this.state.weight_BOT)
 
     // check weight of BOT
-    if (this.state.weight_BOT < 0.1 || this.state.weight_BOT > 1){
-      alert("You should just put a number between 0.1-1. 0.1 is for choosing to go through BOT roads, while 1 is for avoiding")
+    if (this.state.weight_BOT < 0 || this.state.weight_BOT > 1){
+      alert("You should just put a number between 0-1. 0 is for choosing to go through BOT roads, while 1 is for avoiding")
       return
     }else if (this.state.weight_BOT === ""){
       alert("You haven't had the weight for BOT ways")
