@@ -71,7 +71,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
     priority_of_road = 1.0 when roads are 'motorway','motorway_junction','motorway_link' <br/>
   
   -> This numbers has been chosen from the attributes of the data of length and h(). <br/>
-  Briefly, length ~ (0.00001, 9)  and h() ~ (0.0001 -> 5). length is always in this range,no matter node being considered is close to the destination, while the range of h() will be changed
+  Briefly, length ∈ (0.00001, 9)  and h() ∈ (0.0001 -> 5). length is always in this range,no matter node being considered is close to the destination, while the range of h() will be changed
 
   Now it can be affected by the kind of each road. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
@@ -87,6 +87,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
   -, price_highest_of_road is come from the BOT_toll_plaza table<br/>
   -, weight is from user choose and send to the server <br/>
+    *(weight ∈ [0, 1])*
 
   An example of finding a path from Thaibinh city to Hanoi city. The recommender system's result avoid the direction passing the CT01 (Pháp vân- Cầu giẽ)- a BOT project where you have to pay if you want to go through
   ![length*priority_of_road*price_highest_of_road1](https://gitlab.com/dangha997/commodity_carrier/uploads/782ce689f4db973c3d8d778fd79e1cbf/image.png)
