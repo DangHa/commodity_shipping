@@ -112,17 +112,17 @@ This recommender system helps drivers to find suitable direction by criteria suc
   - For mobile app <br/>
     Install Adroid studio and also set up some environment link (follow instruction to install on ubuntu)
 ```shell
-npm install (install library) <br/>
-npm start --reset-cache <br/>
-npx react-native run-android <br/>
+npm install (install library) 
+npm start --reset-cache 
+npx react-native run-android 
 ```
   - For server <br/>
 ```shell
-npm install (install library) <br/>
+npm install (install library) 
 npm start
 ```
   - For admin interface  <br/>
 ```shell
-npm install (install library) <br/>
-npm start <br/>
+npm install (install library) 
+npm start 
 ```
