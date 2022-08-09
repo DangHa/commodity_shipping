@@ -18,19 +18,19 @@ The information of 1 shipment consists: <br/>
 
 - **System Overview**
 
-![Overview system](https://gitlab.com/dangha997/commodity_carrier/uploads/22c41974673a5da80ca7221034b84825/image.png)
+![Overview system](https://user-images.githubusercontent.com/20589233/183610133-4c9d9433-80d5-45d8-8c47-9ba10c667d24.png)
 
 ## Interfaces of 2 mobile apps
 
 - **Driver App**
 
-![Diagram_driver_app](https://gitlab.com/dangha997/commodity_carrier/uploads/105b6366c18e22c8a02606e7db473c2e/image.png)
-![Driver_app_interface](https://gitlab.com/dangha997/commodity_carrier/uploads/515356d0c5fdc57faf3ec47e81718da5/Driver_app_interface.png)
+![Diagram_driver_app](https://user-images.githubusercontent.com/20589233/183610153-ebb7acd4-2adb-4f05-80c3-1bce25b4e41e.png)
+![Driver_app_interface](https://user-images.githubusercontent.com/20589233/183610165-81e1dece-11bf-40ab-852b-580b8c0640e8.png)
 
 - **User App**
 
-![Diagram_user_app](https://gitlab.com/dangha997/commodity_carrier/uploads/960683afd02c1d5837dabeb856dee854/image.png)
-![User_app_interface](https://gitlab.com/dangha997/commodity_carrier/uploads/331a9d9c734e3c9d65e8942a2e889702/image.png)
+![Diagram_user_app](https://user-images.githubusercontent.com/20589233/183610192-839b9420-06ed-4446-8fb4-c8f9a48c2655.png)
+![User_app_interface](https://user-images.githubusercontent.com/20589233/183610198-011cfdc7-bc58-49a1-ac9b-009f6429ce11.png)
 
 
 ## Pathfinding recommender system  
@@ -55,7 +55,7 @@ This recommender system helps drivers to find suitable direction by criteria suc
 
   Only find the shortest path. An example of finding a path from Thaibinh city to Hanoi city <br/>
 
-  ![length](https://gitlab.com/dangha997/commodity_carrier/uploads/78cde2d617c5967b31c44c7b0ba30b6d/image.png)
+  ![length](https://user-images.githubusercontent.com/20589233/183610207-80090643-b717-45aa-b9e9-85c524929127.png)
 
     * ***influence of priority_of_road*** <br/> 
 
